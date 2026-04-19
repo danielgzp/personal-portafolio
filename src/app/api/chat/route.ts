@@ -9,8 +9,7 @@ export async function POST(req: Request) {
 
   const allowedModels = new Set([
     "gemini-3-flash-preview",
-    "gemini-2.5-flash",
-    "gemini-2.5-pro",
+    "gemini-3-pro-preview",
   ]);
 
   const selectedModel = allowedModels.has(model)
@@ -23,7 +22,7 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
     system: `
       Eres el asistente personal de Inteligencia Artificial del portafolio interactivo de Daniel González.
-      Daniel es un Lead Frontend Developer especializado en React, Next.js, TypeScript y Arquitectura Frontend.
+      Daniel es un Frontend Engineer especializado en React, Next.js, TypeScript y Arquitectura Frontend.
       Tu objetivo es responder de manera profesional y técnica sobre las habilidades y experiencia de Daniel.
       Si el usuario hace preguntas de código o frontend, responde demostrando el conocimiento avanzado de Daniel.
       Responde siempre en español a menos que el usuario hable en otro idioma.

@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
 import {
   Conversation,
   ConversationContent,
   ConversationEmptyState,
-  ConversationScrollButton
-} from "@/components/ai-elements/conversation";
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation"
 import {
   PromptInput,
   PromptInputActionAddAttachments,
@@ -14,9 +14,9 @@ import {
   PromptInputActionMenuContent,
   PromptInputActionMenuTrigger,
   PromptInputBody,
+  PromptInputButton,
   PromptInputFooter,
   PromptInputMessage,
-  PromptInputButton,
   PromptInputSelect,
   PromptInputSelectContent,
   PromptInputSelectItem,
@@ -24,134 +24,115 @@ import {
   PromptInputSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
-  PromptInputTools
-} from "@/components/ai-elements/prompt-input";
-import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport } from "ai";
-import { GlobeIcon } from "lucide-react";
-import { useState } from "react";
-import { ChatMessage, ChatMessageThinking } from "./chat-message";
-import { EmptyState } from "./empty-state";
-import { ScrollArea } from "@/components/ui/scroll-area";
+  PromptInputTools,
+} from "@/components/ai-elements/prompt-input"
+import { cn } from "@/lib/utils"
+import { useChat } from "@ai-sdk/react"
+import { DefaultChatTransport } from "ai"
+import { GlobeIcon } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { ChatMessage, ChatMessageThinking } from "./chat-message"
+import { EmptyState } from "./empty-state"
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+const COMMANDS = [
+  { command: "/skills", description: "Lista de tecnologías" },
+  { command: "/experiencia", description: "Trayectoria profesional" },
+  { command: "/contacto", description: "Cómo contactar" },
+  { command: "/clear", description: "Limpiar conversación" },
+]
 
 export function ChatArea() {
-  const [input, setInput] = useState("");
-  const [useWebSearch, setUseWebSearch] = useState(false);
-  const [model, setModel] = useState("gemini-3-flash-preview");
+  const [input, setInput] = useState("")
+  const [useWebSearch, setUseWebSearch] = useState(false)
+  const [model, setModel] = useState("gemini-3-flash-preview")
 
   const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
     { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" }
-  ];
+    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
+  ]
 
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-    api: '/api/chat',
-  }),
-  });
+      api: "/api/chat",
+    }),
+  })
 
-  const isLoading = status === "submitted" || status === "streaming";
+  const isLoading = status === "submitted" || status === "streaming"
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
+    setInput(e.target.value)
   }
 
-  const handleSubmit = async (
-    message: PromptInputMessage,
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    const hasText = !!message.text.trim();
-    const hasFiles = message.files.length > 0;
+  const handleSubmit = async (message: PromptInputMessage, e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const hasText = !!message.text.trim()
+    const hasFiles = message.files.length > 0
 
-    if (!hasText && !hasFiles) return;
+    if (!hasText && !hasFiles) return
+
+    setInput("")
 
     await sendMessage(
       {
         text: message.text,
-        files: message.files
+        files: message.files,
       },
       {
         body: {
           model,
-          useWebSearch
-        }
+          useWebSearch,
+        },
       }
-    );
-    setInput("");
+    )
   }
 
   return (
-    <div className="flex flex-col h-full w-full max-w-4xl mx-auto py-6 px-4 md:px-8">
+    <div className="relative flex size-full h-full w-full flex-col">
       {/* Header separador en móvil */}
-      <div className="md:hidden h-12 flex flex-shrink-0 items-center justify-center border-b mb-4">
-        <h1 className="font-semibold text-sm text-foreground">AI Tech Lead</h1>
+      <div className="mb-4 flex h-12 flex-shrink-0 items-center justify-center border-b md:hidden">
+        <h1 className="text-sm font-semibold text-foreground">AI Tech Lead</h1>
       </div>
 
-      
-        <Conversation className="">
-          {messages.length === 0 ? (
-            <ConversationEmptyState>
-              <EmptyState setInput={setInput} />
-            </ConversationEmptyState>
-          ) : (
-            <ConversationContent>
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
-              {isLoading && messages[messages.length - 1]?.role === "user" && (
-                <ChatMessageThinking />
-              )}
-            </ConversationContent>
-          )}
-          <ConversationScrollButton />
-        </Conversation>
-      
-      
+      <Conversation className="mx-auto h-full max-w-5xl flex-1 px-4 md:px-8">
+        {messages.length === 0 ? (
+          <ConversationEmptyState>
+            <EmptyState setInput={setInput} />
+          </ConversationEmptyState>
+        ) : (
+          <ConversationContent>
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
+            {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+          </ConversationContent>
+        )}
+        <ConversationScrollButton />
+      </Conversation>
 
-      <div className="pt-4 mt-auto border-t border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 w-full shrink-0">
-        <PromptInput
-          onSubmit={handleSubmit}
-          className="mt-4"
-          globalDrop
-          multiple
-        >
-          
+      <div className="w-full border-t px-4 pt-4 pb-4 md:px-8">
+        <PromptInput onSubmit={handleSubmit} globalDrop multiple>
           <PromptInputBody>
             <PromptInputTextarea
+              className="px-4 pt-4 md:text-base min-h-auto"
               onChange={handleInputChange}
               value={input}
-              
+              placeholder="Preguntame algo..."
             />
           </PromptInputBody>
           <PromptInputFooter>
             <PromptInputTools>
-              <PromptInputActionMenu>
-                <PromptInputActionMenuTrigger />
-                <PromptInputActionMenuContent>
-                  <PromptInputActionAddAttachments />
-                  <PromptInputActionAddScreenshot />
-                </PromptInputActionMenuContent>
-              </PromptInputActionMenu>
-              <PromptInputButton
-                onClick={() => setUseWebSearch(!useWebSearch)}
-                tooltip={{ content: "Search the web", shortcut: "⌘K" }}
-                variant={useWebSearch ? "default" : "ghost"}
-              >
-                <GlobeIcon size={16} />
-                <span>Search</span>
-              </PromptInputButton>
               <PromptInputSelect
                 onValueChange={(value) => {
-                  setModel(value);
+                  setModel(value)
                 }}
                 value={model}
               >
                 <PromptInputSelectTrigger>
                   <PromptInputSelectValue />
                 </PromptInputSelectTrigger>
-                <PromptInputSelectContent>
+                <PromptInputSelectContent className="p-1">
                   {models.map((model) => (
                     <PromptInputSelectItem key={model.id} value={model.id}>
                       {model.name}
@@ -165,5 +146,5 @@ export function ChatArea() {
         </PromptInput>
       </div>
     </div>
-  );
+  )
 }
