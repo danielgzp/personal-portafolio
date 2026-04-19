@@ -1,19 +1,21 @@
-import { Button } from "@/components/ui/button";
+import { ChatArea } from "@/components/layout/chat/chat-area";
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
+    <main className="flex h-screen w-full overflow-hidden bg-background">
+      {/* PANEL IZQUIERDO: Estático / CV (40%) */}
+      <aside className="hidden lg:flex lg:w-[40%] flex-col border-r bg-muted/20 p-8 overflow-y-auto">
+        <div className="flex h-full flex-col items-center justify-center text-center">
+          <h1 className="text-2xl font-bold tracking-tight">Daniel González</h1>
+          <p className="text-sm text-muted-foreground">Lead Frontend Developer</p>
+          <div className="mt-4 rounded border px-3 py-1 text-xs">Panel CV En Construcción</div>
         </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
-  )
+      </aside>
+
+      {/* PANEL DERECHO: Agente Interactivo AI (60%) */}
+      <section className="flex-1 flex flex-col h-full bg-background relative">
+        <ChatArea />
+      </section>
+    </main>
+  );
 }
