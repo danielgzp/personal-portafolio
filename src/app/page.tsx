@@ -1,4 +1,5 @@
 import { ChatArea } from "@/components/layout/chat/chat-area";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 export default function Page() {
   return (
@@ -15,6 +16,9 @@ export default function Page() {
       {/* PANEL DERECHO: Agente Interactivo AI (60%) */}
       <section className="flex-1 flex flex-col h-full bg-background relative">
         <ChatArea />
+        <div className="absolute right-4 top-4 z-50">
+              <ThemeSwitcher />
+            </div>
       </section>
     </main>
   );
