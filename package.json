@@ -7,9 +7,16 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint --cache \"src/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --cache --fix \"src/**/*.{ts,tsx}\"",
+    "fm:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "fm:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=10"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
