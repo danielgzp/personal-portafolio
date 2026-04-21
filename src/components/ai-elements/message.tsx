@@ -34,7 +34,7 @@ export type MessageContentProps = HTMLAttributes<HTMLDivElement>
 export const MessageContent = ({ children, className, ...props }: MessageContentProps) => (
   <div
     className={cn(
-      "is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-hidden rounded-2xl border px-4 py-2.5 text-sm shadow",
+      "is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-hidden rounded-2xl border px-5 py-3 text-sm shadow",
       "group-[.is-user]:ml-auto group-[.is-user]:rounded-tr-xs group-[.is-user]:rounded-br-2xl group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground",
       "group-[.is-assistant]:max-w-[90%] group-[.is-assistant]:rounded-tl-sm group-[.is-assistant]:rounded-bl-2xl group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
       className

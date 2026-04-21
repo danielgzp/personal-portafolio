@@ -29,7 +29,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { GlobeIcon } from "lucide-react"
+import { GlobeIcon, Sparkles as SparklesIcon } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
@@ -111,17 +111,18 @@ export function ChatArea() {
         <ConversationScrollButton />
       </Conversation>
 
-      <div className="w-full border-t px-4 pt-4 pb-4 md:px-8">
+      <div className="mx-auto w-full max-w-4xl px-4 pt-4 pb-8 md:px-8">
         <PromptInput onSubmit={handleSubmit} globalDrop multiple>
           <PromptInputBody>
             <PromptInputTextarea
-              className="px-4 pt-4 md:text-base min-h-auto"
+              className="min-h-auto px-6 pt-5 md:text-base text-foreground"
               onChange={handleInputChange}
               value={input}
-              placeholder="Preguntame algo..."
+              placeholder="¿Qué quieres saber sobre mí o mis proyectos?"
+              autoFocus
             />
           </PromptInputBody>
-          <PromptInputFooter>
+          <PromptInputFooter className="px-5 pt-2 pb-4">
             <PromptInputTools>
               <PromptInputSelect
                 onValueChange={(value) => {
@@ -130,6 +131,7 @@ export function ChatArea() {
                 value={model}
               >
                 <PromptInputSelectTrigger>
+                  <SparklesIcon className="mr-1.5 size-3.5" />
                   <PromptInputSelectValue />
                 </PromptInputSelectTrigger>
                 <PromptInputSelectContent className="p-1">
@@ -141,7 +143,11 @@ export function ChatArea() {
                 </PromptInputSelectContent>
               </PromptInputSelect>
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input.trim() && !isLoading} status={status} />
+            <PromptInputSubmit
+              disabled={!input.trim() && !isLoading}
+              status={status}
+              className="shrink-0 rounded-full p-2 transition-colors"
+            />
           </PromptInputFooter>
         </PromptInput>
       </div>
