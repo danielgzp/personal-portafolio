@@ -1,5 +1,6 @@
 "use client"
 
+import { BackgroundGradient } from "@/components/ui/background-gradient"
 import { motion } from "framer-motion"
 import { Sparkles, Code2, Briefcase, FileText, ArrowRight, TerminalIcon } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -69,8 +70,8 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } },
+    hidden: { opacity: 0, y: 0 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
   }
 
   return (
@@ -86,9 +87,14 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
           animate={{ scale: 1, opacity: 1, rotate: 0 }}
           transition={{ duration: 0.7, delay: 0.1, type: "spring", bounce: 0.4 }}
-          className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary shadow-[0_0_30px_rgba(var(--primary),0.2)] ring-1 ring-primary/20 backdrop-blur-xl"
+          className=""
         >
-          <Sparkles className="size-6" />
+          <BackgroundGradient
+            className="bg-radial-to-tr flex items-center justify-center rounded-2xl from-primary/10 to-secondary/10 p-2 sm:p-4"
+            containerClassName="p-0.5"
+          >
+            <Sparkles className="size-6" strokeWidth={1.5} />
+          </BackgroundGradient>
         </motion.div>
 
         <div className="space-y-4">

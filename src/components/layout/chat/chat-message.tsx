@@ -84,7 +84,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       </Avatar>
 
       <Message from={message.role}>
-        <MessageContent>
+        <MessageContent className="group-[.is-assistant]:bg-card/50">
           {!!sourceUrlParts.length && (
             <Sources>
               <SourcesTrigger count={sourceUrlParts.length} />

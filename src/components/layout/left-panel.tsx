@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/timeline"
 import { motion } from "framer-motion"
 import { Download, Mail, MapPin } from "lucide-react"
+import { BackgroundRippleEffect } from "../ui/background-ripple-effect"
+import { NoiseBackground } from "../ui/noise-background"
+import GridBackgroundDemo from "../grid-background-demo"
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -131,177 +134,184 @@ const itemVariants = {
 
 export function LeftPanel() {
   return (
-    <ScrollArea className="h-full w-full">
-      <div className="mx-auto flex h-full max-w-2xl flex-col gap-8 p-8 md:p-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-6"
-        >
-          <Avatar className="size-24 border-2">
-            <AvatarImage src="/avatar-placeholder.jpg" alt="Daniel González" />
-            <AvatarFallback className="bg-muted/50 text-2xl font-bold text-muted-foreground">DG</AvatarFallback>
-          </Avatar>
+    <div className="relative h-full w-full overflow-hidden bg-background">
+      {/* Minimalist Grid Background */}
+      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
+      {/* Radial gradient mask to fade out the grid smoothly */}
+      <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
-          <div>
-            <h1 className="mb-2 text-4xl font-bold tracking-tight">Daniel González</h1>
-            <h2 className="mb-4 text-xl font-medium text-muted-foreground">Frontend Engineer</h2>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-4" />
-              <span>Cabudare, Venezuela</span>
-            </div>
-          </div>
-        </motion.div>
+      <ScrollArea className="relative z-10 h-full w-full">
+        <div className="mx-auto flex h-full max-w-2xl flex-col gap-8 p-8 md:p-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
+          >
+            <Avatar className="size-24 border-2">
+              <AvatarImage src="/avatar-placeholder.jpg" alt="Daniel González" />
+              <AvatarFallback className="bg-muted/50 text-2xl font-bold text-muted-foreground">DG</AvatarFallback>
+            </Avatar>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="space-y-4 leading-relaxed text-muted-foreground"
-        >
-          <p>
-            Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema de
-            React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código limpio, si
-            no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas reales. Me
-            apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="space-y-4"
-        >
-          <h3 className="mb-4 text-sm font-semibold tracking-wider text-foreground/80 uppercase">Tecnologías Core</h3>
-          <div className="flex flex-wrap gap-2">
-            {SKILLS.map((tech) => (
-              <div
-                key={tech}
-                className="inline-flex items-center rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary"
-              >
-                {tech}
+            <div>
+              <h1 className="mb-2 text-4xl font-bold tracking-tight">Daniel González</h1>
+              <h2 className="mb-4 text-xl font-medium text-muted-foreground">Frontend Engineer</h2>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="size-4" />
+                <span>Cabudare, Venezuela</span>
               </div>
-            ))}
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="space-y-4"
-        >
-          <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Experiencia Laboral</h3>
-          <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
-            {EXPERIENCE_ITEMS.map((item, index) => (
-              <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
-                <TimelineSeparator />
-                <TimelineIndicator />
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + index * 0.15, duration: 0.5 }}
-                  className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card p-6 transition-colors hover:bg-card/75"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="space-y-4 leading-relaxed text-muted-foreground"
+          >
+            <p>
+              Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
+              de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
+              limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
+              reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="space-y-4"
+          >
+            <h3 className="mb-4 text-sm font-semibold tracking-wider text-foreground/80 uppercase">Tecnologías Core</h3>
+            <div className="flex flex-wrap gap-2">
+              {SKILLS.map((tech) => (
+                <div
+                  key={tech}
+                  className="inline-flex items-center rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary"
                 >
-                  <TimelineHeader className="w-full pb-0">
-                    <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  {tech}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="space-y-4"
+          >
+            <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Experiencia Laboral</h3>
+            <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
+              {EXPERIENCE_ITEMS.map((item, index) => (
+                <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
+                  <TimelineSeparator />
+                  <TimelineIndicator />
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + index * 0.15, duration: 0.5 }}
+                    className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur transition-colors hover:bg-card/75"
+                  >
+                    <TimelineHeader className="w-full pb-0">
+                      <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                        <div className="flex flex-col">
+                          <TimelineTitle className="text-base font-bold text-foreground">{item.company}</TimelineTitle>
+                          <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
+                        </div>
+                        <div className="flex flex-col sm:text-right">
+                          <span className="text-sm font-bold text-foreground">{item.location}</span>
+                          <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
+                            {item.date}
+                          </TimelineDate>
+                        </div>
+                      </div>
+                    </TimelineHeader>
+                    <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
+                      <p className="text-sm">{item.description}</p>
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {item.skills.map((skill) => (
+                          <Badge
+                            key={skill}
+                            variant="secondary"
+                            className="rounded-full border border-border/50 bg-secondary/30 px-3 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
+                          >
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TimelineContent>
+                  </motion.div>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="space-y-4"
+          >
+            <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Educación</h3>
+            <Timeline defaultValue={EDUCATION_ITEMS.length + 1}>
+              {EDUCATION_ITEMS.map((edu, index) => (
+                <TimelineItem key={edu.id} step={edu.id} className="[&:not(:last-child)]:!pb-6">
+                  <TimelineSeparator />
+                  <TimelineIndicator />
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1 }}
+                    className="flex flex-col"
+                  >
+                    <TimelineHeader className="w-full pb-0">
                       <div className="flex flex-col">
-                        <TimelineTitle className="text-base font-bold text-foreground">{item.company}</TimelineTitle>
-                        <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
+                        <TimelineTitle className="text-base font-bold text-foreground">{edu.degree}</TimelineTitle>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                          <span className="font-medium text-foreground/80">{edu.institution}</span>
+                          <span className="text-border">•</span>
+                          <span className="font-mono text-xs">{edu.period}</span>
+                        </div>
                       </div>
-                      <div className="flex flex-col sm:text-right">
-                        <span className="text-sm font-bold text-foreground">{item.location}</span>
-                        <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
-                          {item.date}
-                        </TimelineDate>
-                      </div>
-                    </div>
-                  </TimelineHeader>
-                  <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                    <p className="text-sm">{item.description}</p>
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {item.skills.map((skill) => (
-                        <Badge
-                          key={skill}
-                          variant="secondary"
-                          className="rounded-full border border-border/50 bg-secondary/30 px-3 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
-                        >
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TimelineContent>
-                </motion.div>
-              </TimelineItem>
-            ))}
-          </Timeline>
-        </motion.div>
+                    </TimelineHeader>
+                    <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
+                      <p className="text-sm">{edu.description}</p>
+                    </TimelineContent>
+                  </motion.div>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="space-y-4"
-        >
-          <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Educación</h3>
-          <Timeline defaultValue={EDUCATION_ITEMS.length + 1}>
-            {EDUCATION_ITEMS.map((edu, index) => (
-              <TimelineItem key={edu.id} step={edu.id} className="[&:not(:last-child)]:!pb-6">
-                <TimelineSeparator />
-                <TimelineIndicator />
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                  className="flex flex-col"
-                >
-                  <TimelineHeader className="w-full pb-0">
-                    <div className="flex flex-col">
-                      <TimelineTitle className="text-base font-bold text-foreground">{edu.degree}</TimelineTitle>
-                      <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                        <span className="font-medium text-foreground/80">{edu.institution}</span>
-                        <span className="text-border">•</span>
-                        <span className="font-mono text-xs">{edu.period}</span>
-                      </div>
-                    </div>
-                  </TimelineHeader>
-                  <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                    <p className="text-sm">{edu.description}</p>
-                  </TimelineContent>
-                </motion.div>
-              </TimelineItem>
-            ))}
-          </Timeline>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-auto flex flex-col gap-4 border-t border-border/50 pt-6 sm:flex-row"
-        >
-          <Button className="w-full gap-2 sm:w-auto" size="lg">
-            <Download className="size-4" />
-            Descargar CV
-          </Button>
-          <div className="flex justify-center gap-2 sm:justify-start">
-            <Button variant="outline" size="icon" className="shrink-0 rounded-full">
-              <LinkedinIcon className="size-4" />
-              <span className="sr-only">LinkedIn</span>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-auto flex flex-col gap-4 border-t border-border/50 pt-6 sm:flex-row"
+          >
+            <Button className="w-full gap-2 sm:w-auto" size="lg">
+              <Download className="size-4" />
+              Descargar CV
             </Button>
-            <Button variant="outline" size="icon" className="shrink-0 rounded-full">
-              <GithubIcon className="size-4" />
-              <span className="sr-only">GitHub</span>
-            </Button>
-            <Button variant="outline" size="icon" className="shrink-0 rounded-full">
-              <Mail className="size-4" />
-              <span className="sr-only">Email</span>
-            </Button>
-          </div>
-        </motion.div>
-      </div>
-    </ScrollArea>
+            <div className="flex justify-center gap-2 sm:justify-start">
+              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+                <LinkedinIcon className="size-4" />
+                <span className="sr-only">LinkedIn</span>
+              </Button>
+              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+                <GithubIcon className="size-4" />
+                <span className="sr-only">GitHub</span>
+              </Button>
+              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+                <Mail className="size-4" />
+                <span className="sr-only">Email</span>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </ScrollArea>
+    </div>
   )
 }

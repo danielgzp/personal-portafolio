@@ -35,6 +35,8 @@ import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
+import { NoiseBackground } from "@/components/ui/noise-background"
 
 const COMMANDS = [
   { command: "/skills", description: "Lista de tecnologías" },
@@ -100,14 +102,32 @@ export function ChatArea() {
   }
 
   return (
-    <div className="relative flex size-full h-full w-full flex-col bg-background/50">
+    // <NoiseBackground
+    //   containerClassName="h-full w-full rounded-none border-none shadow-none p-0"
+    //   className="h-full w-full"
+    //   noiseIntensity={0.02}
+    //   speed={0.15}
+    //   gradientColors={["var(--primary)", "var(--chart-2)", "var(--chart-3)"]}
+    // >
+    <div className="relative flex size-full h-full w-full flex-col overflow-hidden bg-background/50">
+      <DottedGlowBackground
+        className="-z-10"
+        opacity={0.5}
+        gap={34}
+        radius={0.9}
+        colorLightVar="--muted-foreground"
+        colorDarkVar="--muted-foreground"
+        glowColorLightVar="--primary"
+        glowColorDarkVar="--primary"
+      />
+
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(var(--primary),0.15),transparent)]" />
       {/* Header separador en móvil */}
       <div className="mb-4 flex h-12 flex-shrink-0 items-center justify-center border-b md:hidden">
         <h1 className="text-sm font-semibold text-foreground">AI Tech Lead</h1>
       </div>
 
-      <Conversation className="mx-auto h-full max-w-5xl flex-1 px-4 md:px-8">
+      <Conversation className="mx-auto h-full w-full max-w-5xl flex-1 px-4 md:px-8">
         {messages.length === 0 ? (
           <ConversationEmptyState>
             <EmptyState setInput={setInput} />
@@ -169,5 +189,6 @@ export function ChatArea() {
         </PromptInput>
       </div>
     </div>
+    // </NoiseBackground>
   )
 }
