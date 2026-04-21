@@ -31,6 +31,7 @@ import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { GlobeIcon, Sparkles as SparklesIcon } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
+import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -42,10 +43,20 @@ const COMMANDS = [
   { command: "/clear", description: "Limpiar conversación" },
 ]
 
+const PLACEHOLDERS = [
+  "¿Qué quieres saber sobre mí o mis proyectos?",
+  "Pregúntame sobre mi experiencia profesional...",
+  "¿Qué tecnologías utilizas?",
+  "Háblame de tu portafolio...",
+  "Escribe un comando como /skills...",
+]
+
 export function ChatArea() {
   const [input, setInput] = useState("")
   const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-3-flash-preview")
+
+  const currentPlaceholder = useTypingEffect(PLACEHOLDERS)
 
   const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
@@ -89,7 +100,8 @@ export function ChatArea() {
   }
 
   return (
-    <div className="relative flex size-full h-full w-full flex-col">
+    <div className="relative flex size-full h-full w-full flex-col bg-background/50">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(var(--primary),0.15),transparent)]" />
       {/* Header separador en móvil */}
       <div className="mb-4 flex h-12 flex-shrink-0 items-center justify-center border-b md:hidden">
         <h1 className="text-sm font-semibold text-foreground">AI Tech Lead</h1>
@@ -123,7 +135,7 @@ export function ChatArea() {
               className="min-h-10 px-5 py-0 text-foreground md:text-base"
               onChange={handleInputChange}
               value={input}
-              placeholder="¿Qué quieres saber sobre mí o mis proyectos?"
+              placeholder={currentPlaceholder}
               autoFocus
             />
           </PromptInputBody>
