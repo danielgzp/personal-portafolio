@@ -112,10 +112,15 @@ export function ChatArea() {
       </Conversation>
 
       <div className="mx-auto w-full max-w-4xl px-4 pt-4 pb-8 md:px-8">
-        <PromptInput onSubmit={handleSubmit} globalDrop multiple>
+        <PromptInput
+          onSubmit={handleSubmit}
+          globalDrop
+          multiple
+          inputGroupClassName="bg-card border border-border/50 shadow-[0_0_2rem_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4"
+        >
           <PromptInputBody>
             <PromptInputTextarea
-              className="min-h-auto px-6 pt-5 md:text-base text-foreground"
+              className="min-h-10 px-5 py-0 text-foreground md:text-base"
               onChange={handleInputChange}
               value={input}
               placeholder="¿Qué quieres saber sobre mí o mis proyectos?"
