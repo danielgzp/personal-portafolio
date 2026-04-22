@@ -70,21 +70,21 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "flex w-full max-w-[65%] items-start gap-2 sm:max-w-[75%]",
-        isUser ? "ml-auto flex-row-reverse" : "flex-row md:max-w-full"
+        "flex w-full items-start gap-2 lg:max-w-[90%]",
+        isUser ? "ml-auto flex-row-reverse" : "mb-2 flex-row"
       )}
     >
-      <Avatar
+      {/* <Avatar
         className={cn(
           "grop[.is-user]:bg-primary grop[.is-user]:text-primary-foreground size-8 shrink-0 items-center justify-center shadow-sm",
           isUser ? "bg-primary text-primary-foreground" : "bg-card text-card-foreground"
         )}
       >
         {isUser ? <UserIcon className="size-4" /> : <BotIcon className="size-4" />}
-      </Avatar>
+      </Avatar> */}
 
       <Message from={message.role}>
-        <MessageContent className="group-[.is-assistant]:bg-card/50">
+        <MessageContent className="backdrop-blur-2xl  group-[.is-assistant]:bg-card/50">
           {!!sourceUrlParts.length && (
             <Sources>
               <SourcesTrigger count={sourceUrlParts.length} />
@@ -115,7 +115,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         </MessageContent>
 
         {!isUser && !!textContent && (
-          <MessageActions className="mt-1 flex justify-end opacity-0 transition-opacity group-hover:opacity-100">
+          <MessageActions className="flex justify-end transition-opacity lg:opacity-0 lg:group-hover:opacity-100">
             <MessageAction
               aria-label="Copiar respuesta"
               label="Copiar respuesta"
@@ -138,14 +138,14 @@ export function ChatMessageThinking() {
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="mb-6 flex w-full flex-row items-start gap-4"
+      className="mb-4 flex w-full flex-row items-start gap-2"
     >
       <Avatar className="size-8 shrink-0 items-center justify-center bg-card text-card-foreground shadow-sm">
         <BotIcon className="size-4" />
       </Avatar>
 
       <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-[100%]">
-        <MessageContent className="rounded-tl-m flex min-h-11 w-fit min-w-16 items-center justify-center rounded-2xl border bg-card px-4 py-2.5 text-foreground shadow-sm">
+        <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-sm border bg-card px-4 text-foreground shadow-sm lg:min-h-11 lg:px-5">
           <div className="flex h-full items-center space-x-1.5">
             <motion.div
               className="size-1.5 rounded-full bg-foreground/40"

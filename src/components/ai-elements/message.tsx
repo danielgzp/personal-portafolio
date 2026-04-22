@@ -21,7 +21,7 @@ export type MessageProps = HTMLAttributes<HTMLDivElement> & {
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div
     className={cn(
-      "group flex w-full max-w-[95%] flex-col gap-2",
+      "group flex w-full flex-col gap-2",
       from === "user" ? "is-user ml-auto justify-end" : "is-assistant",
       className
     )}
@@ -34,11 +34,11 @@ export type MessageContentProps = HTMLAttributes<HTMLDivElement>
 export const MessageContent = ({ children, className, ...props }: MessageContentProps) => (
   <div
     className={cn(
-      "flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-hidden rounded-2xl border px-5 py-3 text-sm shadow-lg backdrop-blur-2xl",
+      "flex min-w-0 flex-col gap-2 overflow-hidden rounded-xl border px-4 py-2.5 text-sm shadow-lg backdrop-blur-2xl lg:px-5 lg:py-3",
 
-      "group-[.is-user]:ml-auto group-[.is-user]:rounded-tr-xs group-[.is-user]:rounded-br-2xl group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground",
+      "group-[.is-user]:ml-auto group-[.is-user]:rounded-tr-xs group-[.is-user]:rounded-br-xl group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground",
 
-      "group-[.is-assistant]:max-w-[90%] group-[.is-assistant]:rounded-tl-sm group-[.is-assistant]:rounded-bl-2xl group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
+      "group-[.is-assistant]:rounded-tl-sm group-[.is-assistant]:rounded-bl-xl group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
       className
     )}
     {...props}

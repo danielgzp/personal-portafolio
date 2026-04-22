@@ -141,7 +141,7 @@ export function LeftPanel() {
       <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
       <ScrollArea className="relative z-10 h-full w-full">
-        <div className="mx-auto flex h-full max-w-2xl flex-col gap-8 p-8 md:p-12">
+        <div className="mx-auto flex h-full flex-col gap-8 p-8 md:p-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -4,7 +4,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher"
 
 export default function Page() {
   return (
-    <main className="flex h-screen w-full overflow-hidden">
+    <main className="flex h-dvh w-full">
       {/* PANEL IZQUIERDO: Estático / CV (40%) */}
       <section className="hidden h-full w-[40%] border-r border-border/40 bg-background lg:flex dark:bg-muted/30">
         <LeftPanel />
@@ -26,7 +26,7 @@ export default function Page() {
           <ChatArea />
         </div>
 
-        <div className="absolute top-4 right-4 z-50">
+        <div className="absolute top-4 right-4 z-50 hidden lg:block">
           <ThemeSwitcher />
         </div>
       </section>

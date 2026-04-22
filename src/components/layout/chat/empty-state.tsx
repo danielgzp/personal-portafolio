@@ -75,13 +75,13 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-4">
+    <div className="flex h-full w-full flex-col items-center justify-center">
       {/* Hero Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-12 flex max-w-3xl flex-col items-center gap-6 text-center"
+        className="mb-8 flex max-w-3xl flex-col items-center gap-4 text-center lg:mb-12 lg:gap-6"
       >
         <motion.div
           initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
