@@ -135,7 +135,7 @@ const itemVariants = {
 export function LeftPanel() {
   return (
     <div className="relative h-full w-full overflow-hidden bg-background">
-      {/* Minimalist Grid Background */}
+      {/* Minimalist Grid card */}
       <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
       {/* Radial gradient mask to fade out the grid smoothly */}
       <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
@@ -293,7 +293,7 @@ export function LeftPanel() {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="mt-auto flex w-full flex-col flex-row gap-4 border-t border-border/50 pt-6"
           >
-            <Button className="flex flex-1 gap-2 sm:w-auto" size="lg">
+            <Button className="flex flex-1 gap-2 sm:w-auto lg:flex-initial" size="lg">
               <Download className="size-4" />
               Descargar CV
             </Button>

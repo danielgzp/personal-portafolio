@@ -8,8 +8,11 @@ export default function Page() {
     <main className="flex h-svh w-full flex-col lg:flex-row">
       <Topbar />
       {/* Left Panel: Static / CV (40%) */}
-      <section className="hidden h-full w-[40%] border-r border-border/40 bg-background lg:flex dark:bg-muted/30">
+      <section className="relative hidden h-full w-[40%] border-r border-border/40 lg:flex">
         <LeftPanel />
+        <div className="absolute top-4 right-4 z-50 hidden lg:block">
+          <ThemeSwitcher />
+        </div>
       </section>
 
       {/* Right Panel: Interactive AI (60%) */}
@@ -25,10 +28,7 @@ export default function Page() {
 
       {/* Main Chat Area */}
       <ChatArea />
-
-      <div className="absolute top-4 right-4 z-50 hidden lg:block">
-        <ThemeSwitcher />
-      </div>
+      
     </main>
   )
 }

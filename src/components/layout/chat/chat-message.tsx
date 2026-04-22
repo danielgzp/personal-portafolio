@@ -84,7 +84,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       </Avatar>
 
       <Message from={message.role}>
-        <MessageContent className="backdrop-blur-2xl group-[.is-assistant]:bg-card/50">
+        <MessageContent className="group-[.is-assistant]:bg-card/75">
           {!!sourceUrlParts.length && (
             <Sources>
               <SourcesTrigger count={sourceUrlParts.length} />
@@ -121,7 +121,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
               label="Copiar respuesta"
               onClick={handleCopy}
               tooltip="Copiar respuesta"
-              className="size-7 rounded-full bg-accent hover:bg-accent/80"
+              className="size-8 rounded-full bg-accent hover:bg-accent/80"
             >
               {isCopied ? <CheckIcon className="size-3.5 text-green-500" /> : <CopyIcon className="size-3.5" />}
             </MessageAction>

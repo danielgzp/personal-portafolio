@@ -7,7 +7,7 @@ import { LeftPanel } from "./left-panel"
 
 export function Topbar() {
   return (
-    <header className="fixed top-0 z-50 flex h-16 w-screen shrink-0 items-center justify-between border-b border-border/40 bg-background/80 px-4 py-2 backdrop-blur-lg lg:hidden">
+    <header className="fixed top-0 z-50 flex h-16 w-screen shrink-0 items-center justify-between border-b border-border/40 bg-sidebar/90 px-4 py-2 backdrop-blur-lg lg:hidden">
       <div className="flex items-center gap-2">
         <Avatar className="size-10 border border-border/50 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <AvatarImage src="/images/avatar.jpg" />
