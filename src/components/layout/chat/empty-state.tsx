@@ -75,7 +75,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
+    <div className="items-center justify-center p-4 pb-8">
       {/* Hero Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -125,7 +125,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2"
+        className="grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
       >
         {suggestions.map((suggestion) => (
           <motion.button
@@ -134,22 +134,22 @@ export function EmptyState({ setInput }: EmptyStateProps) {
             whileTap={{ scale: 0.98 }}
             key={suggestion.heading}
             onClick={() => setInput(suggestion.message)}
-            className="group relative flex h-full w-full cursor-pointer flex-col items-start gap-4 rounded-3xl border border-border/40 bg-card p-6 text-left shadow-[0_0_15px_rgba(0,0,0,0.03)] shadow-lg backdrop-blur-xl transition-all hover:border-primary/30 hover:bg-card/40 hover:shadow-[0_0_25px_rgba(var(--primary),0.08)]"
+            className="group relative flex w-full cursor-pointer flex-col gap-3 rounded-2xl border border-border/40 bg-background/40 p-4 text-left shadow-sm ring-1 ring-black/5 backdrop-blur-lg transition-all hover:border-primary/30 hover:bg-muted/50 hover:shadow-md sm:p-5 dark:ring-white/5"
           >
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-foreground/5 text-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary/80 transition-colors group-hover:bg-primary/20 group-hover:text-primary sm:size-10 sm:rounded-xl">
                   {suggestion.icon}
                 </div>
-                <span className="text-sm font-bold tracking-wide text-foreground/90 uppercase">
+                <span className="text-sm font-semibold text-foreground/90 transition-colors group-hover:text-primary">
                   {suggestion.heading}
                 </span>
               </div>
-              <div className="flex size-8 items-center justify-center rounded-full bg-background/50 opacity-0 transition-all group-hover:opacity-100 dark:bg-foreground/10">
-                <ArrowRight className="size-4 text-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted/80 transition-colors group-hover:bg-primary/10 sm:size-8">
+                <ArrowRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
               </div>
             </div>
-            <p className="line-clamp-2 text-sm leading-relaxed font-medium text-muted-foreground transition-colors group-hover:text-foreground/80">
+            <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
               {suggestion.message}
             </p>
           </motion.button>

@@ -25,7 +25,7 @@ export type ConversationContentProps = ComponentProps<typeof StickToBottom.Conte
 export const ConversationContent = ({ className, ...props }: ConversationContentProps) => (
   <StickToBottom.Content
     // scrollClassName="![scrollbar-gutter:auto] dark:[&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:bg-transparent"
-    className={cn("flex flex-col gap-4 p-4", className)}
+    className={cn("flex flex-col gap-3 p-4 lg:gap-4", className)}
     {...props}
   />
 )

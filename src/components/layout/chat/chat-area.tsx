@@ -117,37 +117,7 @@ export function ChatArea() {
     //   gradientColors={["var(--primary)", "var(--chart-2)", "var(--chart-3)"]}
     // >
     // <div className="relative flex size-full flex-col bg-background/40 backdrop-blur-3xl">
-    <div className="relative flex size-full flex-col overflow-hidden bg-background/40">
-      {/* Refined Mobile Header with Drawer - Minimalist & Sober */}
-      <header className="z-10 flex h-16 shrink-0 items-center justify-between border-b border-border/40 bg-background/80 px-4 py-2 backdrop-blur-md lg:hidden">
-        <div className="flex items-center gap-2">
-          <Avatar className="size-10 border border-border/50 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-            <AvatarImage src="/avatar-placeholder.jpg" />
-            <AvatarFallback className="bg-muted text-[10px] font-medium">DG</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-base leading-tight font-semibold tracking-tight text-foreground">
-              Daniel González
-            </span>
-            <span className="text-xs font-medium text-muted-foreground">Frontend Engineer</span>
-          </div>
-        </div>
-        <div className="gap-2\1 -mr-2 flex flex-row items-center">
-          <ThemeSwitcher />
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="ghost">
-                <Menu className="size-5 text-muted-foreground" strokeWidth={2} />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[85vw] p-0 sm:max-w-sm">
-              <SheetTitle className="sr-only">Resumen</SheetTitle>
-              <LeftPanel />
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
-
+    <section className="relative z-10 flex size-full flex-col overflow-hidden bg-background lg:w-[60%]">
       <DottedGlowBackground
         className="-z-10"
         opacity={0.35}
@@ -160,33 +130,38 @@ export function ChatArea() {
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" />
+      {/* <EmptyState setInput={setInput} /> */}
+      {/* <ConversationEmptyState className="overflow-y-auto p-4">
+        <EmptyState setInput={setInput} />
+      </ConversationEmptyState> */}
+      <div className="flex-1 overflow-y-auto pt-16 lg:pt-4 mask-[linear-gradient(to_bottom,black_80%,transparent)] pb-4">
+        <Conversation className="mx-auto w-full max-w-3xl">
+          {messages.length === 0 ? (
+            <ConversationEmptyState className="p-0">
+              <EmptyState setInput={setInput} />
+            </ConversationEmptyState>
+          ) : (
+            <ConversationContent>
+              {messages.map((msg) => (
+                <ChatMessage key={msg.id} message={msg} />
+              ))}
+              {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+            </ConversationContent>
+          )}
+          <ConversationScrollButton />
+        </Conversation>
+      </div>
 
-      <Conversation className="relative mx-auto size-full max-w-5xl">
-        {messages.length === 0 ? (
-          <ConversationEmptyState className="size-auto p-4">
-            <EmptyState setInput={setInput} />
-          </ConversationEmptyState>
-        ) : (
-          <ScrollArea className="p-4">
-            {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
-            ))}
-            {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
-          </ScrollArea>
-        )}
-        <ConversationScrollButton />
-      </Conversation>
-
-      <div className="mx-auto mt-auto w-full max-w-3xl px-4 pt-2 pb-6 md:pb-8">
+      <div className="mx-auto w-full max-w-3xl px-4 pt-2 pb-4 md:pb-8">
         <PromptInput
           onSubmit={handleSubmit}
           globalDrop
           multiple
-          inputGroupClassName="bg-card border border-border/50 shadow-[0_0_2rem_0] shadow-primary/5 transition-shadow hover:shadow-primary/10 pt-4"
+          inputGroupClassName="bg-card border border-border/50 shadow-[0_0_2rem_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4"
         >
           <PromptInputBody>
             <PromptInputTextarea
-              className="min-h-12 px-4 py-0 text-base lg:min-h-10"
+              className="min-h-12 px-4 py-0 lg:min-h-10 lg:text-base"
               onChange={handleInputChange}
               value={input}
               placeholder={isChatStarted ? "Pregúntame algo..." : currentPlaceholder}
@@ -226,6 +201,6 @@ export function ChatArea() {
           </PromptInputFooter>
         </PromptInput>
       </div>
-    </div>
+    </section>
   )
 }

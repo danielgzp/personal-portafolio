@@ -141,22 +141,24 @@ export function LeftPanel() {
       <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
       <ScrollArea className="relative z-10 h-full w-full">
-        <div className="mx-auto flex h-full flex-col gap-8 p-8 md:p-12">
+        <div className="mx-auto flex h-full flex-col gap-8 p-6 md:p-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="flex flex-col space-y-4 lg:space-y-6"
           >
-            <Avatar className="size-24 border-2">
-              <AvatarImage src="/avatar-placeholder.jpg" alt="Daniel González" />
-              <AvatarFallback className="bg-muted/50 text-2xl font-bold text-muted-foreground">DG</AvatarFallback>
+            <Avatar className="size-18 border lg:size-24">
+              <AvatarImage src="/images/avatar.jpg" alt="Daniel González" />
+              <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
+                DG
+              </AvatarFallback>
             </Avatar>
 
-            <div>
-              <h1 className="mb-2 text-4xl font-bold tracking-tight">Daniel González</h1>
-              <h2 className="mb-4 text-xl font-medium text-muted-foreground">Frontend Engineer</h2>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex w-full flex-col gap-2 lg:gap-4">
+              <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">Daniel González</h1>
+              <h2 className="text-xl font-medium text-muted-foreground">Frontend Engineer</h2>
+              <div className="flex gap-2 text-sm text-muted-foreground">
                 <MapPin className="size-4" />
                 <span>Cabudare, Venezuela</span>
               </div>
@@ -167,9 +169,9 @@ export function LeftPanel() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="space-y-4 leading-relaxed text-muted-foreground"
+            className="space-y-4 leading-relaxed text-balance text-muted-foreground"
           >
-            <p>
+            <p className="text-pretty">
               Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
               de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
               limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
@@ -289,22 +291,22 @@ export function LeftPanel() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-auto flex flex-col gap-4 border-t border-border/50 pt-6 sm:flex-row"
+            className="mt-auto flex w-full flex-col flex-row gap-4 border-t border-border/50 pt-6"
           >
-            <Button className="w-full gap-2 sm:w-auto" size="lg">
+            <Button className="flex flex-1 gap-2 sm:w-auto" size="lg">
               <Download className="size-4" />
               Descargar CV
             </Button>
             <div className="flex justify-center gap-2 sm:justify-start">
-              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
                 <LinkedinIcon className="size-4" />
                 <span className="sr-only">LinkedIn</span>
               </Button>
-              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
                 <GithubIcon className="size-4" />
                 <span className="sr-only">GitHub</span>
               </Button>
-              <Button variant="outline" size="icon" className="shrink-0 rounded-full">
+              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
                 <Mail className="size-4" />
                 <span className="sr-only">Email</span>
               </Button>

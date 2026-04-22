@@ -74,17 +74,17 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         isUser ? "ml-auto flex-row-reverse" : "mb-2 flex-row"
       )}
     >
-      {/* <Avatar
+      <Avatar
         className={cn(
-          "grop[.is-user]:bg-primary grop[.is-user]:text-primary-foreground size-8 shrink-0 items-center justify-center shadow-sm",
+          "grop[.is-user]:bg-primary grop[.is-user]:text-primary-foreground hidden size-8 shrink-0 items-center justify-center shadow-sm lg:flex",
           isUser ? "bg-primary text-primary-foreground" : "bg-card text-card-foreground"
         )}
       >
         {isUser ? <UserIcon className="size-4" /> : <BotIcon className="size-4" />}
-      </Avatar> */}
+      </Avatar>
 
       <Message from={message.role}>
-        <MessageContent className="backdrop-blur-2xl  group-[.is-assistant]:bg-card/50">
+        <MessageContent className="backdrop-blur-2xl group-[.is-assistant]:bg-card/50">
           {!!sourceUrlParts.length && (
             <Sources>
               <SourcesTrigger count={sourceUrlParts.length} />
@@ -115,7 +115,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         </MessageContent>
 
         {!isUser && !!textContent && (
-          <MessageActions className="flex justify-end transition-opacity lg:opacity-0 lg:group-hover:opacity-100">
+          <MessageActions className="flex justify-end">
             <MessageAction
               aria-label="Copiar respuesta"
               label="Copiar respuesta"
