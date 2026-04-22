@@ -1,8 +1,24 @@
 "use client"
 
+import {
+  DockerIcon,
+  EslintIcon,
+  FigmaIcon,
+  JavascriptIcon,
+  MotionIcon,
+  NextjsIcon,
+  NodejsIcon,
+  ReactIcon,
+  ShadcnIcon,
+  SupabaseIcon,
+  TailwindIcon,
+  TypescriptIcon,
+  ZodIcon,
+  ZustandIcon,
+} from "@/assets/icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Timeline,
@@ -10,15 +26,12 @@ import {
   TimelineDate,
   TimelineHeader,
   TimelineIndicator,
-  TimelineSeparator,
   TimelineItem,
+  TimelineSeparator,
   TimelineTitle,
 } from "@/components/ui/timeline"
 import { motion } from "framer-motion"
 import { Download, Mail, MapPin } from "lucide-react"
-import { BackgroundRippleEffect } from "../ui/background-ripple-effect"
-import { NoiseBackground } from "../ui/noise-background"
-import GridBackgroundDemo from "../grid-background-demo"
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -105,16 +118,62 @@ const EDUCATION_ITEMS = [
 ]
 
 const SKILLS = [
-  "Next.js",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
-  "Zustand",
-  "SWR",
-  "Framer Motion",
-  "Supabase",
-  "Node.js",
-  "GraphQL",
+  {
+    icon: ReactIcon,
+    name: "React",
+  },
+  {
+    icon: NextjsIcon,
+    name: "Next.js",
+  },
+  {
+    icon: NodejsIcon,
+    name: "Node.js",
+  },
+  {
+    icon: TailwindIcon,
+    name: "Tailwind CSS",
+  },
+  {
+    icon: JavascriptIcon,
+    name: "JavaScript",
+  },
+  {
+    icon: TypescriptIcon,
+    name: "TypeScript",
+  },
+  {
+    icon: ShadcnIcon,
+    name: "Shadcn/UI",
+  },
+  {
+    icon: MotionIcon,
+    name: "Framer Motion",
+  },
+  {
+    icon: ZustandIcon,
+    name: "Zustand",
+  },
+  {
+    icon: ZodIcon,
+    name: "Zod",
+  },
+  {
+    icon: SupabaseIcon,
+    name: "Supabase",
+  },
+  {
+    icon: DockerIcon,
+    name: "Docker",
+  },
+  {
+    icon: EslintIcon,
+    name: "ESLint",
+  },
+  {
+    icon: FigmaIcon,
+    name: "Figma",
+  },
 ]
 
 const containerVariants = {
@@ -155,9 +214,9 @@ export function LeftPanel() {
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex w-full flex-col gap-2 lg:gap-4">
+            <div className="flex w-full flex-col gap-2">
               <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">Daniel González</h1>
-              <h2 className="text-xl font-medium text-muted-foreground">Frontend Engineer</h2>
+              <h2 className="text-xl font-semibold text-foreground lg:text-xl">Frontend Engineer</h2>
               <div className="flex gap-2 text-sm text-muted-foreground">
                 <MapPin className="size-4" />
                 <span>Cabudare, Venezuela</span>
@@ -169,7 +228,7 @@ export function LeftPanel() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="space-y-4 leading-relaxed text-balance text-muted-foreground"
+            className="space-y-4 leading-relaxed text-balance text-foreground"
           >
             <p className="text-pretty">
               Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
@@ -185,17 +244,21 @@ export function LeftPanel() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="space-y-4"
           >
-            <h3 className="mb-4 text-sm font-semibold tracking-wider text-foreground/80 uppercase">Tecnologías Core</h3>
+            <h3 className="mb-4 text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
             <div className="flex flex-wrap gap-2">
-              {SKILLS.map((tech) => (
-                <div
-                  key={tech}
-                  className="inline-flex items-center rounded-full border border-border bg-secondary/50 px-3 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary"
+              {SKILLS.map((tech, idx) => (
+                <Badge
+                  key={idx}
+                  variant="outline"
+                  className="mr-0.5 h-6 border-dashed bg-card px-2 py-1 [&>svg]:size-4"
                 >
-                  {tech}
-                </div>
+                  <tech.icon />
+                  {tech.name}
+                </Badge>
               ))}
             </div>
+
+            {/* <ThreeDMarqueeDemo /> */}
           </motion.div>
 
           <motion.div
@@ -204,7 +267,7 @@ export function LeftPanel() {
             transition={{ delay: 0.4, duration: 0.5 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Experiencia Laboral</h3>
+            <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
             <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
               {EXPERIENCE_ITEMS.map((item, index) => (
                 <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
@@ -237,7 +300,7 @@ export function LeftPanel() {
                           <Badge
                             key={skill}
                             variant="secondary"
-                            className="rounded-full border border-border/50 bg-secondary/30 px-3 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
+                            className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
                           >
                             {skill}
                           </Badge>
@@ -256,7 +319,7 @@ export function LeftPanel() {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-semibold tracking-wider text-foreground/80 uppercase">Educación</h3>
+            <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Educación</h3>
             <Timeline defaultValue={EDUCATION_ITEMS.length + 1}>
               {EDUCATION_ITEMS.map((edu, index) => (
                 <TimelineItem key={edu.id} step={edu.id} className="[&:not(:last-child)]:!pb-6">
@@ -272,7 +335,7 @@ export function LeftPanel() {
                       <div className="flex flex-col">
                         <TimelineTitle className="text-base font-bold text-foreground">{edu.degree}</TimelineTitle>
                         <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                          <span className="font-medium text-foreground/80">{edu.institution}</span>
+                          <span className="font-medium text-foreground">{edu.institution}</span>
                           <span className="text-border">•</span>
                           <span className="font-mono text-xs">{edu.period}</span>
                         </div>

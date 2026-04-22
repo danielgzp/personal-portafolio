@@ -127,8 +127,8 @@ export function ChatArea() {
         opacity={0.35}
         gap={34}
         radius={0.9}
-        colorLightVar="--muted-foreground"
-        colorDarkVar="--muted-foreground"
+        colorLightVar="--foreground"
+        colorDarkVar="--foreground"
         glowColorLightVar="--primary"
         glowColorDarkVar="--primary"
       />
