@@ -74,11 +74,6 @@ export function EmptyState({ setInput }: EmptyStateProps) {
     },
   }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 0 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-  }
-
   return (
     <div className="items-center justify-center p-4 pb-8">
       {/* Hero Header */}
@@ -149,7 +144,10 @@ export function EmptyState({ setInput }: EmptyStateProps) {
       >
         {suggestions.map((suggestion) => (
           <motion.button
-            variants={itemVariants}
+            variants={{
+              hidden: { opacity: 0, y: 0 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+            }}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             key={suggestion.heading}
