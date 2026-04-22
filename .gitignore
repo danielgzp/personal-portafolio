@@ -20,7 +20,12 @@
 
 # misc
 .DS_Store
-*.pem
+.vercel
+.netlify
+.vscode
+.eslintcache
+.unimportedrc.json
+tsconfig.tsbuildinfo
 
 # debug
 npm-debug.log*
@@ -34,3 +39,7 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# AI generated files
+.claude
