@@ -48,7 +48,7 @@ export function CodeBlock({ code, language = "tsx", className }: Props) {
   return (
     <div
       className={cn(
-        "group relative my-3 overflow-hidden rounded-lg border border-border bg-code-bg",
+        "group relative my-3 overflow-hidden rounded-xl border border-border bg-code-bg",
         className,
       )}
     >
@@ -57,7 +57,7 @@ export function CodeBlock({ code, language = "tsx", className }: Props) {
         <button
           type="button"
           onClick={onCopy}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          className="flex items-center gap-1.5 rounded-xl px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           aria-label="Copiar código"
         >
           {copied ? (

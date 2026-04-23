@@ -10,6 +10,7 @@ import {
 import { Reasoning, ReasoningContent, ReasoningTrigger } from "@/components/ai-elements/reasoning"
 import { Source, Sources, SourcesContent, SourcesTrigger } from "@/components/ai-elements/sources"
 import { Avatar } from "@/components/ui/avatar"
+import { LoaderFive, LoaderOne } from "@/components/ui/loader"
 import { cn } from "@/lib/utils"
 import type { ReasoningUIPart, SourceUrlUIPart, TextUIPart, UIMessage } from "ai"
 import { motion } from "framer-motion"
@@ -145,8 +146,8 @@ export function ChatMessageThinking() {
       </Avatar>
 
       <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-[100%]">
-        <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-sm border bg-card px-4 text-foreground shadow-sm lg:min-h-11 lg:px-5">
-          <div className="flex h-full items-center space-x-1.5">
+        <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-xs border bg-card px-4 py-0 text-foreground shadow-sm lg:min-h-10.5 lg:px-5">
+          {/* <div className="flex h-full items-center space-x-1.5">
             <motion.div
               className="size-1.5 rounded-full bg-foreground/40"
               animate={{ y: [0, -4, 0] }}
@@ -162,7 +163,9 @@ export function ChatMessageThinking() {
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 0.8, repeat: Infinity, delay: 0.3 }}
             />
-          </div>
+          </div> */}
+          <LoaderOne />
+          {/* <LoaderFive text="Generating chat..." /> */}
         </MessageContent>
       </Message>
     </motion.div>

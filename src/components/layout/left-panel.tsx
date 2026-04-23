@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/timeline"
 import { motion } from "framer-motion"
 import { Download, Mail, MapPin } from "lucide-react"
+import { TimelineDemo } from "../demos/timeline-demo"
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -198,7 +199,6 @@ export function LeftPanel() {
       <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
       {/* Radial gradient mask to fade out the grid smoothly */}
       <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
-
       <ScrollArea className="relative z-10 h-full w-full">
         <div className="mx-auto flex h-full flex-col gap-8 p-6 md:p-12">
           <motion.div
@@ -313,7 +313,7 @@ export function LeftPanel() {
             </Timeline>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
@@ -348,7 +348,7 @@ export function LeftPanel() {
                 </TimelineItem>
               ))}
             </Timeline>
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

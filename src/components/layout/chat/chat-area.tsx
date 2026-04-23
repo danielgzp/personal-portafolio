@@ -138,7 +138,7 @@ export function ChatArea() {
       {/* <ConversationEmptyState className="overflow-y-auto p-4">
         <EmptyState setInput={setInput} />
       </ConversationEmptyState> */}
-      <div className="flex flex-1 items-center overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-16 pb-4 lg:pt-4">
+      <div className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-16 pb-4 lg:pt-4">
         <Conversation className="mx-auto w-full max-w-3xl">
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">
@@ -149,7 +149,7 @@ export function ChatArea() {
               {messages.map((msg) => (
                 <ChatMessage key={msg.id} message={msg} />
               ))}
-              {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+              {!isLoading && <ChatMessageThinking />}
             </ConversationContent>
           )}
           <ConversationScrollButton />

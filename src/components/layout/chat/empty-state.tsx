@@ -98,7 +98,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         </motion.div> */}
 
         <div className="space-y-4">
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-pretty text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">
               <Typewriter
                 text="Asistente Virtual"
@@ -108,13 +108,13 @@ export function EmptyState({ setInput }: EmptyStateProps) {
               {/* <TypewriterEffectSmooth words={words} /> */}
             </span>
             <span className="hidden sm:inline">
-              <Typewriter text="Conoce a Daniel" delay={300} />
+              <Typewriter text="Conoce a Daniel" delay={0} />
               <br className="hidden sm:block" />
               <Typewriter text="a la velocidad de la " delay={700} />
               <Typewriter
                 text="Inteligencia Artificial"
                 delay={1400}
-                className="bg-gradient-to-br from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent drop-shadow-sm"
+                className="bg-linear-to-b from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent drop-shadow-sm"
               />
             </span>
           </h2>

@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
-import { Check, ContrastIcon, Moon, Sun } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Check, ContrastIcon } from "lucide-react"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
