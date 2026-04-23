@@ -1,27 +1,16 @@
-"use client";
+"use client"
 
-import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
-export const ThreeDMarquee = ({
-  images,
-  className,
-}: {
-  images: string[];
-  className?: string;
-}) => {
+import { motion } from "motion/react"
+import { cn } from "@/lib/utils"
+export const ThreeDMarquee = ({ images, className }: { images: string[]; className?: string }) => {
   // Split the images array into 4 equal parts
-  const chunkSize = Math.ceil(images.length / 4);
+  const chunkSize = Math.ceil(images.length / 4)
   const chunks = Array.from({ length: 4 }, (_, colIndex) => {
-    const start = colIndex * chunkSize;
-    return images.slice(start, start + chunkSize);
-  });
+    const start = colIndex * chunkSize
+    return images.slice(start, start + chunkSize)
+  })
   return (
-    <div
-      className={cn(
-        "mx-auto block h-[600px] overflow-hidden rounded-2xl max-sm:h-100",
-        className,
-      )}
-    >
+    <div className={cn("mx-auto block h-[600px] overflow-hidden rounded-2xl max-sm:h-100", className)}>
       <div className="flex size-full items-center justify-center">
         <div className="size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100">
           <div
@@ -56,7 +45,7 @@ export const ThreeDMarquee = ({
                       key={imageIndex + image}
                       src={image}
                       alt={`Image ${imageIndex + 1}`}
-                      className="aspect-[970/700] rounded-lg object-cover ring ring-gray-950/5 hover:shadow-2xl"
+                      className="aspect-[970/700] rounded-xl object-cover ring ring-gray-950/5 hover:shadow-2xl"
                       width={970}
                       height={700}
                     />
@@ -68,16 +57,10 @@ export const ThreeDMarquee = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-const GridLineHorizontal = ({
-  className,
-  offset,
-}: {
-  className?: string;
-  offset?: string;
-}) => {
+const GridLineHorizontal = ({ className, offset }: { className?: string; offset?: string }) => {
   return (
     <div
       style={
@@ -100,19 +83,13 @@ const GridLineHorizontal = ({
         "[mask-composite:exclude]",
         "z-30",
         "dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
-        className,
+        className
       )}
     ></div>
-  );
-};
+  )
+}
 
-const GridLineVertical = ({
-  className,
-  offset,
-}: {
-  className?: string;
-  offset?: string;
-}) => {
+const GridLineVertical = ({ className, offset }: { className?: string; offset?: string }) => {
   return (
     <div
       style={
@@ -135,8 +112,8 @@ const GridLineVertical = ({
         "[mask-composite:exclude]",
         "z-30",
         "dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
-        className,
+        className
       )}
     ></div>
-  );
-};
+  )
+}

@@ -1,37 +1,128 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import { ThemeSwitcher } from "@/components/theme-switcher"
-import { Button } from "@/components/ui/button"
-import { LeftPanel } from "./left-panel"
+"use client"
 
-export function Topbar() {
+import { type Variants, m, LayoutGroup, useReducedMotion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { ThemeSwitcher } from "@/components/theme-switcher"
+import type { TabType } from "@/app/page"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+// Module-level variants — defined once, never recreated on re-renders.
+// Each variant carries its own transition for asymmetric easing:
+//   hide → fast ease-in  (quick dismissal, non-distracting)
+//   show → slower ease-out (deliberate reveal, user needs to read it)
+const headerVariants: Variants = {
+  visible: {
+    y: 0,
+    transition: { duration: 0.32, ease: [0, 0, 0.2, 1] }, // ease-out
+  },
+  hidden: {
+    y: "-100%",
+    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] }, // ease-in
+  },
+}
+
+// Tab pill spring — module-level so it's not inlined per render
+const pillTransition = { type: "spring", damping: 28, stiffness: 300 } as const
+
+interface TopbarProps {
+  activeTab?: TabType
+  onTabChange?: (tab: TabType) => void
+}
+
+export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
+  const [hidden, setHidden] = useState(false)
+  const [prevTab, setPrevTab] = useState(activeTab)
+  const reduceMotion = useReducedMotion()
+
+  // When activeTab changes, show the topbar immediately.
+  // This is the React-idiomatic way to reset state on prop changes:
+  // calling setState during render (not in an effect) makes React discard
+  // the current render and re-run with the updated state synchronously,
+  // avoiding the cascading-render problem of calling setState inside an effect.
+  if (prevTab !== activeTab) {
+    setPrevTab(activeTab)
+    setHidden(false)
+  }
+
+  useEffect(() => {
+    const scrollId = activeTab === "chat" ? "chat-scroll-container" : "profile-scroll-container"
+    const el = document.getElementById(scrollId)
+    if (!el) return
+
+    let lastScrollY = el.scrollTop
+
+    const handleScroll = () => {
+      const currentScrollY = el.scrollTop
+      // Hide when scrolling down more than 50px, show when scrolling up or at top
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setHidden(true)
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
+        setHidden(false)
+      }
+      lastScrollY = currentScrollY
+    }
+
+    el.addEventListener("scroll", handleScroll, { passive: true })
+    return () => el.removeEventListener("scroll", handleScroll)
+  }, [activeTab])
+
   return (
-    <header className="fixed top-0 z-50 flex h-16 w-screen shrink-0 items-center justify-between border-b border-border/40 bg-sidebar/90 px-4 py-2 backdrop-blur-lg lg:hidden">
-      <div className="flex items-center gap-2">
-        <Avatar className="size-10 border border-border/50 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-          <AvatarImage src="/images/avatar.jpg" />
-          <AvatarFallback className="bg-muted text-[10px] font-medium">DG</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="text-base leading-tight font-semibold tracking-tight text-foreground">Daniel González</span>
-          <span className="text-xs font-medium text-muted-foreground">Frontend Engineer</span>
+    // LazyMotion is provided by the parent page.tsx — no need for a wrapper here.
+    <m.header
+      variants={headerVariants}
+      initial={false}
+      animate={hidden && !reduceMotion ? "hidden" : "visible"}
+      style={{ willChange: "transform" }}
+      className="fixed top-0 z-50 flex h-14 w-screen shrink-0 items-center justify-between border-b border-border/40 bg-background/80 px-4 py-2 backdrop-blur-lg lg:hidden"
+    >
+      <div className="flex w-full items-center justify-between gap-4">
+        {onTabChange ? (
+          <LayoutGroup id="topbar-tabs">
+            <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as TabType)}>
+              <TabsList className="relative rounded-full bg-muted/50 px-2 py-0.5">
+                <TabsTrigger
+                  value="profile"
+                  className="relative rounded-full data-active:bg-transparent! data-active:shadow-none! dark:data-active:bg-transparent!"
+                >
+                  {activeTab === "profile" && (
+                    <m.div
+                      layoutId="topbar-active-tab"
+                      className="absolute inset-0 rounded-full bg-background shadow-sm"
+                      style={{ willChange: "transform" }}
+                      transition={pillTransition}
+                    />
+                  )}
+                  <span className="relative z-10">Resumen</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="chat"
+                  className="relative rounded-full data-active:bg-transparent! data-active:shadow-none! dark:data-active:bg-transparent!"
+                >
+                  {activeTab === "chat" && (
+                    <m.div
+                      layoutId="topbar-active-tab"
+                      className="absolute inset-0 rounded-full bg-background shadow-sm"
+                      style={{ willChange: "transform" }}
+                      transition={pillTransition}
+                    />
+                  )}
+                  <span className="relative z-10">Chat</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </LayoutGroup>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-base leading-tight font-semibold tracking-tight text-foreground">
+              Daniel González
+            </span>
+          </div>
+        )}
+
+        <div className="flex shrink-0 items-center">
+          <ThemeSwitcher />
         </div>
       </div>
-      <div className="-mr-2 flex flex-row items-center gap-0">
-        <ThemeSwitcher />
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button size="icon" variant="ghost" className="size-10">
-              <Menu className="size-6 text-muted-foreground" strokeWidth={2} />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full! p-0 sm:max-w-sm">
-            <SheetTitle className="sr-only">Resumen</SheetTitle>
-            <LeftPanel />
-          </SheetContent>
-        </Sheet>
-      </div>
-    </header>
+    </m.header>
   )
 }
