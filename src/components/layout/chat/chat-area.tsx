@@ -8,13 +8,7 @@ import {
 } from "@/components/ai-elements/conversation"
 import {
   PromptInput,
-  PromptInputActionAddAttachments,
-  PromptInputActionAddScreenshot,
-  PromptInputActionMenu,
-  PromptInputActionMenuContent,
-  PromptInputActionMenuTrigger,
   PromptInputBody,
-  PromptInputButton,
   PromptInputFooter,
   PromptInputMessage,
   PromptInputSelect,
@@ -26,23 +20,14 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input"
-import { cn } from "@/lib/utils"
+import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
+import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { GlobeIcon, Sparkles as SparklesIcon } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
-import { useTypingEffect } from "@/hooks/use-typing-effect"
+import { Sparkles as SparklesIcon } from "lucide-react"
+import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
-import { NoiseBackground } from "@/components/ui/noise-background"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import { LeftPanel } from "../left-panel"
-import { ThemeSwitcher } from "@/components/theme-switcher"
-import { Button } from "@/components/ui/button"
 
 const COMMANDS = [
   { command: "/skills", description: "Lista de tecnologías" },
@@ -77,8 +62,8 @@ export function ChatArea() {
   })
 
   const currentPlaceholder = useTypingEffect(PLACEHOLDERS, {
-    typingSpeed: 20,
-    deletingSpeed: 10,
+    typingSpeed: 30,
+    deletingSpeed: 15,
     pauseBeforeType: 250,
   })
   const isChatStarted = messages.length > 0
@@ -121,7 +106,7 @@ export function ChatArea() {
     //   gradientColors={["var(--primary)", "var(--chart-2)", "var(--chart-3)"]}
     // >
     // <div className="relative flex size-full flex-col bg-background/40 backdrop-blur-3xl">
-    <section className="relative z-10 flex size-full flex-col overflow-hidden bg-accent lg:w-[60%] dark:bg-background">
+    <section className="relative z-10 flex size-full flex-col overflow-hidden bg-accent dark:bg-background">
       <DottedGlowBackground
         className="-z-10"
         opacity={0.35}

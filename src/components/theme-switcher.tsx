@@ -28,8 +28,8 @@ export function ThemeSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-10 rounded-full">
-          <ContrastIcon className="size-6 text-muted-foreground" />
+        <Button variant="ghost" size="icon" className="size-9 rounded-full">
+          <ContrastIcon className="size-5 text-foreground" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>

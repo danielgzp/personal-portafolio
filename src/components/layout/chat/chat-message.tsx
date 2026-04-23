@@ -13,7 +13,7 @@ import { Avatar } from "@/components/ui/avatar"
 import { LoaderFive, LoaderOne } from "@/components/ui/loader"
 import { cn } from "@/lib/utils"
 import type { ReasoningUIPart, SourceUrlUIPart, TextUIPart, UIMessage } from "ai"
-import { motion } from "framer-motion"
+import { m } from "framer-motion"
 import { BotIcon, CheckIcon, CopyIcon, UserIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Streamdown } from "streamdown"
@@ -66,7 +66,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -129,13 +129,13 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           </MessageActions>
         )}
       </Message>
-    </motion.div>
+    </m.div>
   )
 }
 
 export function ChatMessageThinking() {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -148,17 +148,17 @@ export function ChatMessageThinking() {
       <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-[100%]">
         <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-xs border bg-card px-4 py-0 text-foreground shadow-sm lg:min-h-10.5 lg:px-5">
           {/* <div className="flex h-full items-center space-x-1.5">
-            <motion.div
+            <m.div
               className="size-1.5 rounded-full bg-foreground/40"
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 0.8, repeat: Infinity, delay: 0 }}
             />
-            <motion.div
+            <m.div
               className="size-1.5 rounded-full bg-foreground/40"
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 0.8, repeat: Infinity, delay: 0.15 }}
             />
-            <motion.div
+            <m.div
               className="size-1.5 rounded-full bg-foreground/40"
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 0.8, repeat: Infinity, delay: 0.3 }}
@@ -168,6 +168,6 @@ export function ChatMessageThinking() {
           {/* <LoaderFive text="Generating chat..." /> */}
         </MessageContent>
       </Message>
-    </motion.div>
+    </m.div>
   )
 }

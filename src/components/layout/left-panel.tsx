@@ -30,11 +30,11 @@ import {
   TimelineSeparator,
   TimelineTitle,
 } from "@/components/ui/timeline"
-import { motion } from "framer-motion"
-import { DownloadIcon, Mail, MailIcon, MapPin } from "lucide-react"
+import { type Variants, m, useReducedMotion } from "framer-motion"
+import { DownloadIcon, MailIcon, MapPin } from "lucide-react"
 import Link from "next/link"
-import { LinkPreview } from "../ui/link-preview"
-import link from "next/link"
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -77,6 +77,8 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
 const EXPERIENCE_ITEMS = [
   {
     id: 1,
@@ -110,123 +112,120 @@ const EXPERIENCE_ITEMS = [
   },
 ]
 
-const EDUCATION_ITEMS = [
-  {
-    id: 1,
-    degree: "Técnico Superior en Informática",
-    institution: "Instituto Universitario Jesús Obrero",
-    period: "Diciembre 2019 — Enero 2023",
-    description: "Extensión Barquisimeto, Venezuela.",
-  },
-]
-
 const SKILLS = [
-  {
-    icon: ReactIcon,
-    name: "React",
-  },
-  {
-    icon: NextjsIcon,
-    name: "Next.js",
-  },
-  {
-    icon: NodejsIcon,
-    name: "Node.js",
-  },
-  {
-    icon: TailwindIcon,
-    name: "Tailwind CSS",
-  },
-  {
-    icon: JavascriptIcon,
-    name: "JavaScript",
-  },
-  {
-    icon: TypescriptIcon,
-    name: "TypeScript",
-  },
-  {
-    icon: ShadcnIcon,
-    name: "Shadcn/UI",
-  },
-  {
-    icon: MotionIcon,
-    name: "Framer Motion",
-  },
-  {
-    icon: ZustandIcon,
-    name: "Zustand",
-  },
-  {
-    icon: ZodIcon,
-    name: "Zod",
-  },
-  {
-    icon: SupabaseIcon,
-    name: "Supabase",
-  },
-  {
-    icon: DockerIcon,
-    name: "Docker",
-  },
-  {
-    icon: EslintIcon,
-    name: "ESLint",
-  },
-  {
-    icon: FigmaIcon,
-    name: "Figma",
-  },
+  { icon: ReactIcon, name: "React" },
+  { icon: NextjsIcon, name: "Next.js" },
+  { icon: NodejsIcon, name: "Node.js" },
+  { icon: TailwindIcon, name: "Tailwind CSS" },
+  { icon: JavascriptIcon, name: "JavaScript" },
+  { icon: TypescriptIcon, name: "TypeScript" },
+  { icon: ShadcnIcon, name: "Shadcn/UI" },
+  { icon: MotionIcon, name: "Framer Motion" },
+  { icon: ZustandIcon, name: "Zustand" },
+  { icon: ZodIcon, name: "Zod" },
+  { icon: SupabaseIcon, name: "Supabase" },
+  { icon: DockerIcon, name: "Docker" },
+  { icon: EslintIcon, name: "ESLint" },
+  { icon: FigmaIcon, name: "Figma" },
 ]
 
-const containerVariants = {
-  hidden: { opacity: 0 },
+const links = [
+  { name: "LinkedIn", url: "https://linkedin.com/in/danielgzp", icon: LinkedinIcon },
+  { name: "GitHub", url: "https://github.com/danielgzp", icon: GithubIcon },
+  { name: "Email", url: "mailto:danielgzp01@gmail.com", icon: MailIcon },
+]
+
+// ─── Animation Variants ───────────────────────────────────────────────────────
+
+// Shared expo-out ease — feels snappy without being abrupt
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as [number, number, number, number]
+
+// Level 1: top-level page stagger — each section reveals after the previous one
+const pageVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.18,
+      delayChildren: 0.1,
     },
   },
 }
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+// Level 2: each section fades + rises
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: EASE_OUT_EXPO },
+  },
 }
 
-const links = [
-  {
-    name: "LinkedIn",
-    url: "https://linkedin.com/in/danielgzp",
-    icon: LinkedinIcon,
+// Level 3a: stagger wrapper for experience cards
+const cardsVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.14, delayChildren: 0.05 },
   },
-  {
-    name: "GitHub",
-    url: "https://github.com/danielgzp",
-    icon: GithubIcon,
+}
+
+// Level 3b: individual experience card
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: EASE_OUT_EXPO },
   },
-  {
-    name: "Email",
-    url: "mailto:danielgzp01@gmail.com",
-    icon: MailIcon,
+}
+
+// Level 3c: individual skill badge
+const badgeVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3, ease: EASE_OUT_EXPO },
   },
-]
+}
+
+// Stagger wrapper for badges (tighter cadence = "waterfall" feel)
+const badgesVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04, delayChildren: 0.05 },
+  },
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function LeftPanel() {
+  // When the user's OS has "reduce motion" enabled, skip all animations
+  // and render content instantly. This is an a11y requirement + perf win
+  // on constrained devices (screen readers, low-power mode, etc.).
+  const reduceMotion = useReducedMotion()
+  const motionState = reduceMotion ? "visible" : "hidden"
   return (
     <div className="relative h-full w-full overflow-hidden bg-background">
-      {/* Minimalist Grid card */}
-      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
-      {/* Radial gradient mask to fade out the grid smoothly */}
+      {/* Minimalist grid */}
+      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-40" />
+      {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
-      <ScrollArea className="relative z-10 h-full w-full">
-        <div className="mx-auto flex h-full flex-col gap-8 p-6 md:p-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col space-y-4 lg:space-y-6"
-          >
+
+      <ScrollArea className="relative z-10 h-full w-full" viewportId="profile-scroll-container">
+        {/*
+          Single m.div orchestrator — all sections below are direct children
+          so pageVariants.staggerChildren controls the cascade timing.
+          LazyMotion context is provided by the parent page.tsx.
+        */}
+        <m.div
+          className="mx-auto flex h-full flex-col gap-8 p-6 pt-20 md:p-12"
+          variants={pageVariants}
+          initial={motionState}
+          animate="visible"
+        >
+          {/* ── Hero ── */}
+          <m.div variants={sectionVariants} className="flex flex-col space-y-4 lg:space-y-6">
             <Avatar className="size-18 border lg:size-24">
               <AvatarImage src="/images/avatar.jpg" alt="Daniel González" />
               <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
@@ -236,144 +235,94 @@ export function LeftPanel() {
 
             <div className="flex w-full flex-col gap-2">
               <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">Daniel González</h1>
-              <h2 className="text-xl font-semibold text-foreground lg:text-xl">Frontend Engineer</h2>
+              <h2 className="text-xl font-semibold text-foreground">Frontend Engineer</h2>
               <div className="flex gap-2 text-sm text-muted-foreground">
                 <MapPin className="size-4" />
                 <span>Cabudare, Venezuela</span>
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="space-y-4 leading-relaxed text-balance text-foreground"
-          >
+          {/* ── Bio ── */}
+          <m.div variants={sectionVariants} className="leading-relaxed text-foreground">
             <p className="text-pretty">
               Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
               de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
               limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
               reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
             </p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="space-y-4"
-          >
-            <h3 className="mb-4 text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
-            <div className="flex flex-wrap gap-2">
-              {SKILLS.map((tech, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="mr-0.5 h-6 border-dashed bg-card px-2 py-1 [&>svg]:size-4"
-                >
-                  <tech.icon />
-                  {tech.name}
-                </Badge>
+          {/* ── Skills ── */}
+          <m.div variants={sectionVariants} className="space-y-4">
+            <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
+            {/* Nested stagger — badges cascade in like a waterfall */}
+            <m.div variants={badgesVariants} className="flex flex-wrap gap-2">
+              {SKILLS.map((tech) => (
+                <m.div key={tech.name} variants={badgeVariants}>
+                  <Badge variant="outline" className="mr-0.5 h-6 border-dashed bg-card px-2 py-1 [&>svg]:size-4">
+                    <tech.icon />
+                    {tech.name}
+                  </Badge>
+                </m.div>
               ))}
-            </div>
+            </m.div>
+          </m.div>
 
-            {/* <ThreeDMarqueeDemo /> */}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="space-y-4"
-          >
+          {/* ── Experience ── */}
+          <m.div variants={sectionVariants} className="space-y-4">
             <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
-            <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
-              {EXPERIENCE_ITEMS.map((item, index) => (
-                <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
-                  <TimelineSeparator />
-                  <TimelineIndicator />
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + index * 0.15, duration: 0.5 }}
-                    className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur transition-colors hover:bg-card/75"
-                  >
-                    <TimelineHeader className="w-full pb-0">
-                      <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                        <div className="flex flex-col">
-                          <TimelineTitle className="text-base font-bold text-foreground">{item.company}</TimelineTitle>
-                          <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
+            {/* Inner stagger for experience cards */}
+            <m.div variants={cardsVariants}>
+              <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
+                {EXPERIENCE_ITEMS.map((item) => (
+                  <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
+                    <TimelineSeparator />
+                    <TimelineIndicator />
+                    <m.div
+                      variants={cardVariants}
+                      className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur transition-colors hover:bg-card/75"
+                    >
+                      <TimelineHeader className="w-full pb-0">
+                        <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                          <div className="flex flex-col">
+                            <TimelineTitle className="text-base font-bold text-foreground">
+                              {item.company}
+                            </TimelineTitle>
+                            <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
+                          </div>
+                          <div className="flex flex-col sm:text-right">
+                            <span className="text-sm font-bold text-foreground">{item.location}</span>
+                            <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
+                              {item.date}
+                            </TimelineDate>
+                          </div>
                         </div>
-                        <div className="flex flex-col sm:text-right">
-                          <span className="text-sm font-bold text-foreground">{item.location}</span>
-                          <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
-                            {item.date}
-                          </TimelineDate>
+                      </TimelineHeader>
+                      <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
+                        <p className="text-sm">{item.description}</p>
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {item.skills.map((skill) => (
+                            <Badge
+                              key={skill}
+                              variant="secondary"
+                              className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
+                            >
+                              {skill}
+                            </Badge>
+                          ))}
                         </div>
-                      </div>
-                    </TimelineHeader>
-                    <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                      <p className="text-sm">{item.description}</p>
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {item.skills.map((skill) => (
-                          <Badge
-                            key={skill}
-                            variant="secondary"
-                            className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
-                          >
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                    </TimelineContent>
-                  </motion.div>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </motion.div>
+                      </TimelineContent>
+                    </m.div>
+                  </TimelineItem>
+                ))}
+              </Timeline>
+            </m.div>
+          </m.div>
 
-          {/* <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="space-y-4"
-          >
-            <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Educación</h3>
-            <Timeline defaultValue={EDUCATION_ITEMS.length + 1}>
-              {EDUCATION_ITEMS.map((edu, index) => (
-                <TimelineItem key={edu.id} step={edu.id} className="[&:not(:last-child)]:!pb-6">
-                  <TimelineSeparator />
-                  <TimelineIndicator />
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1 }}
-                    className="flex flex-col"
-                  >
-                    <TimelineHeader className="w-full pb-0">
-                      <div className="flex flex-col">
-                        <TimelineTitle className="text-base font-bold text-foreground">{edu.degree}</TimelineTitle>
-                        <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                          <span className="font-medium text-foreground">{edu.institution}</span>
-                          <span className="text-border">•</span>
-                          <span className="font-mono text-xs">{edu.period}</span>
-                        </div>
-                      </div>
-                    </TimelineHeader>
-                    <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                      <p className="text-sm">{edu.description}</p>
-                    </TimelineContent>
-                  </motion.div>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </motion.div> */}
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
+          {/* ── CTA Footer ── */}
+          <m.div
+            variants={sectionVariants}
             className="mt-auto flex w-full flex-row justify-center gap-2 border-t border-border/50 pt-6 sm:justify-start"
           >
             <Button
@@ -400,8 +349,8 @@ export function LeftPanel() {
                 </Link>
               </Button>
             ))}
-          </motion.div>
-        </div>
+          </m.div>
+        </m.div>
       </ScrollArea>
     </div>
   )
