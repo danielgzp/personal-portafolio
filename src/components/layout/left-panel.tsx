@@ -80,33 +80,33 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
 const EXPERIENCE_ITEMS = [
   {
     id: 1,
-    company: "Acme Global Design",
-    role: "Lead Product Designer",
-    location: "New York, NY",
-    date: "2021 — Present",
+    company: "Essertech LLC",
+    role: "Lead Frontend Developer",
+    location: "Cabudare, Venezuela",
+    date: "Marzo 2025 — Actualidad",
     description:
-      "Directed the end-to-end design strategy for enterprise-level SaaS applications. Established the core design system utilized across 14 product squads, resulting in a 30% reduction in development time and a unified brand experience. Led a team of 6 senior designers, fostering a culture of rigorous critique and high-fidelity prototyping.",
-    skills: ["Design Systems", "Leadership", "SaaS"],
+      "Lideré el desarrollo end-to-end de un ERP para ISP. Creé el System Design con estándares Pixel Perfect y definí la arquitectura modular. Integré IA para acelerar el desarrollo en un 45%.",
+    skills: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"],
   },
   {
     id: 2,
-    company: "Nexus Interactive",
-    role: "Senior UI/UX Designer",
-    location: "San Francisco, CA",
-    date: "2018 — 2021",
+    company: "Essertech LLC",
+    role: "Junior Frontend Developer",
+    location: "Cabudare, Venezuela",
+    date: "Agosto 2023 — Marzo 2025",
     description:
-      "Spearheaded the redesign of the flagship consumer mobile application, achieving a 4.8 App Store rating and increasing user retention by 22% within the first quarter. Collaborated closely with engineering and product management to ensure seamless translation of high-fidelity designs into production-ready code.",
-    skills: ["Mobile App", "Prototyping", "User Research"],
+      "Desarrollé una plataforma financiera en tiempo real, optimicé la UI/UX y rendimiento de un SaaS existente, y construí desde cero un marketplace multi-tenant global.",
+    skills: ["React", "Next.js", "Zustand", "Supabase", "i18n"],
   },
   {
     id: 3,
-    company: "Studio Monochrome",
-    role: "Digital Designer",
-    location: "London, UK",
-    date: "2015 — 2018",
+    company: "Grupo Corporativo Marna",
+    role: "Software Developer",
+    location: "Barquisimeto, Venezuela",
+    date: "Agosto 2022 — Noviembre 2022",
     description:
-      "Crafted bespoke digital experiences and brand identities for boutique luxury clients. Focused on creating highly immersive, visually stunning marketing websites that challenged standard web conventions. Managed client presentations and iterative feedback cycles directly with stakeholders.",
-    skills: ["Web Design", "Branding"],
+      "Mejoré la usabilidad, rediseñé la interfaz e internacionalicé un sistema de citas para spas. También desarrollé su landing page comercial.",
+    skills: ["PHP", "PostgreSQL", "HTML5", "CSS"],
   },
 ]
 
