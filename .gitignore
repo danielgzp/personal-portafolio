@@ -26,6 +26,7 @@
 .eslintcache
 .unimportedrc.json
 tsconfig.tsbuildinfo
+TODO.md
 
 # debug
 npm-debug.log*

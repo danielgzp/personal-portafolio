@@ -31,8 +31,10 @@ import {
   TimelineTitle,
 } from "@/components/ui/timeline"
 import { motion } from "framer-motion"
-import { Download, Mail, MapPin } from "lucide-react"
-import { TimelineDemo } from "../demos/timeline-demo"
+import { DownloadIcon, Mail, MailIcon, MapPin } from "lucide-react"
+import Link from "next/link"
+import { LinkPreview } from "../ui/link-preview"
+import link from "next/link"
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -191,6 +193,24 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 }
+
+const links = [
+  {
+    name: "LinkedIn",
+    url: "https://linkedin.com/in/danielgzp",
+    icon: LinkedinIcon,
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/danielgzp",
+    icon: GithubIcon,
+  },
+  {
+    name: "Email",
+    url: "mailto:danielgzp01@gmail.com",
+    icon: MailIcon,
+  },
+]
 
 export function LeftPanel() {
   return (
@@ -354,26 +374,32 @@ export function LeftPanel() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-auto flex w-full flex-col flex-row gap-4 border-t border-border/50 pt-6"
+            className="mt-auto flex w-full flex-row justify-center gap-2 border-t border-border/50 pt-6 sm:justify-start"
           >
-            <Button className="flex flex-1 gap-2 sm:w-auto lg:flex-initial" size="lg">
-              <Download className="size-4" />
-              Descargar CV
+            <Button
+              className="mr-2 flex flex-1 gap-2 transition-all hover:scale-105 hover:shadow-lg sm:w-auto lg:flex-initial"
+              size="lg"
+              asChild
+            >
+              <Link href="/CV-2026-DanielGonzález.pdf" target="_blank" rel="noopener noreferrer">
+                <DownloadIcon className="size-4" />
+                Descargar CV
+              </Link>
             </Button>
-            <div className="flex justify-center gap-2 sm:justify-start">
-              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
-                <LinkedinIcon className="size-4" />
-                <span className="sr-only">LinkedIn</span>
+
+            {links.map((link, idx) => (
+              <Button
+                asChild
+                className="size-10 shrink-0 rounded-full transition-all hover:scale-110 hover:shadow-lg active:scale-95"
+                key={idx}
+                variant="outline"
+              >
+                <Link href={link.url} target="_blank" rel="noopener noreferrer">
+                  <link.icon className="size-4" />
+                  <span className="sr-only">{link.name}</span>
+                </Link>
               </Button>
-              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
-                <GithubIcon className="size-4" />
-                <span className="sr-only">GitHub</span>
-              </Button>
-              <Button variant="outline" size="icon" className="size-10 shrink-0 rounded-full">
-                <Mail className="size-4" />
-                <span className="sr-only">Email</span>
-              </Button>
-            </div>
+            ))}
           </motion.div>
         </div>
       </ScrollArea>
