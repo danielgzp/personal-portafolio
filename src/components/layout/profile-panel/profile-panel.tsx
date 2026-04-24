@@ -280,7 +280,7 @@ export function ProfilePanel() {
                         </div>
                         <div className="flex flex-col sm:text-right">
                           <span className="text-sm font-bold text-foreground">{item.location}</span>
-                          <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
+                          <TimelineDate className="mb-0! text-sm! font-medium! text-muted-foreground italic">
                             {item.date}
                           </TimelineDate>
                         </div>

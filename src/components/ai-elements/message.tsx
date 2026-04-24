@@ -265,6 +265,19 @@ export const MessageResponse = memo(
     <Streamdown
       className={cn("size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0", className)}
       plugins={streamdownPlugins}
+      // Smooth, modern streaming feel:
+      // blurIn masks batch token arrivals better than plain fadeIn.
+      // 220ms + ease-out matches the pacing of modern chat UIs like Claude/ChatGPT.
+      // stagger adds a gentle cascade between words in the same batch.
+      animated={{
+        animation: "blurIn",
+        duration: 220,
+        easing: "ease-out",
+        sep: "word",
+        stagger: 15,
+      }}
+      // Blinking block cursor visible while the model is responding
+      caret="block"
       {...props}
     />
   ),

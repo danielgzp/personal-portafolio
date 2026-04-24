@@ -24,7 +24,7 @@ import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
 import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { Sparkles as SparklesIcon } from "lucide-react"
+import { AlertCircle, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
 import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
@@ -44,10 +44,49 @@ const PLACEHOLDERS = [
   "Escribe un comando como /skills...",
 ]
 
+/** Maps structured error codes returned by the API to user-readable messages. */
+function getErrorMessage(error: Error | undefined): string {
+  if (!error) return ""
+
+  // Try to parse the structured JSON error body sent by the route handler
+  try {
+    const parsed = JSON.parse(error.message)
+    if (parsed?.message) return parsed.message
+  } catch {
+    // Not a JSON error body — fall through to generic messages below
+  }
+
+  const message = error.message.toLowerCase()
+
+  if (message.includes("rate_limit") || message.includes("429")) {
+    return "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo."
+  }
+
+  if (
+    message.includes("token_limit") ||
+    message.includes("token") ||
+    message.includes("context length")
+  ) {
+    return "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto."
+  }
+
+  if (message.includes("auth_error") || message.includes("401") || message.includes("403")) {
+    return "Error de autenticación con el proveedor de IA."
+  }
+
+  if (message.includes("service_unavailable") || message.includes("503")) {
+    return "El servicio de IA no está disponible en este momento. Inténtalo más tarde."
+  }
+
+  // Generic fallback
+  return "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
+}
+
 export function ChatPanel() {
   const [input, setInput] = useState("")
   // const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-3-flash-preview")
+  const [isDismissed, setIsDismissed] = useState(false)
 
   const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
@@ -55,10 +94,15 @@ export function ChatPanel() {
     { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
   ]
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error, regenerate } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
     }),
+    onError: (err) => {
+      // Reset dismiss state so the new error is visible
+      setIsDismissed(false)
+      console.error("[ChatPanel] useChat error:", err)
+    },
   })
 
   const currentPlaceholder = useTypingEffect(PLACEHOLDERS, {
@@ -69,6 +113,11 @@ export function ChatPanel() {
   const isChatStarted = messages.length > 0
 
   const isLoading = status === "submitted" || status === "streaming"
+
+  // Derive whether the error banner should be shown
+  const hasError = !!error && !isDismissed
+
+  const errorMessage = getErrorMessage(error)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
@@ -82,6 +131,7 @@ export function ChatPanel() {
     if (!hasText && !hasFiles) return
 
     setInput("")
+    setIsDismissed(false)
 
     await sendMessage(
       {
@@ -97,15 +147,12 @@ export function ChatPanel() {
     )
   }
 
+  const handleRetry = () => {
+    setIsDismissed(false)
+    regenerate()
+  }
+
   return (
-    // <NoiseBackground
-    //   containerClassName="h-full w-full rounded-none border-none shadow-none p-0"
-    //   className="h-full w-full"
-    //   noiseIntensity={0.02}
-    //   speed={0.15}
-    //   gradientColors={["var(--primary)", "var(--chart-2)", "var(--chart-3)"]}
-    // >
-    // <div className="relative flex size-full flex-col bg-background/40 backdrop-blur-3xl">
     <section className="relative z-10 flex size-full flex-col overflow-hidden bg-accent dark:bg-background">
       <DottedGlowBackground
         className="-z-10"
@@ -119,10 +166,7 @@ export function ChatPanel() {
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" />
-      {/* <EmptyState setInput={setInput} /> */}
-      {/* <ConversationEmptyState className="overflow-y-auto p-4">
-        <EmptyState setInput={setInput} />
-      </ConversationEmptyState> */}
+
       <div
         id="chat-scroll-container"
         className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
@@ -140,10 +184,22 @@ export function ChatPanel() {
                 </ConversationEmptyState>
               ) : (
                 <ConversationContent className="p-0">
-                  {messages.map((msg) => (
-                    <ChatMessage key={msg.id} message={msg} />
+                  {messages.map((msg, idx) => (
+                    <ChatMessage
+                      key={msg.id}
+                      message={msg}
+                      // Mark the last assistant message as actively streaming
+                      // so Streamdown's isAnimating and caret are properly activated
+                      isStreaming={
+                        isLoading &&
+                        idx === messages.length - 1 &&
+                        msg.role === "assistant"
+                      }
+                    />
                   ))}
-                  {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+                  {isLoading && messages[messages.length - 1]?.role === "user" && (
+                    <ChatMessageThinking />
+                  )}
                 </ConversationContent>
               )}
             </ConversationContent>
@@ -153,6 +209,39 @@ export function ChatPanel() {
       </div>
 
       <div className="mx-auto w-full max-w-3xl px-4 pt-2 pb-4 md:pb-8">
+        {/* Error banner — shown when useChat surfaces an error */}
+        {hasError && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-3 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive backdrop-blur-sm"
+          >
+            <AlertCircle className="mt-0.5 size-4 shrink-0" />
+            <p className="flex-1 leading-snug">{errorMessage}</p>
+            <div className="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                onClick={handleRetry}
+                title="Reintentar"
+                aria-label="Reintentar la última solicitud"
+                className="flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/10 px-2.5 py-1 text-xs font-medium transition-colors hover:bg-destructive/20"
+              >
+                <RefreshCw className="size-3" />
+                Reintentar
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsDismissed(true)}
+                title="Descartar error"
+                aria-label="Descartar mensaje de error"
+                className="rounded-lg p-1 transition-colors hover:bg-destructive/20"
+              >
+                <X className="size-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <PromptInput
           onSubmit={handleSubmit}
           globalDrop
