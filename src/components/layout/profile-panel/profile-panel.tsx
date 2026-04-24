@@ -35,6 +35,41 @@ import Image from "next/image"
 import { useEffect, useRef } from "react"
 import { CTASection } from "./cta-section"
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const EXPERIENCE_ITEMS = [
+  {
+    id: 1,
+    company: "Essertech LLC",
+    role: "Lead Frontend Developer",
+    location: "Cabudare, Venezuela",
+    date: "Marzo 2025 — Actualidad",
+    description:
+      "Lideré el desarrollo end-to-end de un ERP para ISP. Creé el System Design con estándares Pixel Perfect y definí la arquitectura modular. Integré IA para acelerar el desarrollo en un 45%.",
+    skills: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"],
+  },
+  {
+    id: 2,
+    company: "Essertech LLC",
+    role: "Junior Frontend Developer",
+    location: "Cabudare, Venezuela",
+    date: "Agosto 2023 — Marzo 2025",
+    description:
+      "Desarrollé una plataforma financiera en tiempo real, optimicé la UI/UX y rendimiento de un SaaS existente, y construí desde cero un marketplace multi-tenant global.",
+    skills: ["React", "Next.js", "Zustand", "Supabase", "i18n"],
+  },
+  {
+    id: 3,
+    company: "Grupo Corporativo Marna",
+    role: "Software Developer",
+    location: "Barquisimeto, Venezuela",
+    date: "Agosto 2022 — Noviembre 2022",
+    description:
+      "Mejoré la usabilidad, rediseñé la interfaz e internacionalicé un sistema de citas para spas. También desarrollé su landing page comercial.",
+    skills: ["PHP", "PostgreSQL", "HTML5", "CSS"],
+  },
+]
+
 const SKILLS = [
   { icon: ReactIcon, name: "React" },
   { icon: NextjsIcon, name: "Next.js" },
