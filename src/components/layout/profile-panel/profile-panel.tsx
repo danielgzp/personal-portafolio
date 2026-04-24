@@ -34,7 +34,7 @@ import { type Variants, m, useReducedMotion } from "framer-motion"
 import { DownloadIcon, MailIcon, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useRef } from "react"
-import { CTASection } from "./profile-panel/cta-section"
+import { CTASection } from "./cta-section"
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -204,7 +204,7 @@ const badgesVariants: Variants = {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function LeftPanel() {
+export function ProfilePanel() {
   const reduceMotion = useReducedMotion()
   const motionState = reduceMotion ? "visible" : "hidden"
 
@@ -216,13 +216,13 @@ export function LeftPanel() {
   }, [])
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-background">
+    <div className="relative size-full bg-background">
       {/* Minimalist grid */}
       <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-40" />
       {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
-      <ScrollArea className="relative z-10 h-full w-full" viewportId="profile-scroll-container">
+      <ScrollArea type="always" className="relative z-10 size-full" viewportId="profile-scroll-container">
         {/*
           Single m.div orchestrator — all sections below are direct children
           so pageVariants.staggerChildren controls the cascade timing.
@@ -333,7 +333,7 @@ export function LeftPanel() {
                           <Badge
                             key={skill}
                             variant="secondary"
-                            className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
+                            className="h-6 rounded-full border border-dashed border-border px-2.5 text-xs"
                           >
                             {skill}
                           </Badge>

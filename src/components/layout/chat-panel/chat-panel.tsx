@@ -44,7 +44,7 @@ const PLACEHOLDERS = [
   "Escribe un comando como /skills...",
 ]
 
-export function ChatArea() {
+export function ChatPanel() {
   const [input, setInput] = useState("")
   const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-3-flash-preview")
