@@ -29,12 +29,12 @@ import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 
-const COMMANDS = [
-  { command: "/skills", description: "Lista de tecnologías" },
-  { command: "/experiencia", description: "Trayectoria profesional" },
-  { command: "/contacto", description: "Cómo contactar" },
-  { command: "/clear", description: "Limpiar conversación" },
-]
+// const COMMANDS = [
+//   { command: "/skills", description: "Lista de tecnologías" },
+//   { command: "/experiencia", description: "Trayectoria profesional" },
+//   { command: "/contacto", description: "Cómo contactar" },
+//   { command: "/clear", description: "Limpiar conversación" },
+// ]
 
 const PLACEHOLDERS = [
   "¿Qué quieres saber sobre mí o mis proyectos?",
@@ -46,7 +46,7 @@ const PLACEHOLDERS = [
 
 export function ChatPanel() {
   const [input, setInput] = useState("")
-  const [useWebSearch, setUseWebSearch] = useState(false)
+  // const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-3-flash-preview")
 
   const models = [
@@ -91,7 +91,7 @@ export function ChatPanel() {
       {
         body: {
           model,
-          useWebSearch,
+          // useWebSearch,
         },
       }
     )

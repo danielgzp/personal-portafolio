@@ -25,8 +25,8 @@ export const LinkPreview = ({
   className,
   width = 200,
   height = 125,
-  quality = 50,
-  layout = "fixed",
+  // quality = 50,
+  // layout = "fixed",
   isStatic = false,
   imageSrc = "",
   linkProps,
@@ -73,6 +73,7 @@ export const LinkPreview = ({
     <>
       {isMounted ? (
         <div className="hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={src} width={width} height={height} alt="hidden image" />
         </div>
       ) : null}
@@ -91,7 +92,7 @@ export const LinkPreview = ({
         </HoverCardPrimitive.Trigger>
 
         <HoverCardPrimitive.Content
-          className="[transform-origin:var(--radix-hover-card-content-transform-origin)]"
+          className="origin-(--radix-hover-card-content-transform-origin)"
           side="top"
           align="center"
           sideOffset={10}
@@ -122,6 +123,7 @@ export const LinkPreview = ({
                   style={{ fontSize: 0 }}
                   {...linkProps}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={isStatic ? imageSrc : src}
                     width={width}

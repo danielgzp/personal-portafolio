@@ -10,13 +10,12 @@ import {
 import { Reasoning, ReasoningContent, ReasoningTrigger } from "@/components/ai-elements/reasoning"
 import { Source, Sources, SourcesContent, SourcesTrigger } from "@/components/ai-elements/sources"
 import { Avatar } from "@/components/ui/avatar"
-import { LoaderFive, LoaderOne } from "@/components/ui/loader"
+import { LoaderOne } from "@/components/ui/loader"
 import { cn } from "@/lib/utils"
 import type { ReasoningUIPart, SourceUrlUIPart, TextUIPart, UIMessage } from "ai"
 import { m } from "framer-motion"
 import { BotIcon, CheckIcon, CopyIcon, UserIcon } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Streamdown } from "streamdown"
 
 interface ChatMessageProps {
   message: UIMessage
@@ -145,7 +144,7 @@ export function ChatMessageThinking() {
         <BotIcon className="size-4" />
       </Avatar>
 
-      <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-[100%]">
+      <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-full">
         <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-xs border bg-card px-4 py-0 text-foreground shadow-sm lg:min-h-10.5 lg:px-5">
           {/* <div className="flex h-full items-center space-x-1.5">
             <m.div
