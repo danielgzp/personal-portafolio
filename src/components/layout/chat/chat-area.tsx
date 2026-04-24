@@ -125,9 +125,9 @@ export function ChatArea() {
       </ConversationEmptyState> */}
       <div
         id="chat-scroll-container"
-        className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-16 pb-4 lg:pt-4"
+        className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
       >
-        <Conversation className="mx-auto w-full max-w-3xl">
+        <Conversation className="mx-auto w-full max-w-3xl p-0">
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">
               <EmptyState setInput={setInput} />
@@ -139,7 +139,7 @@ export function ChatArea() {
                   <EmptyState setInput={setInput} />
                 </ConversationEmptyState>
               ) : (
-                <ConversationContent>
+                <ConversationContent className="p-0">
                   {messages.map((msg) => (
                     <ChatMessage key={msg.id} message={msg} />
                   ))}
@@ -157,7 +157,7 @@ export function ChatArea() {
           onSubmit={handleSubmit}
           globalDrop
           multiple
-          inputGroupClassName="bg-card border border-border/50 shadow-[0_0_2rem_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4"
+          inputGroupClassName="bg-card border border-border/50 shadow-sm lg:shadow-[0_0_30px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4"
         >
           <PromptInputBody>
             <PromptInputTextarea

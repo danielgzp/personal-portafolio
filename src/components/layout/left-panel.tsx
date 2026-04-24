@@ -33,6 +33,8 @@ import {
 import { type Variants, m, useReducedMotion } from "framer-motion"
 import { DownloadIcon, MailIcon, MapPin } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useRef } from "react"
+import { CTASection } from "./profile-panel/cta-section"
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -135,82 +137,90 @@ const links = [
   { name: "Email", url: "mailto:danielgzp01@gmail.com", icon: MailIcon },
 ]
 
-// ─── Animation Variants ───────────────────────────────────────────────────────
+// ─── Ease curve used by Vercel, Linear, Framer's own site.
+// Starts gentle, surges mid-curve, lands softly — feels intentional, not robotic.
+const EASE_PREMIUM = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
-// Shared expo-out ease — feels snappy without being abrupt
-const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as [number, number, number, number]
-
-// Level 1: top-level page stagger — each section reveals after the previous one
+// Level 1: top-level page stagger
 const pageVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.18,
-      delayChildren: 0.1,
+      staggerChildren: 0.14,
+      delayChildren: 0.05,
     },
   },
 }
 
-// Level 2: each section fades + rises
+// Level 2: each section fades + rises with a short, snappy movement
 const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 22 },
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: EASE_OUT_EXPO },
+    transition: { duration: 0.55, ease: EASE_PREMIUM },
   },
 }
 
-// Level 3a: stagger wrapper for experience cards
-const cardsVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.14, delayChildren: 0.05 },
-  },
-}
-
-// Level 3b: individual experience card
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: EASE_OUT_EXPO },
-  },
-}
-
-// Level 3c: individual skill badge
-const badgeVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.85 },
+// Avatar: spring physics for an organic, weighted feel
+const avatarVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.85, y: 8 },
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.3, ease: EASE_OUT_EXPO },
+    y: 0,
+    transition: { type: "spring", stiffness: 280, damping: 22 },
   },
 }
 
-// Stagger wrapper for badges (tighter cadence = "waterfall" feel)
+// Individual experience card — used with whileInView
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: EASE_PREMIUM },
+  },
+}
+
+// Individual skill badge
+const badgeVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.8, y: 4 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: EASE_PREMIUM },
+  },
+}
+
+// Stagger wrapper for badges (tight cadence = waterfall feel)
 const badgesVariants: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.04, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
   },
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function LeftPanel() {
-  // When the user's OS has "reduce motion" enabled, skip all animations
-  // and render content instantly. This is an a11y requirement + perf win
-  // on constrained devices (screen readers, low-power mode, etc.).
   const reduceMotion = useReducedMotion()
   const motionState = reduceMotion ? "visible" : "hidden"
+
+  // Ref to the scroll viewport — used as IntersectionObserver root so that
+  // whileInView triggers relative to the panel's scroll position, not the window.
+  const containerRef = useRef<Element | null>(null)
+  useEffect(() => {
+    containerRef.current = document.getElementById("profile-scroll-container")
+  }, [])
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-background">
       {/* Minimalist grid */}
       <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-40" />
       {/* Radial fade mask */}
-      <div className="absolute inset-0 z-0 bg-background [mask-image:radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
+      <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
       <ScrollArea className="relative z-10 h-full w-full" viewportId="profile-scroll-container">
         {/*
@@ -226,26 +236,36 @@ export function LeftPanel() {
         >
           {/* ── Hero ── */}
           <m.div variants={sectionVariants} className="flex flex-col space-y-4 lg:space-y-6">
-            <Avatar className="size-18 border lg:size-24">
-              <AvatarImage src="/images/avatar.jpg" alt="Daniel González" />
-              <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
-                DG
-              </AvatarFallback>
-            </Avatar>
+            <m.div variants={avatarVariants}>
+              <Avatar className="size-18 border lg:size-24">
+                <AvatarImage src="/images/avatar.jpg" alt="Daniel González" />
+                <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
+                  DG
+                </AvatarFallback>
+              </Avatar>
+            </m.div>
 
             <div className="flex w-full flex-col gap-2">
-              <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">Daniel González</h1>
+              <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Daniel González</h1>
               <h2 className="text-xl font-semibold text-foreground">Frontend Engineer</h2>
               <div className="flex gap-2 text-sm text-muted-foreground">
                 <MapPin className="size-4" />
                 <span>Cabudare, Venezuela</span>
               </div>
             </div>
+            <CTASection
+              variants={sectionVariants}
+              reduceMotion={reduceMotion}
+              containerRef={containerRef}
+              showBorder={false}
+            />
           </m.div>
+
+          {/* ── Top CTA ── */}
 
           {/* ── Bio ── */}
           <m.div variants={sectionVariants} className="leading-relaxed text-foreground">
-            <p className="text-pretty">
+            <p className="text-sm text-pretty lg:md:text-base">
               Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
               de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
               limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
@@ -257,10 +277,10 @@ export function LeftPanel() {
           <m.div variants={sectionVariants} className="space-y-4">
             <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
             {/* Nested stagger — badges cascade in like a waterfall */}
-            <m.div variants={badgesVariants} className="flex flex-wrap gap-2">
+            <m.div variants={badgesVariants} className="flex flex-wrap gap-1.5 lg:gap-2">
               {SKILLS.map((tech) => (
                 <m.div key={tech.name} variants={badgeVariants}>
-                  <Badge variant="outline" className="mr-0.5 h-6 border-dashed bg-card px-2 py-1 [&>svg]:size-4">
+                  <Badge variant="outline" className="mr-0.5 h-6.5 border-dashed bg-card px-2 py-1 [&>svg]:size-4">
                     <tech.icon />
                     {tech.name}
                   </Badge>
@@ -270,86 +290,69 @@ export function LeftPanel() {
           </m.div>
 
           {/* ── Experience ── */}
+          {/* Section title is part of the cascade; cards use whileInView
+              so they animate in as the user scrolls down, not all at once. */}
           <m.div variants={sectionVariants} className="space-y-4">
             <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
-            {/* Inner stagger for experience cards */}
-            <m.div variants={cardsVariants}>
-              <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
-                {EXPERIENCE_ITEMS.map((item) => (
-                  <TimelineItem key={item.id} step={item.id} className="[&:not(:last-child)]:!pb-6">
-                    <TimelineSeparator />
-                    <TimelineIndicator />
-                    <m.div
-                      variants={cardVariants}
-                      className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur transition-colors hover:bg-card/75"
-                    >
-                      <TimelineHeader className="w-full pb-0">
-                        <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                          <div className="flex flex-col">
-                            <TimelineTitle className="text-base font-bold text-foreground">
-                              {item.company}
-                            </TimelineTitle>
-                            <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
-                          </div>
-                          <div className="flex flex-col sm:text-right">
-                            <span className="text-sm font-bold text-foreground">{item.location}</span>
-                            <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
-                              {item.date}
-                            </TimelineDate>
-                          </div>
+            <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
+              {EXPERIENCE_ITEMS.map((item, idx) => (
+                <TimelineItem key={item.id} step={item.id} className="not-last:pb-6!">
+                  <TimelineSeparator />
+                  <TimelineIndicator />
+                  <m.div
+                    variants={cardVariants}
+                    initial={reduceMotion ? "visible" : "hidden"}
+                    whileInView="visible"
+                    viewport={{
+                      once: true,
+                      root: containerRef as React.RefObject<Element>,
+                      amount: 0.15,
+                      margin: "0px 0px -40px 0px",
+                    }}
+                    transition={{ delay: idx * 0.08 }}
+                    className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/90 p-6 shadow-sm transition-colors hover:bg-card/50"
+                  >
+                    <TimelineHeader className="w-full pb-0">
+                      <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                        <div className="flex flex-col">
+                          <TimelineTitle className="text-base font-bold text-foreground">{item.company}</TimelineTitle>
+                          <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
                         </div>
-                      </TimelineHeader>
-                      <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                        <p className="text-sm">{item.description}</p>
-                        <div className="flex flex-wrap gap-2 pt-2">
-                          {item.skills.map((skill) => (
-                            <Badge
-                              key={skill}
-                              variant="secondary"
-                              className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
-                            >
-                              {skill}
-                            </Badge>
-                          ))}
+                        <div className="flex flex-col sm:text-right">
+                          <span className="text-sm font-bold text-foreground">{item.location}</span>
+                          <TimelineDate className="!mb-0 !text-sm !font-medium text-muted-foreground italic">
+                            {item.date}
+                          </TimelineDate>
                         </div>
-                      </TimelineContent>
-                    </m.div>
-                  </TimelineItem>
-                ))}
-              </Timeline>
-            </m.div>
+                      </div>
+                    </TimelineHeader>
+                    <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
+                      <p className="text-sm">{item.description}</p>
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {item.skills.map((skill) => (
+                          <Badge
+                            key={skill}
+                            variant="secondary"
+                            className="rounded-full border border-border/50 bg-secondary/30 px-2 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase shadow-none hover:bg-secondary/50"
+                          >
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TimelineContent>
+                  </m.div>
+                </TimelineItem>
+              ))}
+            </Timeline>
           </m.div>
 
           {/* ── CTA Footer ── */}
-          <m.div
+          <CTASection
             variants={sectionVariants}
-            className="mt-auto flex w-full flex-row justify-center gap-2 border-t border-border/50 pt-6 sm:justify-start"
-          >
-            <Button
-              className="mr-2 flex flex-1 gap-2 transition-all hover:scale-105 hover:shadow-lg sm:w-auto lg:flex-initial"
-              size="lg"
-              asChild
-            >
-              <Link href="/CV-2026-DanielGonzález.pdf" target="_blank" rel="noopener noreferrer">
-                <DownloadIcon className="size-4" />
-                Descargar CV
-              </Link>
-            </Button>
-
-            {links.map((link, idx) => (
-              <Button
-                asChild
-                className="size-10 shrink-0 rounded-full transition-all hover:scale-110 hover:shadow-lg active:scale-95"
-                key={idx}
-                variant="outline"
-              >
-                <Link href={link.url} target="_blank" rel="noopener noreferrer">
-                  <link.icon className="size-4" />
-                  <span className="sr-only">{link.name}</span>
-                </Link>
-              </Button>
-            ))}
-          </m.div>
+            reduceMotion={reduceMotion}
+            containerRef={containerRef}
+            className="mt-auto"
+          />
         </m.div>
       </ScrollArea>
     </div>
