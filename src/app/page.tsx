@@ -4,9 +4,9 @@ import { ChatArea } from "@/components/layout/chat/chat-area"
 import { LeftPanel } from "@/components/layout/left-panel"
 import { Topbar } from "@/components/layout/topbar"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-import { useState } from "react"
-import { LazyMotion, domAnimation, m, useReducedMotion } from "framer-motion"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { m, useReducedMotion } from "framer-motion"
+import { useState } from "react"
 
 // True easeInOut (cubic-bezier): starts and ends softly — no jarring snap.
 // willChange:transform on the panels pre-promotes GPU layers before the
@@ -37,7 +37,7 @@ export default function Page() {
   const slideTransition = !hasInteracted || reduceMotion ? { duration: 0 } : SLIDE_TRANSITION
 
   return (
-    <LazyMotion features={domAnimation} strict>
+    
       <main className="relative flex h-dvh w-full flex-col overflow-hidden bg-background">
         <Topbar activeTab={activeTab} onTabChange={handleTabChange} />
 
@@ -78,6 +78,6 @@ export default function Page() {
           </m.section>
         </div>
       </main>
-    </LazyMotion>
+    
   )
 }
