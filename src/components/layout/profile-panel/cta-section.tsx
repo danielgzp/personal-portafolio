@@ -38,7 +38,7 @@ export function CTASection({ variants, reduceMotion, containerRef, className, sh
         size="lg"
         asChild
       >
-        <Link href="/CV-2026-DanielGonzález.pdf" target="_blank" rel="noopener noreferrer">
+        <Link href="/CV-2026-DanielGonzalez.pdf" target="_blank" rel="noopener noreferrer" prefetch={false}>
           <DownloadIcon className="size-4" />
           Descargar CV
         </Link>

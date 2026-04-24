@@ -35,6 +35,7 @@ import { DownloadIcon, MailIcon, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useRef } from "react"
 import { CTASection } from "./cta-section"
+import Image from "next/image"
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -236,9 +237,19 @@ export function ProfilePanel() {
         >
           {/* ── Hero ── */}
           <m.div variants={sectionVariants} className="flex flex-col space-y-4 lg:space-y-6">
-            <m.div variants={avatarVariants}>
+            <m.div variants={avatarVariants} initial={false}>
               <Avatar className="size-18 border lg:size-24">
-                <AvatarImage src="/images/avatar.jpg" alt="Daniel González" />
+                <AvatarImage src="/images/avatar.jpg" alt="Daniel González" asChild>
+                  <Image
+                    src="/images/avatar.jpg"
+                    className="size-full object-cover"
+                    alt="Daniel González"
+                    width={96}
+                    height={96}
+                    priority
+                    loading="eager"
+                  />
+                </AvatarImage>
                 <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
                   DG
                 </AvatarFallback>
