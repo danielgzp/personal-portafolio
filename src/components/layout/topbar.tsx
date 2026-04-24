@@ -13,11 +13,11 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 const headerVariants: Variants = {
   visible: {
     y: 0,
-    transition: { duration: 0.32, ease: [0, 0, 0.2, 1] }, // ease-out
+    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] }, // ease-in
   },
   hidden: {
     y: "-100%",
-    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] }, // ease-in
+    transition: { duration: 0.2, ease: "easeInOut" } // ease-in
   },
 }
 

@@ -8,74 +8,74 @@ import { useState } from "react"
 import { LazyMotion, domAnimation, m, useReducedMotion } from "framer-motion"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
+// True easeInOut (cubic-bezier): starts and ends softly — no jarring snap.
+// willChange:transform on the panels pre-promotes GPU layers before the
+// animation starts, eliminating the first-frame jank on mobile.
+const SLIDE_TRANSITION = {
+  duration: 0.35,
+  ease: [0.4, 0, 0.3, 1] as [number, number, number, number],
+}
+
 export type TabType = "chat" | "profile"
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<TabType>("profile")
   const isMobile = useMediaQuery("(max-width: 1023px)")
   const isProfile = activeTab === "profile"
-
-  // Only animate the flip after the user has explicitly changed a tab.
-  // This prevents the initial isMobile hydration (false→true) from
-  // triggering the 3D flip animation on first load.
-  const [hasInteracted, setHasInteracted] = useState(false)
-
-  // Skip the spring entirely when the OS has prefers-reduced-motion enabled.
   const reduceMotion = useReducedMotion()
+
+  // Only animate after explicit user interaction — prevents the isMobile
+  // hydration (false → true) from triggering a slide animation on load.
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   const handleTabChange = (tab: TabType) => {
     if (!hasInteracted) setHasInteracted(true)
     setActiveTab(tab)
   }
 
-  const flipTransition =
-    reduceMotion || !hasInteracted
-      ? { duration: 0 }
-      : { duration: 0.75, type: "spring" as const, damping: 22, stiffness: 110 }
+  // Instant jump on first load / reduced-motion; tween on user interactions.
+  const slideTransition = !hasInteracted || reduceMotion ? { duration: 0 } : SLIDE_TRANSITION
 
   return (
     <LazyMotion features={domAnimation} strict>
       <main className="relative flex h-dvh w-full flex-col overflow-hidden bg-background">
         <Topbar activeTab={activeTab} onTabChange={handleTabChange} />
 
-        {/* Main 3D Container Wrapper — perspective in style to avoid CSS recalc */}
-        <div className="relative flex size-full flex-1 flex-col lg:flex-row" style={{ perspective: "2000px" }}>
-          <m.div
-            className="relative flex size-full w-full flex-col lg:flex-row"
-            style={{ transformStyle: "preserve-3d", willChange: "transform" }}
-            initial={false}
-            animate={{ rotateY: isMobile && isProfile ? 180 : 0 }}
-            transition={flipTransition}
-          >
-            {/* Back on Mobile (rotated 180deg) | Left on Desktop */}
-            <section
-              className="absolute inset-0 z-10 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:z-auto lg:order-1 lg:w-[40%]"
-              style={{
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-                transform: isMobile ? "rotateY(180deg)" : "none",
-                pointerEvents: isMobile && !isProfile ? "none" : "auto",
-              }}
-            >
-              <LeftPanel />
-              <div className="absolute top-4 right-4 z-50 hidden lg:block">
-                <ThemeSwitcher />
-              </div>
-            </section>
+        {/*
+          Both panels stay mounted at all times → chat state is preserved
+          when the user switches tabs and comes back.
 
-            {/* Front on Mobile (0deg) | Right on Desktop */}
-            <section
-              className="absolute inset-0 z-20 flex h-full w-full flex-1 flex-col bg-background lg:relative lg:z-auto lg:order-2"
-              style={{
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-                transform: isMobile ? "rotateY(0deg)" : "none",
-                pointerEvents: isMobile && isProfile ? "none" : "auto",
-              }}
-            >
-              <ChatArea />
-            </section>
-          </m.div>
+          On mobile: panels are absolute-positioned and slide left/right.
+            - Profile: z-20 so it's on top on initial load (correct default).
+            - Chat: starts off-screen at x:100%, slides in when active.
+          On desktop (lg): panels become relative and flex side-by-side;
+            x is always 0 so the slide logic is inert.
+        */}
+        <div className="relative flex size-full flex-1 overflow-hidden lg:flex-row">
+          {/* ── Profile Panel ── slides out to the LEFT when Chat is active */}
+          <m.section
+            className="absolute inset-0 z-20 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-[40%]"
+            initial={false}
+            animate={{ x: isMobile && !isProfile ? "-100%" : 0 }}
+            transition={slideTransition}
+            style={{ pointerEvents: isMobile && !isProfile ? "none" : "auto", willChange: "transform" }}
+          >
+            <LeftPanel />
+            <div className="absolute top-4 right-4 z-50 hidden lg:block">
+              <ThemeSwitcher />
+            </div>
+          </m.section>
+
+          {/* ── Chat Panel ── slides in from the RIGHT when Chat is active */}
+          <m.section
+            className="absolute inset-0 z-10 flex h-full w-full flex-1 flex-col bg-background lg:relative lg:inset-auto lg:z-auto lg:order-2"
+            initial={false}
+            animate={{ x: isMobile && isProfile ? "100%" : 0 }}
+            transition={slideTransition}
+            style={{ pointerEvents: isMobile && isProfile ? "none" : "auto", willChange: "transform" }}
+          >
+            <ChatArea />
+          </m.section>
         </div>
       </main>
     </LazyMotion>
