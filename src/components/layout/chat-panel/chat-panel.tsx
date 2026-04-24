@@ -176,11 +176,14 @@ export function ChatPanel() {
                 }}
                 value={model}
               >
-                <PromptInputSelectTrigger className="h-8 max-w-[160px] truncate rounded-full border-none bg-accent/40 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:ring-0 md:max-w-xs">
+                <PromptInputSelectTrigger
+                  aria-label="Select Model"
+                  className="h-8 max-w-40 truncate rounded-full border-none bg-accent/40 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:ring-0 md:max-w-xs"
+                >
                   <SparklesIcon className="mr-1.5 size-3.5 fill-primary/10 text-primary/70" />
                   <PromptInputSelectValue />
                 </PromptInputSelectTrigger>
-                <PromptInputSelectContent className="min-w-[160px] rounded-2xl border border-border/40 bg-background/90 p-1.5 shadow-xl backdrop-blur-xl">
+                <PromptInputSelectContent className="min-w-40 rounded-2xl border border-border/40 bg-background/90 p-1.5 shadow-xl backdrop-blur-xl">
                   {models.map((model) => (
                     <PromptInputSelectItem
                       key={model.id}
