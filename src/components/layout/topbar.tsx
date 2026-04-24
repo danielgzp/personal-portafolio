@@ -17,7 +17,7 @@ const headerVariants: Variants = {
   },
   hidden: {
     y: "-100%",
-    transition: { duration: 0.2, ease: "easeInOut" } // ease-in
+    transition: { duration: 0.2, ease: "easeInOut" }, // ease-in
   },
 }
 

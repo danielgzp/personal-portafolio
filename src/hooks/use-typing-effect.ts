@@ -7,16 +7,8 @@ interface UseTypingEffectOptions {
   pauseBeforeType?: number
 }
 
-export function useTypingEffect(
-  phrases: string[],
-  options: UseTypingEffectOptions = {}
-) {
-  const {
-    typingSpeed = 50,
-    deletingSpeed = 30,
-    pauseBeforeDelete = 2000,
-    pauseBeforeType = 500,
-  } = options
+export function useTypingEffect(phrases: string[], options: UseTypingEffectOptions = {}) {
+  const { typingSpeed = 50, deletingSpeed = 30, pauseBeforeDelete = 2000, pauseBeforeType = 500 } = options
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [currentText, setCurrentText] = useState("")
@@ -36,26 +28,18 @@ export function useTypingEffect(
         setSelectedIndex((prev) => (prev + 1) % phrases.length)
       }, pauseBeforeType)
     } else {
-      timeoutId = setTimeout(() => {
-        setCurrentText(
-          isDeleting
-            ? fullText.substring(0, currentText.length - 1)
-            : fullText.substring(0, currentText.length + 1)
-        )
-      }, isDeleting ? deletingSpeed : typingSpeed)
+      timeoutId = setTimeout(
+        () => {
+          setCurrentText(
+            isDeleting ? fullText.substring(0, currentText.length - 1) : fullText.substring(0, currentText.length + 1)
+          )
+        },
+        isDeleting ? deletingSpeed : typingSpeed
+      )
     }
 
     return () => clearTimeout(timeoutId)
-  }, [
-    currentText,
-    isDeleting,
-    selectedIndex,
-    phrases,
-    typingSpeed,
-    deletingSpeed,
-    pauseBeforeDelete,
-    pauseBeforeType,
-  ])
+  }, [currentText, isDeleting, selectedIndex, phrases, typingSpeed, deletingSpeed, pauseBeforeDelete, pauseBeforeType])
 
   return currentText
 }
