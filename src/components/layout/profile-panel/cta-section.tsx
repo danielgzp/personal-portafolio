@@ -47,9 +47,10 @@ export function CTASection({ variants, reduceMotion, containerRef, className, sh
       {links.map((link, idx) => (
         <Button
           asChild
-          className="size-10 shrink-0 rounded-full transition-all hover:scale-110 hover:shadow-lg active:scale-95"
+          className="shrink-0 rounded-full shadow-lg transition-all hover:scale-110 active:scale-95"
           key={idx}
-          variant="outline"
+          variant="secondary"
+          size="icon-lg"
         >
           <Link href={link.url} target="_blank" rel="noopener noreferrer">
             <link.icon className="size-4" />

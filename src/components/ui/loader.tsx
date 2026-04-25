@@ -22,7 +22,7 @@ export const LoaderOne = () => {
           y: [3, -3, 3],
         }}
         transition={transition(0)}
-        className="size-2.5 rounded-full border border-border bg-linear-to-b from-foreground/60 to-foreground/40"
+        className="size-1.5 rounded-full border border-border bg-linear-to-b from-muted-foreground to-muted-foreground/60"
       />
       <m.div
         initial={{
@@ -32,7 +32,7 @@ export const LoaderOne = () => {
           y: [3, -3, 3],
         }}
         transition={transition(1)}
-        className="size-2.5 rounded-full border border-border bg-linear-to-b from-foreground/60 to-foreground/40"
+        className="size-1.5 rounded-full border border-border bg-linear-to-b from-muted-foreground to-muted-foreground/60"
       />
       <m.div
         initial={{
@@ -42,7 +42,7 @@ export const LoaderOne = () => {
           y: [3, -3, 3],
         }}
         transition={transition(2)}
-        className="size-2.5 rounded-full border border-border bg-linear-to-b from-foreground/70 to-foreground/40"
+        className="size-1.5 rounded-full border border-border bg-linear-to-b from-muted-foreground to-muted-foreground/60"
       />
     </div>
   )
@@ -184,7 +184,7 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
 
 export const LoaderFive = ({ text }: { text: string }) => {
   return (
-    <div className="font-sans font-bold [--shadow-color:var(--color-neutral-500)] dark:[--shadow-color:var(--color-neutral-100)]">
+    <div className="font-mono font-medium [--shadow-color:var(--color-neutral-500)] dark:[--shadow-color:var(--color-neutral-100)]">
       {text.split("").map((char, i) => (
         <m.span
           key={i}

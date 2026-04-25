@@ -34,11 +34,11 @@ export type MessageContentProps = HTMLAttributes<HTMLDivElement>
 export const MessageContent = ({ children, className, ...props }: MessageContentProps) => (
   <div
     className={cn(
-      "flex min-w-0 flex-col gap-2 overflow-hidden rounded-xl border px-4 py-2.5 text-sm shadow-lg backdrop-blur-lg lg:px-5 lg:py-3",
+      "flex min-w-0 flex-col gap-2 overflow-hidden rounded-2xl border px-4 py-2.5 text-sm shadow-lg backdrop-blur-lg lg:px-5 lg:py-3",
 
-      "group-[.is-user]:ml-auto group-[.is-user]:max-w-[65%] group-[.is-user]:rounded-tr-xs group-[.is-user]:rounded-br-2xl group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground lg:group-[.is-user]:max-w-1/2",
+      "group-[.is-user]:ml-auto group-[.is-user]:max-w-[65%] group-[.is-user]:rounded-tr-xs group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground lg:group-[.is-user]:max-w-1/2",
 
-      "group-[.is-assistant]:rounded-tl-xs group-[.is-assistant]:rounded-bl-2xl group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
+      "group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
       className
     )}
     {...props}
@@ -265,6 +265,19 @@ export const MessageResponse = memo(
     <Streamdown
       className={cn("size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0", className)}
       plugins={streamdownPlugins}
+      // Smooth, modern streaming feel:
+      // blurIn masks batch token arrivals better than plain fadeIn.
+      // 220ms + ease-out matches the pacing of modern chat UIs like Claude/ChatGPT.
+      // stagger adds a gentle cascade between words in the same batch.
+      animated={{
+        animation: "blurIn",
+        duration: 220,
+        easing: "ease-out",
+        sep: "word",
+        stagger: 15,
+      }}
+      // Blinking block cursor visible while the model is responding
+      caret="block"
       {...props}
     />
   ),
