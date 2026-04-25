@@ -142,6 +142,31 @@ const badgeVariants: Variants = {
     y: 0,
     transition: { duration: 0.28, ease: EASE_PREMIUM },
   },
+  hover: {
+    y: -2,
+    scale: 1.04,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 12,
+    },
+  },
+  tap: {
+    scale: 0.95,
+  },
+}
+
+// Tech icon specific animation
+const iconVariants: Variants = {
+  hover: {
+    scale: 1.2,
+    rotate: 12,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 10,
+    },
+  },
 }
 
 // Stagger wrapper for badges (tight cadence = waterfall feel)
@@ -239,9 +264,16 @@ export function ProfilePanel() {
             {/* Nested stagger — badges cascade in like a waterfall */}
             <m.div variants={badgesVariants} className="flex flex-wrap gap-1.5 lg:gap-2">
               {SKILLS.map((tech) => (
-                <m.div key={tech.name} variants={badgeVariants}>
-                  <Badge variant="outline" className="mr-0.5 h-6.5 border-dashed bg-card px-2 py-1 [&>svg]:size-4">
-                    <tech.icon />
+                <m.div
+                  key={tech.name}
+                  variants={badgeVariants}
+                  whileHover={reduceMotion ? {} : "hover"}
+                  whileTap={reduceMotion ? {} : "tap"}
+                >
+                  <Badge variant="outline" className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1">
+                    <m.span variants={iconVariants} className="flex [&>svg]:size-4">
+                      <tech.icon />
+                    </m.span>
                     {tech.name}
                   </Badge>
                 </m.div>
@@ -288,17 +320,29 @@ export function ProfilePanel() {
                     </TimelineHeader>
                     <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
                       <p className="text-sm">{item.description}</p>
-                      <div className="flex flex-wrap gap-2 pt-2">
+                      <m.div
+                        variants={badgesVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="flex flex-wrap gap-2 pt-2"
+                      >
                         {item.skills.map((skill) => (
-                          <Badge
+                          <m.div
                             key={skill}
-                            variant="secondary"
-                            className="h-6 rounded-full border border-dashed border-border px-2.5 text-xs"
+                            variants={badgeVariants}
+                            whileHover={reduceMotion ? {} : "hover"}
+                            whileTap={reduceMotion ? {} : "tap"}
                           >
-                            {skill}
-                          </Badge>
+                            <Badge
+                              variant="secondary"
+                              className="h-6 rounded-full border border-dashed border-border px-2.5 text-xs"
+                            >
+                              {skill}
+                            </Badge>
+                          </m.div>
                         ))}
-                      </div>
+                      </m.div>
                     </TimelineContent>
                   </m.div>
                 </TimelineItem>
