@@ -172,7 +172,7 @@ export function ProfilePanel() {
       {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
-      <ScrollArea type="always" className="relative z-10 size-full" viewportId="profile-scroll-container">
+      <ScrollArea className="relative z-10 size-full" viewportId="profile-scroll-container">
         {/*
           Single m.div orchestrator — all sections below are direct children
           so pageVariants.staggerChildren controls the cascade timing.

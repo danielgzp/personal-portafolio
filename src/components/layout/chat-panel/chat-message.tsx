@@ -9,12 +9,11 @@ import {
 } from "@/components/ai-elements/message"
 import { Reasoning, ReasoningContent, ReasoningTrigger } from "@/components/ai-elements/reasoning"
 import { Source, Sources, SourcesContent, SourcesTrigger } from "@/components/ai-elements/sources"
-import { Avatar } from "@/components/ui/avatar"
-import { LoaderOne } from "@/components/ui/loader"
+import { LoaderFive } from "@/components/ui/loader"
 import { cn } from "@/lib/utils"
 import type { ReasoningUIPart, SourceUrlUIPart, TextUIPart, UIMessage } from "ai"
 import { m } from "framer-motion"
-import { BotIcon, CheckIcon, CopyIcon, UserIcon } from "lucide-react"
+import { CheckIcon, CopyIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 
 interface ChatMessageProps {
@@ -69,22 +68,10 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={cn(
-        "flex w-full items-start gap-2 lg:max-w-[90%]",
-        isUser ? "ml-auto flex-row-reverse" : "mb-2 flex-row"
-      )}
+      className={cn("relative flex w-full items-start", isUser ? "ml-auto flex-row-reverse" : "mb-2 flex-row")}
     >
-      <Avatar
-        className={cn(
-          "grop[.is-user]:bg-primary grop[.is-user]:text-primary-foreground hidden size-8 shrink-0 items-center justify-center shadow-sm lg:flex",
-          isUser ? "bg-primary text-primary-foreground" : "bg-card text-card-foreground"
-        )}
-      >
-        {isUser ? <UserIcon className="size-4" /> : <BotIcon className="size-4" />}
-      </Avatar>
-
       <Message from={message.role}>
-        <MessageContent className="group-[.is-assistant]:bg-card/75">
+        <MessageContent className="backdrop-blur-2xl backdrop-saturate-150 group-[.is-assistant]:bg-card/50">
           {!!sourceUrlParts.length && (
             <Sources>
               <SourcesTrigger count={sourceUrlParts.length} />
@@ -104,7 +91,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           )}
 
           {isUser ? (
-            <div className="prose-chat text-foreground">{textContent}</div>
+            <div className="prose-chat">{textContent}</div>
           ) : (
             <div className="prose leading-relaxed prose-slate dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
               <MessageResponse animated isAnimating={isStreaming}>
@@ -140,12 +127,8 @@ export function ChatMessageThinking() {
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="mb-4 flex w-full flex-row items-start gap-2"
     >
-      <Avatar className="size-8 shrink-0 items-center justify-center bg-card text-card-foreground shadow-sm">
-        <BotIcon className="size-4" />
-      </Avatar>
-
       <Message from="assistant" className="w-fit max-w-[85%] sm:max-w-[75%] md:max-w-full">
-        <MessageContent className="flex min-h-10 w-fit min-w-16 items-center justify-center rounded-tl-xs border bg-card px-4 py-0 text-foreground shadow-sm lg:min-h-10.5 lg:px-5">
+        <MessageContent className="flex min-h-9 w-fit min-w-16 items-center justify-center rounded-xl! border bg-card/50 px-4 py-0 text-foreground shadow-sm lg:min-h-10 lg:px-5">
           {/* <div className="flex h-full items-center space-x-1.5">
             <m.div
               className="size-1.5 rounded-full bg-foreground/40"
@@ -163,8 +146,8 @@ export function ChatMessageThinking() {
               transition={{ duration: 0.8, repeat: Infinity, delay: 0.3 }}
             />
           </div> */}
-          <LoaderOne />
-          {/* <LoaderFive text="Generating chat..." /> */}
+          {/* <LoaderOne /> */}
+          <LoaderFive text="Generando respuesta..." />
         </MessageContent>
       </Message>
     </m.div>

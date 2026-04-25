@@ -1,10 +1,5 @@
 import { google } from "@ai-sdk/google"
-import {
-  APICallError,
-  convertToModelMessages,
-  smoothStream,
-  streamText,
-} from "ai"
+import { APICallError, convertToModelMessages, smoothStream, streamText } from "ai"
 
 // Force Edge runtime for faster streaming
 export const runtime = "edge"
@@ -19,8 +14,7 @@ function buildErrorResponse(error: unknown): Response {
     return new Response(
       JSON.stringify({
         error: "rate_limit",
-        message:
-          "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
+        message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
       }),
       { status: 429, headers: { "Content-Type": "application/json" } }
     )
@@ -54,8 +48,7 @@ function buildErrorResponse(error: unknown): Response {
       return new Response(
         JSON.stringify({
           error: "auth_error",
-          message:
-            "Error de autenticación con el proveedor de IA. Por favor, revisa la configuración.",
+          message: "Error de autenticación con el proveedor de IA. Por favor, revisa la configuración.",
         }),
         { status: statusCode, headers: { "Content-Type": "application/json" } }
       )
@@ -66,8 +59,7 @@ function buildErrorResponse(error: unknown): Response {
       return new Response(
         JSON.stringify({
           error: "service_unavailable",
-          message:
-            "El servicio de IA no está disponible en este momento. Por favor, inténtalo más tarde.",
+          message: "El servicio de IA no está disponible en este momento. Por favor, inténtalo más tarde.",
         }),
         { status: statusCode, headers: { "Content-Type": "application/json" } }
       )
@@ -99,8 +91,7 @@ function buildErrorResponse(error: unknown): Response {
   return new Response(
     JSON.stringify({
       error: "internal_error",
-      message:
-        "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+      message: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
     }),
     { status: 500, headers: { "Content-Type": "application/json" } }
   )
@@ -110,15 +101,9 @@ export async function POST(req: Request) {
   try {
     const { messages, model } = await req.json()
 
-    const allowedModels = new Set([
-      "gemini-3-flash-preview",
-      "gemini-2.5-flash",
-      "gemini-2.5-pro",
-    ])
+    const allowedModels = new Set(["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.5-pro"])
 
-    const selectedModel = allowedModels.has(model)
-      ? model
-      : "gemini-3-flash-preview"
+    const selectedModel = allowedModels.has(model) ? model : "gemini-3-flash-preview"
 
     const result = streamText({
       model: google(selectedModel),
@@ -135,14 +120,12 @@ export async function POST(req: Request) {
       // and dump many tokens at once; smoothStream re-paces the output to feel
       // like a human typing — the same effect you see in Claude and ChatGPT.
       experimental_transform: smoothStream({
-        chunking: "word",  // release one word at a time
-        delayInMs: 35,     // ~35ms between words ≈ comfortable reading pace
+        chunking: "word", // release one word at a time
+        delayInMs: 35, // ~35ms between words ≈ comfortable reading pace
       }),
       // Log when the stream completes or is aborted
       onFinish: ({ usage }) => {
-        console.log(
-          `[/api/chat] Stream finished — model: ${selectedModel} | tokens: ${JSON.stringify(usage)}`
-        )
+        console.log(`[/api/chat] Stream finished — model: ${selectedModel} | tokens: ${JSON.stringify(usage)}`)
       },
       onAbort: () => {
         console.log(`[/api/chat] Stream aborted — model: ${selectedModel}`)
@@ -150,11 +133,62 @@ export async function POST(req: Request) {
     })
 
     return result.toUIMessageStreamResponse({
-      // Forward any errors that surface inside the stream back to the client
+      // Errors that surface INSIDE the stream (e.g. 429 rate-limit from Google)
+      // arrive here, not in the outer try/catch, because the actual HTTP request
+      // to the provider is lazy — it starts after toUIMessageStreamResponse() is returned.
+      // We return a JSON string so the client's getErrorMessage() can parse it.
       onError: (error) => {
         console.error("[/api/chat] Stream error:", error)
-        // Return a generic message to avoid leaking internal details
-        return "Ocurrió un error durante la respuesta. Por favor, inténtalo de nuevo."
+
+        if (APICallError.isInstance(error)) {
+          const status = error.statusCode ?? 500
+
+          if (status === 429) {
+            return JSON.stringify({
+              error: "rate_limit",
+              message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
+            })
+          }
+
+          if (
+            status === 400 &&
+            (error.message.includes("token") ||
+              error.message.includes("context") ||
+              error.message.includes("length") ||
+              error.message.includes("limit"))
+          ) {
+            return JSON.stringify({
+              error: "token_limit",
+              message:
+                "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto.",
+            })
+          }
+
+          if (status === 401 || status === 403) {
+            return JSON.stringify({
+              error: "auth_error",
+              message: "Error de autenticación con el proveedor de IA.",
+            })
+          }
+
+          if (status === 503 || status === 502) {
+            return JSON.stringify({
+              error: "service_unavailable",
+              message: "El servicio de IA no está disponible en este momento. Por favor, inténtalo más tarde.",
+            })
+          }
+
+          return JSON.stringify({
+            error: "api_error",
+            message: `Error del proveedor de IA (${status}). Por favor, inténtalo de nuevo.`,
+          })
+        }
+
+        // Unknown / unexpected streaming error
+        return JSON.stringify({
+          error: "internal_error",
+          message: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+        })
       },
     })
   } catch (error) {

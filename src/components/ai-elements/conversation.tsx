@@ -12,6 +12,9 @@ export type ConversationProps = ComponentProps<typeof StickToBottom>
 
 export const Conversation = ({ className, ...props }: ConversationProps) => (
   <StickToBottom
+    // overflow-y-hidden is intentional: use-stick-to-bottom renders its own
+    // internal scroll div (position:absolute; inset:0; overflow-y:auto).
+    // The outer element only clips visual overflow — do not change to overflow-y-auto.
     className={cn("relative flex-1 overflow-y-hidden", className)}
     initial="smooth"
     resize="smooth"

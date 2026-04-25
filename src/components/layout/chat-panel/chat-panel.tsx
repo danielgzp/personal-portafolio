@@ -20,11 +20,12 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input"
+import { Button } from "@/components/ui/button"
 import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
 import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { AlertCircle, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
+import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
 import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
@@ -62,11 +63,7 @@ function getErrorMessage(error: Error | undefined): string {
     return "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo."
   }
 
-  if (
-    message.includes("token_limit") ||
-    message.includes("token") ||
-    message.includes("context length")
-  ) {
+  if (message.includes("token_limit") || message.includes("token") || message.includes("context length")) {
     return "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto."
   }
 
@@ -85,13 +82,17 @@ function getErrorMessage(error: Error | undefined): string {
 export function ChatPanel() {
   const [input, setInput] = useState("")
   // const [useWebSearch, setUseWebSearch] = useState(false)
-  const [model, setModel] = useState("gemini-3-flash-preview")
+  const [model, setModel] = useState("gemini-2.5-flash")
   const [isDismissed, setIsDismissed] = useState(false)
 
   const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
     { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
     { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
+    {
+      id: "gemini-2.5-flash-lite",
+      name: "Gemini 2.5 Flash Lite",
+    },
   ]
 
   const { messages, sendMessage, status, error, regenerate } = useChat({
@@ -157,7 +158,7 @@ export function ChatPanel() {
       <DottedGlowBackground
         className="-z-10"
         opacity={0.35}
-        gap={34}
+        gap={50}
         radius={0.9}
         colorLightVar="--foreground"
         colorDarkVar="--foreground"
@@ -167,77 +168,65 @@ export function ChatPanel() {
 
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" />
 
-      <div
+      {/* <div
         id="chat-scroll-container"
         className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
-      >
-        <Conversation className="mx-auto w-full max-w-3xl p-0">
+      > */}
+      <Conversation className="">
+        <ConversationContent
+          scrollClassName="mask-b-from-95% mask-b-to-100%"
+          className="mx-auto size-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4"
+        >
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">
               <EmptyState setInput={setInput} />
             </ConversationEmptyState>
           ) : (
-            <ConversationContent>
-              {messages.length === 0 ? (
-                <ConversationEmptyState className="p-0">
-                  <EmptyState setInput={setInput} />
-                </ConversationEmptyState>
-              ) : (
-                <ConversationContent className="p-0">
-                  {messages.map((msg, idx) => (
-                    <ChatMessage
-                      key={msg.id}
-                      message={msg}
-                      // Mark the last assistant message as actively streaming
-                      // so Streamdown's isAnimating and caret are properly activated
-                      isStreaming={
-                        isLoading &&
-                        idx === messages.length - 1 &&
-                        msg.role === "assistant"
-                      }
-                    />
-                  ))}
-                  {isLoading && messages[messages.length - 1]?.role === "user" && (
-                    <ChatMessageThinking />
-                  )}
-                </ConversationContent>
-              )}
-            </ConversationContent>
+            messages.map((msg, idx) => (
+              <ChatMessage
+                key={msg.id}
+                message={msg}
+                // Mark the last assistant message as actively streaming
+                // so Streamdown's isAnimating and caret are properly activated
+                isStreaming={isLoading && idx === messages.length - 1 && msg.role === "assistant"}
+              />
+            ))
           )}
-          <ConversationScrollButton />
-        </Conversation>
-      </div>
+          {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+          {messages.length > 0 && <div className="h-0.5 shrink-0" aria-hidden="true" />}
+        </ConversationContent>
+        <ConversationScrollButton />
+      </Conversation>
 
-      <div className="mx-auto w-full max-w-3xl px-4 pt-2 pb-4 md:pb-8">
+      <div className="mx-auto w-full max-w-3xl px-4 pb-4 md:pb-8">
         {/* Error banner — shown when useChat surfaces an error */}
         {hasError && (
           <div
             role="alert"
             aria-live="assertive"
-            className="mb-3 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive backdrop-blur-sm"
+            className="mb-3 flex items-center gap-3 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive backdrop-blur-sm"
           >
-            <AlertCircle className="mt-0.5 size-4 shrink-0" />
+            <AlertCircleIcon className="size-4 shrink-0" />
             <p className="flex-1 leading-snug">{errorMessage}</p>
             <div className="flex shrink-0 items-center gap-1">
-              <button
-                type="button"
+              <Button
+                variant="destructive"
                 onClick={handleRetry}
                 title="Reintentar"
                 aria-label="Reintentar la última solicitud"
-                className="flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/10 px-2.5 py-1 text-xs font-medium transition-colors hover:bg-destructive/20"
               >
                 <RefreshCw className="size-3" />
                 Reintentar
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => setIsDismissed(true)}
                 title="Descartar error"
                 aria-label="Descartar mensaje de error"
-                className="rounded-lg p-1 transition-colors hover:bg-destructive/20"
+                size="icon-sm"
               >
                 <X className="size-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -246,7 +235,7 @@ export function ChatPanel() {
           onSubmit={handleSubmit}
           globalDrop
           multiple
-          inputGroupClassName="bg-card border border-border/50 shadow-sm lg:shadow-[0_0_30px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4"
+          inputGroupClassName="bg-card border border-border/50 shadow-sm lg:shadow-[0_0_16px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4 rounded-2xl"
         >
           <PromptInputBody>
             <PromptInputTextarea
@@ -258,7 +247,7 @@ export function ChatPanel() {
             />
           </PromptInputBody>
           <PromptInputFooter className="flex items-center justify-between px-3 pt-2 pb-3 md:px-4">
-            <PromptInputTools className="scrollbar-none flex-1 overflow-x-auto pr-2">
+            <PromptInputTools className="pr-2">
               <PromptInputSelect
                 onValueChange={(value) => {
                   setModel(value)
@@ -267,18 +256,14 @@ export function ChatPanel() {
               >
                 <PromptInputSelectTrigger
                   aria-label="Select Model"
-                  className="h-8 max-w-40 truncate rounded-full border-none bg-accent/40 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:ring-0 md:max-w-xs"
+                  className="h-8 max-w-40 rounded-full bg-accent text-xs font-medium text-muted-foreground transition-colors md:max-w-xs dark:bg-accent/50"
                 >
-                  <SparklesIcon className="mr-1.5 size-3.5 fill-primary/10 text-primary/70" />
-                  <PromptInputSelectValue />
+                  <SparklesIcon className="mr-1.5 size-3.5" />
+                  <PromptInputSelectValue className="truncate" />
                 </PromptInputSelectTrigger>
-                <PromptInputSelectContent className="min-w-40 rounded-2xl border border-border/40 bg-background/90 p-1.5 shadow-xl backdrop-blur-xl">
+                <PromptInputSelectContent className="bg-background/75">
                   {models.map((model) => (
-                    <PromptInputSelectItem
-                      key={model.id}
-                      value={model.id}
-                      className="cursor-pointer rounded-xl px-3 py-2 text-sm font-medium transition-colors focus:bg-primary/10 focus:text-primary"
-                    >
+                    <PromptInputSelectItem key={model.id} value={model.id}>
                       {model.name}
                     </PromptInputSelectItem>
                   ))}

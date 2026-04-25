@@ -64,7 +64,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="items-center justify-center p-4 pb-8">
+    <div className="items-center justify-center">
       {/* Hero Header */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
@@ -73,7 +73,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         className="mb-8 flex max-w-3xl flex-col items-center gap-4 text-center lg:mb-12 lg:gap-6"
       >
         <div className="space-y-4">
-          <h2 className="text-3xl font-extrabold tracking-tight text-pretty text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">
               <Typewriter
                 text="Asistente Virtual"
