@@ -19,7 +19,7 @@ export function LocaleSwitcher() {
   const locale = useLocale()
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="size-9 rounded-full">
           <Languages className="size-4" />

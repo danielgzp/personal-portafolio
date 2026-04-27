@@ -131,7 +131,7 @@
   }
 
   /* Universal minimal scrollbar */
-  /* ::-webkit-scrollbar {
+  ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
@@ -146,7 +146,7 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background-color: var(--muted-foreground);
-  } */
+  }
 }
 
 /* Markdown prose tweaks */
@@ -186,7 +186,7 @@
   font-weight: 600;
 }
 
-/* @theme inline {
+@theme inline {
   --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
 
   @keyframes scroll {
@@ -194,4 +194,4 @@
       transform: translate(calc(-50% - (var(--gap, 1rem) / 2)));
     }
   }
-} */
+}

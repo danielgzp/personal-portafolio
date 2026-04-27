@@ -5,7 +5,6 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    // "css": "src/styles/index.css",
     "css": "src/styles/globals.css",
     "baseColor": "zinc",
     "cssVariables": true,
