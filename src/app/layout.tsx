@@ -3,6 +3,8 @@ import { Geist } from "next/font/google"
 import { ClientProviders } from "@/providers"
 import "@/styles/globals.css"
 import { Metadata } from "next"
+import { getLocale } from "next-intl/server"
+import { NextIntlClientProvider } from "next-intl"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,15 +21,18 @@ export const metadata: Metadata = {
 //   subsets: ["latin"],
 // })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.className} antialiased`}>
+    <html lang={locale} suppressHydrationWarning className={`${geistSans.className} antialiased`}>
       <body>
-        <ClientProviders>{children}</ClientProviders>
+        <NextIntlClientProvider>
+          <ClientProviders>{children}</ClientProviders>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

@@ -175,7 +175,7 @@ export function ChatPanel() {
       <Conversation className="">
         <ConversationContent
           scrollClassName="mask-b-from-95% mask-b-to-100%"
-          className="mx-auto size-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4"
+          className="mx-auto size-full px-2 pt-18 lg:px-4 lg:pt-4 max-w-3xl"
         >
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">

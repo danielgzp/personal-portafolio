@@ -34,6 +34,7 @@ import { MapPin } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useRef } from "react"
 import { CTASection } from "./cta-section"
+import { useTranslations } from "next-intl"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -43,9 +44,9 @@ const EXPERIENCE_ITEMS = [
     company: "Essertech LLC",
     role: "Lead Frontend Developer",
     location: "Cabudare, Venezuela",
-    date: "Marzo 2025 — Actualidad",
+    date: "Mayo 2025 — Actualidad",
     description:
-      "Lideré el desarrollo end-to-end de un ERP para ISP. Creé el System Design con estándares Pixel Perfect y definí la arquitectura modular. Integré IA para acelerar el desarrollo en un 45%.",
+      "Lideré el desarrollo end-to-end de un ERP para ISP. Definí la arquitectura modular y creé un System Design con estándares Pixel-Perfect. Integré asistentes de IA, acelerando el ciclo de desarrollo en un 45%.",
     skills: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"],
   },
   {
@@ -53,9 +54,9 @@ const EXPERIENCE_ITEMS = [
     company: "Essertech LLC",
     role: "Junior Frontend Developer",
     location: "Cabudare, Venezuela",
-    date: "Agosto 2023 — Marzo 2025",
+    date: "Agosto 2023 — Mayo 2025",
     description:
-      "Desarrollé una plataforma financiera en tiempo real, optimicé la UI/UX y rendimiento de un SaaS existente, y construí desde cero un marketplace multi-tenant global.",
+      "Desarrollé un sistema finanzas a medida en tiempo real, optimicé el rendimiento de un ecosistema SaaS y trabajé en el desarrollo de un marketplace multi-tenant global con internacionalización robusta.",
     skills: ["React", "Next.js", "Zustand", "Supabase", "i18n"],
   },
   {
@@ -65,7 +66,7 @@ const EXPERIENCE_ITEMS = [
     location: "Barquisimeto, Venezuela",
     date: "Agosto 2022 — Noviembre 2022",
     description:
-      "Mejoré la usabilidad, rediseñé la interfaz e internacionalicé un sistema de citas para spas. También desarrollé su landing page comercial.",
+      "Rediseñé la interfaz y mejoré la usabilidad de un sistema de citas para spas, implementando su internacionalización. Además, desarrollé la landing page comercial para su distribución.",
     skills: ["PHP", "PostgreSQL", "HTML5", "CSS"],
   },
 ]
@@ -180,6 +181,7 @@ const badgesVariants: Variants = {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ProfilePanel() {
+  const t = useTranslations("HomePage")
   const reduceMotion = useReducedMotion()
   const motionState = reduceMotion ? "visible" : "hidden"
 
@@ -251,10 +253,11 @@ export function ProfilePanel() {
           {/* ── Bio ── */}
           <m.div variants={sectionVariants} className="leading-relaxed text-foreground">
             <p className="text-sm text-pretty lg:md:text-base">
-              Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
-              de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
-              limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
-              reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
+              
+                Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
+                de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
+                limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
+                reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
             </p>
           </m.div>
 
@@ -307,19 +310,19 @@ export function ProfilePanel() {
                     <TimelineHeader className="w-full pb-0">
                       <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                         <div className="flex flex-col">
-                          <TimelineTitle className="text-base font-bold text-foreground">{item.company}</TimelineTitle>
-                          <span className="text-sm font-medium text-muted-foreground">{item.role}</span>
+                          <TimelineTitle className="text-base font-bold text-foreground">{item.role}</TimelineTitle>
+                          <span className="text-base font-medium text-muted-foreground">{item.company}</span>
                         </div>
                         <div className="flex flex-col sm:text-right">
-                          <span className="text-sm font-bold text-foreground">{item.location}</span>
-                          <TimelineDate className="mb-0! text-sm! font-medium! text-muted-foreground italic">
+                          <span className="text-base font-medium text-foreground">{item.location}</span>
+                          <TimelineDate className="mb-0! text-base! font-normal text-muted-foreground italic">
                             {item.date}
                           </TimelineDate>
                         </div>
                       </div>
                     </TimelineHeader>
                     <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                      <p className="text-sm">{item.description}</p>
+                      <p className="text-base">{item.description}</p>
                       <m.div
                         variants={badgesVariants}
                         initial="hidden"

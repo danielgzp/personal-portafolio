@@ -1,7 +1,58 @@
 "use client"
 
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
 import { m } from "framer-motion"
 import { useState, useEffect } from "react"
+
+const suggestions = [
+  // 🚀 IMPACTO Y MÉTRICAS (El gancho para CTOs)
+  {
+    heading: "Integración de IA",
+    message: "¿Cómo logró acelerar el ciclo de desarrollo en un 45% en Essertech?",
+  },
+  {
+    heading: "Proyectos Críticos",
+    message: "Cuéntame sobre la plataforma financiera en tiempo real que construyó.",
+  },
+
+  // 🏗️ ARQUITECTURA (El gancho para Líderes Técnicos)
+  {
+    heading: "System Design",
+    message: "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?",
+  },
+  {
+    heading: "Manejo de Estado",
+    message: "¿Por qué prefiere usar Zustand y SWR en aplicaciones Next.js?",
+  },
+  {
+    heading: "Escalabilidad",
+    message: "¿Cómo estructura y escala un proyecto grande desde cero hasta producción?",
+  },
+
+  // 🧠 LIDERAZGO Y NEGOCIO (El gancho para Managers/RRHH)
+  {
+    heading: "Visión de Producto",
+    message: "¿Cómo equilibra la escritura de 'código limpio' con las urgencias del negocio?",
+  },
+  {
+    heading: "Liderazgo Técnico",
+    message: "¿Cómo fomenta las buenas prácticas y estándares de calidad en su equipo?",
+  },
+  {
+    heading: "Resolución de Retos",
+    message: "¿Cuál ha sido el desafío técnico más complejo que ha tenido que resolver?",
+  },
+
+  // ⚡ STACK Y RESUMEN (Las clásicas, pero elevadas)
+  {
+    heading: "Stack Ideal 2026",
+    message: "¿Qué tecnologías componen su stack de desarrollo favorito actualmente?",
+  },
+  {
+    heading: "Elevator Pitch",
+    message: "Dame un resumen de 30 segundos de por qué debería contratar a Daniel.",
+  },
+]
 
 function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
   const [displayedText, setDisplayedText] = useState("")
@@ -64,15 +115,15 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center">
       {/* Hero Header */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-        className="mb-8 flex max-w-3xl flex-col items-center gap-4 text-center lg:mb-12 lg:gap-6"
+        className="mb-8 flex flex-col items-center gap-4 text-center lg:mb-12 lg:gap-6"
       >
-        <div className="space-y-4">
+        <div className="max-w-3xl space-y-4">
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">
               <Typewriter
@@ -82,12 +133,11 @@ export function EmptyState({ setInput }: EmptyStateProps) {
               />
             </span>
             <span className="hidden sm:inline">
-              <Typewriter text="Conoce a Daniel" delay={0} />
+              <Typewriter text="Explora y conoce el perfil de Daniel mediante" delay={0} />
               <br className="hidden sm:block" />
-              <Typewriter text="a la velocidad de la " delay={700} />
               <Typewriter
                 text="Inteligencia Artificial"
-                delay={1400}
+                delay={1300}
                 className="bg-linear-to-b from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent drop-shadow-sm"
               />
             </span>
@@ -99,11 +149,11 @@ export function EmptyState({ setInput }: EmptyStateProps) {
             className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
           >
             <span className="sm:hidden">
-              Asistente entrenado con su perfil profesional y experiencia. Elige un tema para empezar.
+              Asistente entrenado el perfil profesional y experiencia. Elige un tema para empezar.
             </span>
             <span className="hidden sm:inline">
-              Soy un asistente entrenado con su perfil profesional, código y experiencia. <br /> Pregúntame sobre sus
-              habilidades o elige un tema para empezar.
+              Soy un agente entrenado con su trayectoria, decisiones de arquitectura y visión de producto. Hazme una
+              pregunta técnica o elige un tema para empezar.
             </span>
           </m.p>
         </div>
@@ -136,6 +186,10 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           </m.button>
         ))}
       </m.div>
+      {/* <div className="relative mt-4 w-full overflow-hidden rounded-xl antialiased">
+        <InfiniteMovingCards items={suggestions} direction="right" speed="slow" className="mx-auto w-full max-w-5xl" />
+      </div> */}
     </div>
   )
 }
+
