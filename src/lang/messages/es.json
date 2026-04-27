@@ -1,0 +1,7 @@
+{
+  "HomePage": {
+    "title": "Hola, soy Daniel",
+    "description": "Desarrollador de software con experiencia en el desarrollo de aplicaciones web y móviles. Me apasiona crear soluciones innovadoras y eficientes para resolver problemas complejos."
+  },
+  "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
+}

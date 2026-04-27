@@ -29,6 +29,7 @@ import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-
 import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
+import { cn } from "@/lib/utils"
 
 // const COMMANDS = [
 //   { command: "/skills", description: "Lista de tecnologías" },
@@ -175,7 +176,7 @@ export function ChatPanel() {
       <Conversation className="">
         <ConversationContent
           scrollClassName="mask-b-from-95% mask-b-to-100%"
-          className="mx-auto size-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4"
+          className={cn("mx-auto w-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4", { "h-full": messages.length === 0 })}
         >
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">

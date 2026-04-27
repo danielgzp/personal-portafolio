@@ -1,0 +1,7 @@
+{
+  "HomePage": {
+    "title": "Hi, I'm Daniel",
+    "description": "I'm a software developer with a passion for building web applications. I have experience with React, Next.js, and Node.js. I'm always looking for new challenges and opportunities to learn."
+  },
+  "language": "{locale, select, es {Spanish} en {English} other {unknown}}"
+}

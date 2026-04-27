@@ -1,5 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import {NextConfig} from "next"
+import createNextIntlPlugin from "next-intl/plugin"
+
+const withNextIntl = createNextIntlPlugin("./src/lang/request.ts")
+
+const nextConfig: NextConfig = {
   allowedDevOrigins: ["10.10.10.107"],
   async headers() {
     return [
@@ -16,4 +20,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

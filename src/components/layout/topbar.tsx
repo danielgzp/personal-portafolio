@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import type { TabType } from "@/app/page"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { LocaleSwitcher } from "../locale-switcher"
 
 // Module-level variants — defined once, never recreated on re-renders.
 // Each variant carries its own transition for asymmetric easing:
@@ -120,6 +121,7 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
         )}
 
         <div className="flex shrink-0 items-center">
+          <LocaleSwitcher />
           <ThemeSwitcher />
         </div>
       </div>

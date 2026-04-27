@@ -7,6 +7,7 @@ import { m, useReducedMotion } from "framer-motion"
 import { useState } from "react"
 import { ChatPanel } from "../components/layout/chat-panel"
 import { ProfilePanel } from "../components/layout/profile-panel"
+import { LocaleSwitcher } from "@/components/locale-switcher"
 
 // True easeInOut (cubic-bezier): starts and ends softly — no jarring snap.
 // willChange:transform on the panels pre-promotes GPU layers before the
@@ -60,7 +61,8 @@ export default function Page() {
           style={{ pointerEvents: isMobile && !isProfile ? "none" : "auto", willChange: "transform" }}
         >
           <ProfilePanel />
-          <div className="absolute top-4 right-4 z-50 hidden lg:block">
+          <div className="absolute top-4 right-4 z-50 hidden flex-row gap-2 lg:flex">
+            <LocaleSwitcher />
             <ThemeSwitcher />
           </div>
         </m.section>
