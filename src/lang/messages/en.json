@@ -1,7 +1,92 @@
 {
-  "HomePage": {
-    "title": "Hi, I'm Daniel",
-    "description": "I'm a software developer with a passion for building web applications. I have experience with React, Next.js, and Node.js. I'm always looking for new challenges and opportunities to learn."
+  "profile": {
+    "download_cv": "Download Resume",
+    "about": "I'm a software developer with over 3 years of experience, specializing in the React and Next.js ecosystem. I consider myself highly product-driven; my goal isn't just to write clean code, but to deeply understand the business needs in order to build scalable architectures that solve real-world problems. I thrive on taking projects from their initial concept all the way through to production.",
+    "experience": {
+      "items": [
+        {
+          "id": 1,
+          "company": "Essertech LLC",
+          "role": "Lead Frontend Developer",
+          "location": "Cabudare, Venezuela",
+          "date": "May 2025 — Present",
+          "description": "Led the end-to-end development of an ERP system for ISPs. Architected a modular system and established a Pixel-Perfect System Design. Integrated AI assistants, accelerating the development cycle by 45%.",
+          "skills": ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"]
+        },
+        {
+          "id": 2,
+          "company": "Essertech LLC",
+          "role": "Junior Frontend Developer",
+          "location": "Cabudare, Venezuela",
+          "date": "August 2023 — May 2025",
+          "description": "Developed a custom real-time financial system, optimized the performance of a SaaS ecosystem, and contributed to the development of a global multi-tenant marketplace with robust internationalization.",
+          "skills": ["React", "Next.js", "Zustand", "Supabase", "i18n"]
+        },
+        {
+          "id": 3,
+          "company": "Grupo Corporativo Marna",
+          "role": "Software Developer",
+          "location": "Barquisimeto, Venezuela",
+          "date": "August 2022 — November 2022",
+          "description": "Redesigned the UI and improved the overall usability of a spa booking system, implementing full internationalization. Additionally, developed the commercial landing page for its market release.",
+          "skills": ["PHP", "PostgreSQL", "HTML5", "CSS"]
+        }
+      ]
+    }
   },
-  "language": "{locale, select, es {Spanish} en {English} other {unknown}}"
+  "chat": {
+    "placeholders": [
+      "What would you like to know about me or my projects?",
+      "Ask me about my professional background...",
+      "What technologies do you use?",
+      "Tell me about your portfolio...",
+      "Type a command like /skills..."
+    ],
+    "errors": {
+      "rate_limit": "You've reached the request limit. Please wait a moment and try again.",
+      "token_limit": "The conversation is too long for this model. Try starting a new chat or using a model with a larger context window.",
+      "auth_error": "Authentication error with the AI provider.",
+      "service_unavailable": "The AI service is currently unavailable. Please try again later.",
+      "generic": "An unexpected error occurred. Please try again."
+    },
+    "actions": {
+      "retry": "Retry",
+      "retry_tooltip": "Retry last request",
+      "dismiss": "Dismiss error",
+      "select_model": "Select Model",
+      "copy_response": "Copy response"
+    },
+    "empty_state": {
+      "title_ai": "Virtual Assistant",
+      "title_explore": "Explore and learn about Daniel's profile through",
+      "title_explore_ai": "Artificial Intelligence",
+      "description_mobile": "An assistant trained on my professional background and experience. Pick a topic to get started.",
+      "description_desktop": "I am an AI agent trained on Daniel's background, architectural decisions, and product vision. Ask me a technical question or choose a topic to get started.",
+      "suggestions": [
+        {
+          "heading": "Experience",
+          "message": "What is Daniel's experience leading frontend teams?"
+        },
+        {
+          "heading": "Architecture",
+          "message": "How does Daniel structure large-scale Next.js projects?"
+        },
+        {
+          "heading": "Tech Stack",
+          "message": "What is his current preferred tech stack?"
+        },
+        {
+          "heading": "Summary",
+          "message": "Give me a quick summary of his professional profile."
+        }
+      ]
+    },
+    "messages": {
+      "thinking": "Generating response...",
+      "input_placeholder_active": "Ask me anything..."
+    }
+  },
+  "common": {
+    "language": "{locale, select, es {Spanish} en {English} other {unknown}}"
+  }
 }
