@@ -2,6 +2,7 @@
 
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
 import { m } from "framer-motion"
+import { useTranslations } from "next-intl"
 import { useState, useEffect } from "react"
 
 const suggestions = [
@@ -84,24 +85,8 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ setInput }: EmptyStateProps) {
-  const suggestions = [
-    {
-      heading: "Experiencia",
-      message: "¿Cuál es la experiencia de Daniel liderando equipos frontend?",
-    },
-    {
-      heading: "Arquitectura",
-      message: "¿Cómo estructura Daniel los proyectos grandes en Next.js?",
-    },
-    {
-      heading: "Tech Stack",
-      message: "¿Qué tecnologías prefiere usar actualmente?",
-    },
-    {
-      heading: "Resumen",
-      message: "Dame un resumen rápido de su perfil profesional.",
-    },
-  ]
+  const t = useTranslations("chat.empty_state")
+  const suggestions = t.raw("suggestions") as { heading: string; message: string }[]
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -127,16 +112,16 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">
               <Typewriter
-                text="Asistente Virtual"
+                text={t("title_ai")}
                 delay={200}
                 className="bg-linear-to-br from-foreground via-foreground/75 to-primary/10 bg-clip-text text-transparent drop-shadow-sm"
               />
             </span>
             <span className="hidden sm:inline">
-              <Typewriter text="Explora y conoce el perfil de Daniel mediante" delay={0} />
+              <Typewriter text={t("title_explore")} delay={0} />
               <br className="hidden sm:block" />
               <Typewriter
-                text="Inteligencia Artificial"
+                text={t("title_explore_ai")}
                 delay={1300}
                 className="bg-linear-to-b from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent drop-shadow-sm"
               />
@@ -148,13 +133,8 @@ export function EmptyState({ setInput }: EmptyStateProps) {
             transition={{ delay: 1.5, duration: 1 }}
             className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
           >
-            <span className="sm:hidden">
-              Asistente entrenado el perfil profesional y experiencia. Elige un tema para empezar.
-            </span>
-            <span className="hidden sm:inline">
-              Soy un agente entrenado con su trayectoria, decisiones de arquitectura y visión de producto. Hazme una
-              pregunta técnica o elige un tema para empezar.
-            </span>
+            <span className="sm:hidden">{t("description_mobile")}</span>
+            <span className="hidden sm:inline">{t("description_desktop")}</span>
           </m.p>
         </div>
       </m.div>
@@ -192,4 +172,3 @@ export function EmptyState({ setInput }: EmptyStateProps) {
     </div>
   )
 }
-

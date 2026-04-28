@@ -35,8 +35,56 @@
     }
   },
   "chat": {
-    "title": "¡Hablemos!",
-    "description": "¿Tienes un proyecto en mente o simplemente quieres charlar sobre tecnología? No dudes en contactarme. Estoy siempre abierto a nuevas oportunidades y colaboraciones emocionantes."
+    "placeholders": [
+      "¿Qué quieres saber sobre mí o mis proyectos?",
+      "Pregúntame sobre mi experiencia profesional...",
+      "¿Qué tecnologías utilizas?",
+      "Háblame de tu portafolio...",
+      "Escribe un comando como /skills..."
+    ],
+    "errors": {
+      "rate_limit": "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
+      "token_limit": "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto.",
+      "auth_error": "Error de autenticación con el proveedor de IA.",
+      "service_unavailable": "El servicio de IA no está disponible en este momento. Inténtalo más tarde.",
+      "generic": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
+    },
+    "actions": {
+      "retry": "Reintentar",
+      "retry_tooltip": "Reintentar la última solicitud",
+      "dismiss": "Descartar error",
+      "select_model": "Select Model",
+      "copy_response": "Copiar respuesta"
+    },
+    "empty_state": {
+      "title_ai": "Asistente Virtual",
+      "title_explore": "Explora y conoce el perfil de Daniel mediante",
+      "title_explore_ai": "Inteligencia Artificial",
+      "description_mobile": "Asistente entrenado el perfil profesional y experiencia. Elige un tema para empezar.",
+      "description_desktop": "Soy un agente entrenado con su trayectoria, decisiones de arquitectura y visión de producto. Hazme una pregunta técnica o elige un tema para empezar.",
+      "suggestions": [
+        {
+          "heading": "Experiencia",
+          "message": "¿Cuál es la experiencia de Daniel liderando equipos frontend?"
+        },
+        {
+          "heading": "Arquitectura",
+          "message": "¿Cómo estructura Daniel los proyectos grandes en Next.js?"
+        },
+        {
+          "heading": "Tech Stack",
+          "message": "¿Qué tecnologías prefiere usar actualmente?"
+        },
+        {
+          "heading": "Resumen",
+          "message": "Dame un resumen rápido de su perfil profesional."
+        }
+      ]
+    },
+    "messages": {
+      "thinking": "Generando respuesta...",
+      "input_placeholder_active": "Pregúntame algo..."
+    }
   },
   "common": {
     "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
