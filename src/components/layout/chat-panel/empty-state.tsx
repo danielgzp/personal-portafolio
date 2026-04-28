@@ -54,7 +54,7 @@ import { useEffect, useState } from "react"
 //   },
 // ]
 
-function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
+export function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
   const [displayedText, setDisplayedText] = useState("")
 
   useEffect(() => {
