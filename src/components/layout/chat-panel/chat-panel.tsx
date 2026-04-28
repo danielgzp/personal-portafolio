@@ -30,6 +30,7 @@ import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-
 import { useState, useEffect } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
+import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
@@ -84,7 +85,7 @@ export function ChatPanel() {
 
   const [input, setInput] = useState("")
   // const [useWebSearch, setUseWebSearch] = useState(false)
-  const [model, setModel] = useState("gemini-2.5-flash")
+  const [model, setModel] = useState(DEFAULT_MODEL)
   const [isDismissed, setIsDismissed] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 1024px)")
 
@@ -101,16 +102,6 @@ export function ChatPanel() {
       return () => clearTimeout(timer)
     }
   }, [isDesktop])
-
-  const models = [
-    { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
-    { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-    {
-      id: "gemini-2.5-flash-lite",
-      name: "Gemini 2.5 Flash Lite",
-    },
-  ]
 
   const { messages, sendMessage, status, error, regenerate } = useChat({
     transport: new DefaultChatTransport({
@@ -278,7 +269,7 @@ export function ChatPanel() {
                   <PromptInputSelectValue className="truncate" />
                 </PromptInputSelectTrigger>
                 <PromptInputSelectContent className="bg-background/75">
-                  {models.map((model) => (
+                  {AVAILABLE_MODELS.map((model) => (
                     <PromptInputSelectItem key={model.id} value={model.id}>
                       {model.name}
                     </PromptInputSelectItem>

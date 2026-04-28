@@ -1,197 +1,68 @@
 import { google } from "@ai-sdk/google"
-import { APICallError, convertToModelMessages, smoothStream, streamText } from "ai"
+import { convertToModelMessages, smoothStream, streamText } from "ai"
+import { buildSystemPrompt } from "@/lib/ai/prompts"
+import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
+import { buildErrorResponse, handleStreamError } from "@/lib/ai/error-handler"
+import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
 
-// Force Edge runtime for faster streaming
-export const runtime = "edge"
+// Node.js runtime required: @supabase/supabase-js uses Node APIs (fetch, crypto)
+// not available in the Edge runtime.
+export const runtime = "nodejs"
 
 /**
- * Parses a thrown error and returns a user-friendly error response
- * with an appropriate HTTP status code and a structured error body.
+ * Main API Route Handler for the Chat endpoint.
+ * It coordinates parsing the user request, retrieving RAG context from Supabase,
+ * and streaming the response back to the client using the Vercel AI SDK.
  */
-function buildErrorResponse(error: unknown): Response {
-  // --- Rate limit / quota exceeded (HTTP 429) ---
-  if (APICallError.isInstance(error) && error.statusCode === 429) {
-    return new Response(
-      JSON.stringify({
-        error: "rate_limit",
-        message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
-      }),
-      { status: 429, headers: { "Content-Type": "application/json" } }
-    )
-  }
-
-  // --- Token limit exceeded: Google returns 400 with a specific message ---
-  if (
-    APICallError.isInstance(error) &&
-    error.statusCode === 400 &&
-    (error.message.includes("token") ||
-      error.message.includes("context") ||
-      error.message.includes("length") ||
-      error.message.includes("limit"))
-  ) {
-    return new Response(
-      JSON.stringify({
-        error: "token_limit",
-        message:
-          "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto.",
-      }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    )
-  }
-
-  // --- General API call error (auth, bad request, etc.) ---
-  if (APICallError.isInstance(error)) {
-    const statusCode = error.statusCode ?? 500
-
-    // Authentication / API key errors
-    if (statusCode === 401 || statusCode === 403) {
-      return new Response(
-        JSON.stringify({
-          error: "auth_error",
-          message: "Error de autenticación con el proveedor de IA. Por favor, revisa la configuración.",
-        }),
-        { status: statusCode, headers: { "Content-Type": "application/json" } }
-      )
-    }
-
-    // Service unavailable / overloaded
-    if (statusCode === 503 || statusCode === 502) {
-      return new Response(
-        JSON.stringify({
-          error: "service_unavailable",
-          message: "El servicio de IA no está disponible en este momento. Por favor, inténtalo más tarde.",
-        }),
-        { status: statusCode, headers: { "Content-Type": "application/json" } }
-      )
-    }
-
-    // Generic API error fallback
-    return new Response(
-      JSON.stringify({
-        error: "api_error",
-        message: `Error del proveedor de IA (${statusCode}). Por favor, inténtalo de nuevo.`,
-      }),
-      { status: statusCode, headers: { "Content-Type": "application/json" } }
-    )
-  }
-
-  // --- Invalid request body / bad JSON ---
-  if (error instanceof SyntaxError) {
-    return new Response(
-      JSON.stringify({
-        error: "invalid_request",
-        message: "El cuerpo de la solicitud no es válido.",
-      }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    )
-  }
-
-  // --- Unexpected / unknown server error ---
-  console.error("[/api/chat] Unexpected error:", error)
-  return new Response(
-    JSON.stringify({
-      error: "internal_error",
-      message: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
-    }),
-    { status: 500, headers: { "Content-Type": "application/json" } }
-  )
-}
-
 export async function POST(req: Request) {
   try {
     const { messages, model } = await req.json()
 
-    const allowedModels = new Set(["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.5-pro"])
+    // 1. Model Validation: Default to the fastest model if an invalid one is passed.
+    const allowedModels = new Set(AVAILABLE_MODELS.map(m => m.id))
+    const selectedModel = allowedModels.has(model) ? model : DEFAULT_MODEL
 
-    const selectedModel = allowedModels.has(model) ? model : "gemini-3-flash-preview"
+    // 2. Extract User Query: Cleanly extract the text from the complex Vercel AI payload.
+    const userQuery = extractUserQuery(messages)
 
+    // 3. Optional RAG Context Retrieval: Search Supabase for relevant "War Stories".
+    // If the user hasn't typed anything meaningful, or if Supabase is down, it degrades gracefully to "".
+    const context = userQuery ? await retrieveContext(userQuery) : ""
+
+    // 4. Start the AI Stream
     const result = streamText({
       model: google(selectedModel),
       messages: await convertToModelMessages(messages),
-      system: `
-        Eres el asistente personal de Inteligencia Artificial del portafolio interactivo de Daniel González.
-        Daniel es un Frontend Engineer especializado en React, Next.js, TypeScript y Arquitectura Frontend.
-        Tu objetivo es responder de manera profesional y técnica sobre las habilidades y experiencia de Daniel.
-        Si el usuario hace preguntas de código o frontend, responde demostrando el conocimiento avanzado de Daniel.
-        Responde siempre en español a menos que el usuario hable en otro idioma.
-      `,
-      // Throttle the outgoing stream so tokens arrive word-by-word instead of
-      // in large bursts. Gemini (and many other providers) can buffer internally
-      // and dump many tokens at once; smoothStream re-paces the output to feel
-      // like a human typing — the same effect you see in Claude and ChatGPT.
+      
+      // Inject the dynamically built prompt (Base Prompt + RAG Context)
+      system: buildSystemPrompt(context),
+      
+      // Throttle output to word-by-word for a natural reading pace on the frontend
       experimental_transform: smoothStream({
-        chunking: "word", // release one word at a time
-        delayInMs: 35, // ~35ms between words ≈ comfortable reading pace
+        chunking: "word",
+        delayInMs: 35,
       }),
-      // Log when the stream completes or is aborted
+      
       onFinish: ({ usage }) => {
-        console.log(`[/api/chat] Stream finished — model: ${selectedModel} | tokens: ${JSON.stringify(usage)}`)
+        const hasContext = context.length > 0
+        console.log(
+          `[/api/chat] Stream finished — model: ${selectedModel} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)}`
+        )
       },
       onAbort: () => {
         console.log(`[/api/chat] Stream aborted — model: ${selectedModel}`)
       },
     })
 
+    // 5. Return the HTTP Stream Response
     return result.toUIMessageStreamResponse({
-      // Errors that surface INSIDE the stream (e.g. 429 rate-limit from Google)
-      // arrive here, not in the outer try/catch, because the actual HTTP request
-      // to the provider is lazy — it starts after toUIMessageStreamResponse() is returned.
-      // We return a JSON string so the client's getErrorMessage() can parse it.
-      onError: (error) => {
-        console.error("[/api/chat] Stream error:", error)
-
-        if (APICallError.isInstance(error)) {
-          const status = error.statusCode ?? 500
-
-          if (status === 429) {
-            return JSON.stringify({
-              error: "rate_limit",
-              message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
-            })
-          }
-
-          if (
-            status === 400 &&
-            (error.message.includes("token") ||
-              error.message.includes("context") ||
-              error.message.includes("length") ||
-              error.message.includes("limit"))
-          ) {
-            return JSON.stringify({
-              error: "token_limit",
-              message:
-                "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto.",
-            })
-          }
-
-          if (status === 401 || status === 403) {
-            return JSON.stringify({
-              error: "auth_error",
-              message: "Error de autenticación con el proveedor de IA.",
-            })
-          }
-
-          if (status === 503 || status === 502) {
-            return JSON.stringify({
-              error: "service_unavailable",
-              message: "El servicio de IA no está disponible en este momento. Por favor, inténtalo más tarde.",
-            })
-          }
-
-          return JSON.stringify({
-            error: "api_error",
-            message: `Error del proveedor de IA (${status}). Por favor, inténtalo de nuevo.`,
-          })
-        }
-
-        // Unknown / unexpected streaming error
-        return JSON.stringify({
-          error: "internal_error",
-          message: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
-        })
-      },
+      // If the stream breaks midway, handleStreamError generates the JSON error message
+      onError: handleStreamError,
     })
+
   } catch (error) {
+    // If an error happens before the stream starts (e.g. rate limits, syntax errors),
+    // buildErrorResponse handles the HTTP status and JSON mapping.
     return buildErrorResponse(error)
   }
 }
