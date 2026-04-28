@@ -13,7 +13,6 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ input, handleInputChange, handleSubmit, isLoading }: ChatInputProps) {
-  console.log("input", input)
   const submitRef = useRef<HTMLButtonElement>(null)
 
   // Submit con Enter

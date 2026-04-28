@@ -39,8 +39,6 @@ export function ExperienceSection() {
 
   const expirienceItems = t.raw("items") as ExperienceItem[]
 
-  console.log(expirienceItems)
-
   return (
     <m.div variants={sectionVariants} className="space-y-4">
       <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>

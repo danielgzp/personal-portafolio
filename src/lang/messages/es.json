@@ -11,7 +11,13 @@
           "location": "Cabudare, Venezuela",
           "date": "Mayo 2025 — Actualidad",
           "description": "Lideré el desarrollo end-to-end de un ERP para ISP. Definí la arquitectura modular y creé un System Design con estándares Pixel-Perfect. Integré asistentes de IA, acelerando el ciclo de desarrollo en un 45%.",
-          "skills": ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"]
+          "skills": [
+            "Next.js",
+            "TypeScript",
+            "Tailwind CSS",
+            "Shadcn UI",
+            "System Design"
+          ]
         },
         {
           "id": 2,
@@ -20,7 +26,13 @@
           "location": "Cabudare, Venezuela",
           "date": "Agosto 2023 — Mayo 2025",
           "description": "Desarrollé un sistema finanzas a medida en tiempo real, optimicé el rendimiento de un ecosistema SaaS y trabajé en el desarrollo de un marketplace multi-tenant global con internacionalización robusta.",
-          "skills": ["React", "Next.js", "Zustand", "Supabase", "i18n"]
+          "skills": [
+            "React",
+            "Next.js",
+            "Zustand",
+            "Supabase",
+            "i18n"
+          ]
         },
         {
           "id": 3,
@@ -29,7 +41,12 @@
           "location": "Barquisimeto, Venezuela",
           "date": "Agosto 2022 — Noviembre 2022",
           "description": "Rediseñé la interfaz y mejoré la usabilidad de un sistema de citas para spas, implementando su internacionalización. Además, desarrollé la landing page comercial para su distribución.",
-          "skills": ["PHP", "PostgreSQL", "HTML5", "CSS"]
+          "skills": [
+            "PHP",
+            "PostgreSQL",
+            "HTML5",
+            "CSS"
+          ]
         }
       ]
     }
@@ -88,5 +105,9 @@
   },
   "common": {
     "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
+  },
+  "metadata": {
+    "title": "Daniel González | Frontend Engineer",
+    "description": "Portafolio interactivo y asistente de IA para Daniel González, Frontend Engineer."
   }
 }

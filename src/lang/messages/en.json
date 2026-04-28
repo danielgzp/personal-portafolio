@@ -11,7 +11,13 @@
           "location": "Cabudare, Venezuela",
           "date": "May 2025 — Present",
           "description": "Led the end-to-end development of an ERP system for ISPs. Architected a modular system and established a Pixel-Perfect System Design. Integrated AI assistants, accelerating the development cycle by 45%.",
-          "skills": ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"]
+          "skills": [
+            "Next.js",
+            "TypeScript",
+            "Tailwind CSS",
+            "Shadcn UI",
+            "System Design"
+          ]
         },
         {
           "id": 2,
@@ -20,7 +26,13 @@
           "location": "Cabudare, Venezuela",
           "date": "August 2023 — May 2025",
           "description": "Developed a custom real-time financial system, optimized the performance of a SaaS ecosystem, and contributed to the development of a global multi-tenant marketplace with robust internationalization.",
-          "skills": ["React", "Next.js", "Zustand", "Supabase", "i18n"]
+          "skills": [
+            "React",
+            "Next.js",
+            "Zustand",
+            "Supabase",
+            "i18n"
+          ]
         },
         {
           "id": 3,
@@ -29,7 +41,12 @@
           "location": "Barquisimeto, Venezuela",
           "date": "August 2022 — November 2022",
           "description": "Redesigned the UI and improved the overall usability of a spa booking system, implementing full internationalization. Additionally, developed the commercial landing page for its market release.",
-          "skills": ["PHP", "PostgreSQL", "HTML5", "CSS"]
+          "skills": [
+            "PHP",
+            "PostgreSQL",
+            "HTML5",
+            "CSS"
+          ]
         }
       ]
     }
@@ -88,5 +105,9 @@
   },
   "common": {
     "language": "{locale, select, es {Spanish} en {English} other {unknown}}"
+  },
+  "metadata": {
+    "title": "Daniel González | Frontend Engineer",
+    "description": "Interactive portfolio and AI assistant for Daniel González, Frontend Engineer."
   }
 }

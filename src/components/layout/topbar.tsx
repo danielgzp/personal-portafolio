@@ -3,9 +3,10 @@
 import { type Variants, m, LayoutGroup, useReducedMotion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-import type { TabType } from "@/app/page"
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LocaleSwitcher } from "../locale-switcher"
+import { TabType } from "@/app/[locale]/page"
 
 // Module-level variants — defined once, never recreated on re-renders.
 // Each variant carries its own transition for asymmetric easing:

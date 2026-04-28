@@ -10,10 +10,7 @@ export const availableLanguages = [
   },
 ];
 
-export const locales = ["es", "en"];
-export const defaultLocale = "es";
+export const locales = ["es", "en"] as const;
+export const defaultLocale = "es" as const;
+export const defultLocalePrefix = "as-needed" as const;
 
-// export const localeLanguages = {
-//   es,
-//   en: enUS,
-// };

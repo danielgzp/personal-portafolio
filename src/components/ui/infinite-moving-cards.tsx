@@ -85,9 +85,6 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <button
-            onClick={() => {
-              console.log("clic", item)
-            }}
             className="group flex w-[320px] shrink-0 cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-card! p-6 text-left backdrop-blur-sm transition-all duration-300 hover:bg-card/50 md:w-[400px]"
             key={idx}
           >
