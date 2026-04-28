@@ -100,7 +100,7 @@ export const InfiniteMovingCards = ({
               </span>
             </div>
             <p className="text-sm leading-relaxed text-zinc-300 transition-colors group-hover:text-white">
-              "{item.message}"
+              {item.message}
             </p>
           </button>
         ))}

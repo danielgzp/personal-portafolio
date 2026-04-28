@@ -7,7 +7,6 @@ import Link from "next/link"
 interface CTAProps {
   variants: Variants
   reduceMotion: boolean | null
-  containerRef: React.RefObject<Element | null>
   className?: string
   showBorder?: boolean
 }
@@ -18,7 +17,7 @@ const links = [
   { name: "Email", url: "mailto:danielgzp01@gmail.com", icon: MailIcon },
 ]
 
-export function CTASection({ variants, reduceMotion, containerRef, className, showBorder = true }: CTAProps) {
+export function CTASection({ variants, reduceMotion, className, showBorder = true }: CTAProps) {
   return (
     <m.div
       variants={variants}
@@ -26,7 +25,6 @@ export function CTASection({ variants, reduceMotion, containerRef, className, sh
       whileInView="visible"
       viewport={{
         once: true,
-        root: containerRef as React.RefObject<Element>,
         amount: 0.5,
       }}
       className={`flex w-full flex-row justify-center gap-2 sm:justify-start ${
