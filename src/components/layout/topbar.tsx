@@ -54,10 +54,10 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
 
     const handleScroll = () => {
       const currentScrollY = el.scrollTop
-      // Hide when scrolling down more than 50px, show when scrolling up or at top
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      // Hide when scrolling down more than 40px, show when scrolling up or at top
+      if (currentScrollY > lastScrollY && currentScrollY > 40) {
         setHidden(true)
-      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 40) {
         setHidden(false)
       }
       lastScrollY = currentScrollY

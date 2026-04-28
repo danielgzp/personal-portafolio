@@ -15,7 +15,7 @@ import { changeLocaleAction } from "@/lang/actions"
 import { availableLanguages } from "@/lang/configs"
 
 export function LocaleSwitcher() {
-  const t = useTranslations()
+  const t = useTranslations("common")
   const locale = useLocale()
 
   return (

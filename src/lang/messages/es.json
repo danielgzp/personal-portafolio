@@ -1,7 +1,44 @@
 {
-  "HomePage": {
-    "title": "Hola, soy Daniel",
-    "description": "Desarrollador de software con experiencia en el desarrollo de aplicaciones web y móviles. Me apasiona crear soluciones innovadoras y eficientes para resolver problemas complejos."
+  "profile": {
+    "download_cv": "Descargar CV",
+    "about": "Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.",
+    "experience": {
+      "items": [
+        {
+          "id": 1,
+          "company": "Essertech LLC",
+          "role": "Lead Frontend Developer",
+          "location": "Cabudare, Venezuela",
+          "date": "Mayo 2025 — Actualidad",
+          "description": "Lideré el desarrollo end-to-end de un ERP para ISP. Definí la arquitectura modular y creé un System Design con estándares Pixel-Perfect. Integré asistentes de IA, acelerando el ciclo de desarrollo en un 45%.",
+          "skills": ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"]
+        },
+        {
+          "id": 2,
+          "company": "Essertech LLC",
+          "role": "Junior Frontend Developer",
+          "location": "Cabudare, Venezuela",
+          "date": "Agosto 2023 — Mayo 2025",
+          "description": "Desarrollé un sistema finanzas a medida en tiempo real, optimicé el rendimiento de un ecosistema SaaS y trabajé en el desarrollo de un marketplace multi-tenant global con internacionalización robusta.",
+          "skills": ["React", "Next.js", "Zustand", "Supabase", "i18n"]
+        },
+        {
+          "id": 3,
+          "company": "Grupo Corporativo Marna",
+          "role": "Software Developer",
+          "location": "Barquisimeto, Venezuela",
+          "date": "Agosto 2022 — Noviembre 2022",
+          "description": "Rediseñé la interfaz y mejoré la usabilidad de un sistema de citas para spas, implementando su internacionalización. Además, desarrollé la landing page comercial para su distribución.",
+          "skills": ["PHP", "PostgreSQL", "HTML5", "CSS"]
+        }
+      ]
+    }
   },
-  "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
+  "chat": {
+    "title": "¡Hablemos!",
+    "description": "¿Tienes un proyecto en mente o simplemente quieres charlar sobre tecnología? No dudes en contactarme. Estoy siempre abierto a nuevas oportunidades y colaboraciones emocionantes."
+  },
+  "common": {
+    "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
+  }
 }

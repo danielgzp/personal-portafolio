@@ -11,41 +11,19 @@ import {
 } from "@/components/ui/timeline"
 import { type Variants, m, useReducedMotion } from "framer-motion"
 import { sectionVariants, EASE_PREMIUM } from "@/lib/animations"
+import { useTranslations } from "next-intl"
 
-const EXPERIENCE_ITEMS = [
-  {
-    id: 1,
-    company: "Essertech LLC",
-    role: "Lead Frontend Developer",
-    location: "Cabudare, Venezuela",
-    date: "Mayo 2025 — Actualidad",
-    description:
-      "Lideré el desarrollo end-to-end de un ERP para ISP. Definí la arquitectura modular y creé un System Design con estándares Pixel-Perfect. Integré asistentes de IA, acelerando el ciclo de desarrollo en un 45%.",
-    skills: ["Next.js", "TypeScript", "Tailwind CSS", "Shadcn UI", "System Design"],
-  },
-  {
-    id: 2,
-    company: "Essertech LLC",
-    role: "Junior Frontend Developer",
-    location: "Cabudare, Venezuela",
-    date: "Agosto 2023 — Mayo 2025",
-    description:
-      "Desarrollé un sistema finanzas a medida en tiempo real, optimicé el rendimiento de un ecosistema SaaS y trabajé en el desarrollo de un marketplace multi-tenant global con internacionalización robusta.",
-    skills: ["React", "Next.js", "Zustand", "Supabase", "i18n"],
-  },
-  {
-    id: 3,
-    company: "Grupo Corporativo Marna",
-    role: "Software Developer",
-    location: "Barquisimeto, Venezuela",
-    date: "Agosto 2022 — Noviembre 2022",
-    description:
-      "Rediseñé la interfaz y mejoré la usabilidad de un sistema de citas para spas, implementando su internacionalización. Además, desarrollé la landing page comercial para su distribución.",
-    skills: ["PHP", "PostgreSQL", "HTML5", "CSS"],
-  },
-]
+interface ExperienceItem {
+  id: number
+  role: string
+  company: string
+  location: string
+  date: string
+  description: string
+  skills: string[]
+}
 
-// Individual experience card — used with whileInView
+// Individual experience card
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -55,17 +33,19 @@ const cardVariants: Variants = {
   },
 }
 
-// Section title is part of the cascade; cards use whileInView
-// so they animate in as the user scrolls down, not all at once.
-
 export function ExperienceSection() {
   const reduceMotion = useReducedMotion()
+  const t = useTranslations("profile.experience")
+
+  const expirienceItems = t.raw("items") as ExperienceItem[]
+
+  console.log(expirienceItems)
 
   return (
     <m.div variants={sectionVariants} className="space-y-4">
       <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
-      <Timeline defaultValue={EXPERIENCE_ITEMS.length + 1}>
-        {EXPERIENCE_ITEMS.map((item) => (
+      <Timeline defaultValue={expirienceItems.length + 1}>
+        {expirienceItems.map((item) => (
           <TimelineItem key={item.id} step={item.id} className="not-last:pb-6!">
             <TimelineSeparator />
             <TimelineIndicator />

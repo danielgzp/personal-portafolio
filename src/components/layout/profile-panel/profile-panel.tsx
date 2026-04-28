@@ -8,7 +8,7 @@ import { TechnologiesSection } from "./technologies-section"
 import { pageVariants, sectionVariants } from "@/lib/animations"
 
 export function ProfilePanel() {
-  const t = useTranslations("HomePage")
+  const t = useTranslations("profile")
   const reduceMotion = useReducedMotion()
 
   return (
@@ -30,12 +30,7 @@ export function ProfilePanel() {
 
           {/* ── Bio ── */}
           <m.div variants={sectionVariants} className="leading-relaxed text-foreground">
-            <p className="text-sm text-pretty lg:md:text-base">
-              Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema
-              de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código
-              limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas
-              reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.
-            </p>
+            <p className="text-sm text-pretty lg:md:text-base">{t("about")}</p>
           </m.div>
 
           {/* ── Technologies ── */}
