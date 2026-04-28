@@ -27,10 +27,11 @@ import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { useTranslations } from "next-intl"
 import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import { cn } from "@/lib/utils"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // const COMMANDS = [
 //   { command: "/skills", description: "Lista de tecnologías" },
@@ -85,6 +86,21 @@ export function ChatPanel() {
   // const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-2.5-flash")
   const [isDismissed, setIsDismissed] = useState(false)
+  const isDesktop = useMediaQuery("(min-width: 1024px)")
+
+  useEffect(() => {
+    if (isDesktop) {
+      // Usamos un pequeño timeout para asegurar que el componente esté montado
+      // y usamos preventScroll para evitar saltos bruscos en la UI
+      const timer = setTimeout(() => {
+        const textarea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement
+        if (textarea) {
+          textarea.focus({ preventScroll: true })
+        }
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isDesktop])
 
   const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
@@ -244,7 +260,6 @@ export function ChatPanel() {
               onChange={handleInputChange}
               value={input}
               placeholder={isChatStarted ? tMessages("input_placeholder_active") : currentPlaceholder}
-              autoFocus
             />
           </PromptInputBody>
           <PromptInputFooter className="flex items-center justify-between px-3 pt-2 pb-3 md:px-4">
