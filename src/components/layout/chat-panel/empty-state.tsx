@@ -1,59 +1,58 @@
 "use client"
 
-import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
 import { m } from "framer-motion"
 import { useTranslations } from "next-intl"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const suggestions = [
-  // 🚀 IMPACTO Y MÉTRICAS (El gancho para CTOs)
-  {
-    heading: "Integración de IA",
-    message: "¿Cómo logró acelerar el ciclo de desarrollo en un 45% en Essertech?",
-  },
-  {
-    heading: "Proyectos Críticos",
-    message: "Cuéntame sobre la plataforma financiera en tiempo real que construyó.",
-  },
+// const suggestions = [
+//   // 🚀 IMPACTO Y MÉTRICAS (El gancho para CTOs)
+//   {
+//     heading: "Integración de IA",
+//     message: "¿Cómo logró acelerar el ciclo de desarrollo en un 45% en Essertech?",
+//   },
+//   {
+//     heading: "Proyectos Críticos",
+//     message: "Cuéntame sobre la plataforma financiera en tiempo real que construyó.",
+//   },
 
-  // 🏗️ ARQUITECTURA (El gancho para Líderes Técnicos)
-  {
-    heading: "System Design",
-    message: "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?",
-  },
-  {
-    heading: "Manejo de Estado",
-    message: "¿Por qué prefiere usar Zustand y SWR en aplicaciones Next.js?",
-  },
-  {
-    heading: "Escalabilidad",
-    message: "¿Cómo estructura y escala un proyecto grande desde cero hasta producción?",
-  },
+//   // 🏗️ ARQUITECTURA (El gancho para Líderes Técnicos)
+//   {
+//     heading: "System Design",
+//     message: "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?",
+//   },
+//   {
+//     heading: "Manejo de Estado",
+//     message: "¿Por qué prefiere usar Zustand y SWR en aplicaciones Next.js?",
+//   },
+//   {
+//     heading: "Escalabilidad",
+//     message: "¿Cómo estructura y escala un proyecto grande desde cero hasta producción?",
+//   },
 
-  // 🧠 LIDERAZGO Y NEGOCIO (El gancho para Managers/RRHH)
-  {
-    heading: "Visión de Producto",
-    message: "¿Cómo equilibra la escritura de 'código limpio' con las urgencias del negocio?",
-  },
-  {
-    heading: "Liderazgo Técnico",
-    message: "¿Cómo fomenta las buenas prácticas y estándares de calidad en su equipo?",
-  },
-  {
-    heading: "Resolución de Retos",
-    message: "¿Cuál ha sido el desafío técnico más complejo que ha tenido que resolver?",
-  },
+//   // 🧠 LIDERAZGO Y NEGOCIO (El gancho para Managers/RRHH)
+//   {
+//     heading: "Visión de Producto",
+//     message: "¿Cómo equilibra la escritura de 'código limpio' con las urgencias del negocio?",
+//   },
+//   {
+//     heading: "Liderazgo Técnico",
+//     message: "¿Cómo fomenta las buenas prácticas y estándares de calidad en su equipo?",
+//   },
+//   {
+//     heading: "Resolución de Retos",
+//     message: "¿Cuál ha sido el desafío técnico más complejo que ha tenido que resolver?",
+//   },
 
-  // ⚡ STACK Y RESUMEN (Las clásicas, pero elevadas)
-  {
-    heading: "Stack Ideal 2026",
-    message: "¿Qué tecnologías componen su stack de desarrollo favorito actualmente?",
-  },
-  {
-    heading: "Elevator Pitch",
-    message: "Dame un resumen de 30 segundos de por qué debería contratar a Daniel.",
-  },
-]
+//   // ⚡ STACK Y RESUMEN (Las clásicas, pero elevadas)
+//   {
+//     heading: "Stack Ideal 2026",
+//     message: "¿Qué tecnologías componen su stack de desarrollo favorito actualmente?",
+//   },
+//   {
+//     heading: "Elevator Pitch",
+//     message: "Dame un resumen de 30 segundos de por qué debería contratar a Daniel.",
+//   },
+// ]
 
 function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
   const [displayedText, setDisplayedText] = useState("")

@@ -1,4 +1,3 @@
-
 export const availableLanguages = [
   {
     code: "es",
@@ -8,9 +7,8 @@ export const availableLanguages = [
     code: "en",
     prefix: "🇺🇸",
   },
-];
+]
 
-export const locales = ["es", "en"] as const;
-export const defaultLocale = "es" as const;
-export const defultLocalePrefix = "as-needed" as const;
-
+export const locales = ["es", "en"] as const
+export const defaultLocale = "es" as const
+export const defultLocalePrefix = "as-needed" as const

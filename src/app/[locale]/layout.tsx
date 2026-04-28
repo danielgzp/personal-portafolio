@@ -5,7 +5,7 @@ import { ClientProviders } from "@/providers"
 import "@/styles/globals.css"
 import type { Metadata } from "next"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
-import { getMessages, getTranslations, setRequestLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import { notFound } from "next/navigation"
 
 type RootLayoutProps = {
@@ -45,7 +45,6 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   // Enable static rendering
   setRequestLocale(locale)
-  const messages = await getMessages()
 
   return (
     <html lang={locale} suppressHydrationWarning className={`${geistSans.className} antialiased`}>

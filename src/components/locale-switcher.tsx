@@ -1,4 +1,4 @@
-import { Languages } from "lucide-react"
+import { LanguagesIcon } from "lucide-react"
 import { Locale, useLocale, useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { availableLanguages } from "@/lang/configs"
 import { usePathname, useRouter } from "@/lang/routing"
-import { useTransition } from "react"
 import { useParams } from "next/navigation"
+import { useTransition } from "react"
+import { Spinner } from "./ui/spinner"
 
 export function LocaleSwitcher() {
   const t = useTranslations("common")
@@ -40,7 +41,7 @@ export function LocaleSwitcher() {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="size-9 rounded-full">
-          <Languages className="size-4" />
+          {isPending ? <Spinner className="size-4" /> : <LanguagesIcon className="size-4" />}
           <span className="sr-only">Toggle language</span>
         </Button>
       </DropdownMenuTrigger>

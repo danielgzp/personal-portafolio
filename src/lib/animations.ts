@@ -20,7 +20,7 @@ export const pageVariants: Variants = {
 
 // Level 2: each section fades + rises with a short, snappy movement
 export const sectionVariants: Variants = {
-   hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,

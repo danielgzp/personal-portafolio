@@ -68,7 +68,7 @@ export const InfiniteMovingCards = ({
 
   useEffect(() => {
     addAnimation()
-  }, [])
+  }, [addAnimation])
 
   return (
     <div
@@ -85,7 +85,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <button
-            className="group flex w-[320px] shrink-0 cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-card! p-6 text-left backdrop-blur-sm transition-all duration-300 hover:bg-card/50 md:w-[400px]"
+            className="group flex w-[320px] shrink-0 cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-card! p-6 text-left backdrop-blur-sm transition-all duration-300 hover:bg-card/50 md:w-100"
             key={idx}
           >
             <div className="flex items-center gap-3">
