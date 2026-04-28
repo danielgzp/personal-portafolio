@@ -5,8 +5,8 @@ import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { m, useReducedMotion } from "framer-motion"
 import { useState } from "react"
-import { ChatPanel } from "../components/layout/chat-panel"
-import { ProfilePanel } from "../components/layout/profile-panel"
+import { ChatPanel } from "@/components/layout/chat-panel"
+import { ProfilePanel } from "@/components/layout/profile-panel"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 
 // True easeInOut (cubic-bezier): starts and ends softly — no jarring snap.

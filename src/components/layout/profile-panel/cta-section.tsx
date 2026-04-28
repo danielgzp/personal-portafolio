@@ -3,11 +3,11 @@ import { GithubIcon, LinkedinIcon } from "@/assets/icons"
 import { m, Variants } from "framer-motion"
 import { MailIcon, DownloadIcon } from "lucide-react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 
 interface CTAProps {
   variants: Variants
   reduceMotion: boolean | null
-  containerRef: React.RefObject<Element | null>
   className?: string
   showBorder?: boolean
 }
@@ -18,7 +18,8 @@ const links = [
   { name: "Email", url: "mailto:danielgzp01@gmail.com", icon: MailIcon },
 ]
 
-export function CTASection({ variants, reduceMotion, containerRef, className, showBorder = true }: CTAProps) {
+export function CTASection({ variants, reduceMotion, className, showBorder = true }: CTAProps) {
+  const t = useTranslations("profile")
   return (
     <m.div
       variants={variants}
@@ -26,7 +27,6 @@ export function CTASection({ variants, reduceMotion, containerRef, className, sh
       whileInView="visible"
       viewport={{
         once: true,
-        root: containerRef as React.RefObject<Element>,
         amount: 0.5,
       }}
       className={`flex w-full flex-row justify-center gap-2 sm:justify-start ${
@@ -40,7 +40,7 @@ export function CTASection({ variants, reduceMotion, containerRef, className, sh
       >
         <Link href="/CV-2026-DanielGonzalez.pdf" target="_blank" rel="noopener noreferrer" prefetch={false}>
           <DownloadIcon className="size-4" />
-          Descargar CV
+          {t("download_cv")}
         </Link>
       </Button>
 

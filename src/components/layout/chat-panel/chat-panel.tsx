@@ -25,6 +25,7 @@ import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
 import { useTypingEffect } from "@/hooks/use-typing-effect"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
+import { useTranslations } from "next-intl"
 import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
 import { useState } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
@@ -38,49 +39,48 @@ import { cn } from "@/lib/utils"
 //   { command: "/clear", description: "Limpiar conversación" },
 // ]
 
-const PLACEHOLDERS = [
-  "¿Qué quieres saber sobre mí o mis proyectos?",
-  "Pregúntame sobre mi experiencia profesional...",
-  "¿Qué tecnologías utilizas?",
-  "Háblame de tu portafolio...",
-  "Escribe un comando como /skills...",
-]
-
-/** Maps structured error codes returned by the API to user-readable messages. */
-function getErrorMessage(error: Error | undefined): string {
-  if (!error) return ""
-
-  // Try to parse the structured JSON error body sent by the route handler
-  try {
-    const parsed = JSON.parse(error.message)
-    if (parsed?.message) return parsed.message
-  } catch {
-    // Not a JSON error body — fall through to generic messages below
-  }
-
-  const message = error.message.toLowerCase()
-
-  if (message.includes("rate_limit") || message.includes("429")) {
-    return "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo."
-  }
-
-  if (message.includes("token_limit") || message.includes("token") || message.includes("context length")) {
-    return "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto."
-  }
-
-  if (message.includes("auth_error") || message.includes("401") || message.includes("403")) {
-    return "Error de autenticación con el proveedor de IA."
-  }
-
-  if (message.includes("service_unavailable") || message.includes("503")) {
-    return "El servicio de IA no está disponible en este momento. Inténtalo más tarde."
-  }
-
-  // Generic fallback
-  return "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
-}
-
 export function ChatPanel() {
+  const tErrors = useTranslations("chat.errors")
+  const tActions = useTranslations("chat.actions")
+  const tMessages = useTranslations("chat.messages")
+  const tChat = useTranslations("chat")
+
+  const placeholders = tChat.raw("placeholders") as string[]
+
+  /** Maps structured error codes returned by the API to user-readable messages. */
+  function getErrorMessage(error: Error | undefined): string {
+    if (!error) return ""
+
+    // Try to parse the structured JSON error body sent by the route handler
+    try {
+      const parsed = JSON.parse(error.message)
+      if (parsed?.message) return parsed.message
+    } catch {
+      // Not a JSON error body — fall through to generic messages below
+    }
+
+    const message = error.message.toLowerCase()
+
+    if (message.includes("rate_limit") || message.includes("429")) {
+      return tErrors("rate_limit")
+    }
+
+    if (message.includes("token_limit") || message.includes("token") || message.includes("context length")) {
+      return tErrors("token_limit")
+    }
+
+    if (message.includes("auth_error") || message.includes("401") || message.includes("403")) {
+      return tErrors("auth_error")
+    }
+
+    if (message.includes("service_unavailable") || message.includes("503")) {
+      return tErrors("service_unavailable")
+    }
+
+    // Generic fallback
+    return tErrors("generic")
+  }
+
   const [input, setInput] = useState("")
   // const [useWebSearch, setUseWebSearch] = useState(false)
   const [model, setModel] = useState("gemini-2.5-flash")
@@ -107,7 +107,7 @@ export function ChatPanel() {
     },
   })
 
-  const currentPlaceholder = useTypingEffect(PLACEHOLDERS, {
+  const currentPlaceholder = useTypingEffect(placeholders, {
     typingSpeed: 30,
     deletingSpeed: 15,
     pauseBeforeType: 250,
@@ -213,17 +213,17 @@ export function ChatPanel() {
               <Button
                 variant="destructive"
                 onClick={handleRetry}
-                title="Reintentar"
-                aria-label="Reintentar la última solicitud"
+                title={tActions("retry")}
+                aria-label={tActions("retry_tooltip")}
               >
                 <RefreshCw className="size-3" />
-                Reintentar
+                {tActions("retry")}
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setIsDismissed(true)}
-                title="Descartar error"
-                aria-label="Descartar mensaje de error"
+                title={tActions("dismiss")}
+                aria-label={tActions("dismiss")}
                 size="icon-sm"
               >
                 <X className="size-3.5" />
@@ -243,7 +243,7 @@ export function ChatPanel() {
               className="min-h-12 px-4 py-0 lg:min-h-10 lg:text-base"
               onChange={handleInputChange}
               value={input}
-              placeholder={isChatStarted ? "Pregúntame algo..." : currentPlaceholder}
+              placeholder={isChatStarted ? tMessages("input_placeholder_active") : currentPlaceholder}
               autoFocus
             />
           </PromptInputBody>
@@ -256,7 +256,7 @@ export function ChatPanel() {
                 value={model}
               >
                 <PromptInputSelectTrigger
-                  aria-label="Select Model"
+                  aria-label={tActions("select_model")}
                   className="h-8 max-w-40 rounded-full bg-accent text-xs font-medium text-muted-foreground transition-colors md:max-w-xs dark:bg-accent/50"
                 >
                   <SparklesIcon className="mr-1.5 size-3.5" />

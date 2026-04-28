@@ -3,9 +3,10 @@
 import { type Variants, m, LayoutGroup, useReducedMotion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-import type { TabType } from "@/app/page"
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LocaleSwitcher } from "../locale-switcher"
+import { TabType } from "@/app/[locale]/page"
 
 // Module-level variants — defined once, never recreated on re-renders.
 // Each variant carries its own transition for asymmetric easing:
@@ -54,10 +55,10 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
 
     const handleScroll = () => {
       const currentScrollY = el.scrollTop
-      // Hide when scrolling down more than 50px, show when scrolling up or at top
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      // Hide when scrolling down more than 40px, show when scrolling up or at top
+      if (currentScrollY > lastScrollY && currentScrollY > 40) {
         setHidden(true)
-      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 40) {
         setHidden(false)
       }
       lastScrollY = currentScrollY

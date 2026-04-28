@@ -13,6 +13,7 @@ import { LoaderFive } from "@/components/ui/loader"
 import { cn } from "@/lib/utils"
 import type { ReasoningUIPart, SourceUrlUIPart, TextUIPart, UIMessage } from "ai"
 import { m } from "framer-motion"
+import { useTranslations } from "next-intl"
 import { CheckIcon, CopyIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 
@@ -22,6 +23,7 @@ interface ChatMessageProps {
 }
 
 export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
+  const t = useTranslations("chat.actions")
   const isUser = message.role === "user"
   const [isCopied, setIsCopied] = useState(false)
 
@@ -104,10 +106,9 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         {!isUser && !!textContent && (
           <MessageActions className="flex justify-end">
             <MessageAction
-              aria-label="Copiar respuesta"
-              label="Copiar respuesta"
+              label={t("copy_response")}
               onClick={handleCopy}
-              tooltip="Copiar respuesta"
+              tooltip={t("copy_response")}
               className="size-8 rounded-full bg-accent hover:bg-accent/80"
             >
               {isCopied ? <CheckIcon className="size-3.5 text-green-500" /> : <CopyIcon className="size-3.5" />}
@@ -120,6 +121,8 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
 }
 
 export function ChatMessageThinking() {
+  const t = useTranslations("chat.messages")
+
   return (
     <m.div
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
@@ -147,7 +150,7 @@ export function ChatMessageThinking() {
             />
           </div> */}
           {/* <LoaderOne /> */}
-          <LoaderFive text="Generando respuesta..." />
+          <LoaderFive text={t("thinking")} />
         </MessageContent>
       </Message>
     </m.div>
