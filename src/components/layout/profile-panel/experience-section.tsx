@@ -62,19 +62,19 @@ export function ExperienceSection() {
               <TimelineHeader className="w-full pb-0">
                 <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex flex-col">
-                    <TimelineTitle className="text-base font-bold text-foreground">{item.role}</TimelineTitle>
-                    <span className="text-base font-medium text-muted-foreground">{item.company}</span>
+                    <TimelineTitle className="text-sm font-bold text-foreground">{item.role}</TimelineTitle>
+                    <span className="text-sm font-medium text-muted-foreground">{item.company}</span>
                   </div>
                   <div className="flex flex-col sm:text-right">
-                    <span className="text-base font-medium text-foreground">{item.location}</span>
-                    <TimelineDate className="mb-0! text-base! font-normal text-muted-foreground italic">
+                    <span className="text-sm font-semibold text-foreground">{item.location}</span>
+                    <TimelineDate className="mb-0! text-sm font-normal text-muted-foreground italic">
                       {item.date}
                     </TimelineDate>
                   </div>
                 </div>
               </TimelineHeader>
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                <p className="text-base">{item.description}</p>
+                <p className="text-sm">{item.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {item.skills.map((skill, idx) => (
                     <Badge

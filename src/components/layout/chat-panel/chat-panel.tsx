@@ -27,10 +27,12 @@ import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { useTranslations } from "next-intl"
 import { AlertCircleIcon, RefreshCw, Sparkles as SparklesIcon, X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
+import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
 import { cn } from "@/lib/utils"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // const COMMANDS = [
 //   { command: "/skills", description: "Lista de tecnologías" },
@@ -83,18 +85,23 @@ export function ChatPanel() {
 
   const [input, setInput] = useState("")
   // const [useWebSearch, setUseWebSearch] = useState(false)
-  const [model, setModel] = useState("gemini-2.5-flash")
+  const [model, setModel] = useState(DEFAULT_MODEL)
   const [isDismissed, setIsDismissed] = useState(false)
+  const isDesktop = useMediaQuery("(min-width: 1024px)")
 
-  const models = [
-    { id: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
-    { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-    {
-      id: "gemini-2.5-flash-lite",
-      name: "Gemini 2.5 Flash Lite",
-    },
-  ]
+  useEffect(() => {
+    if (isDesktop) {
+      // Usamos un pequeño timeout para asegurar que el componente esté montado
+      // y usamos preventScroll para evitar saltos bruscos en la UI
+      const timer = setTimeout(() => {
+        const textarea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement
+        if (textarea) {
+          textarea.focus({ preventScroll: true })
+        }
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isDesktop])
 
   const { messages, sendMessage, status, error, regenerate } = useChat({
     transport: new DefaultChatTransport({
@@ -244,7 +251,6 @@ export function ChatPanel() {
               onChange={handleInputChange}
               value={input}
               placeholder={isChatStarted ? tMessages("input_placeholder_active") : currentPlaceholder}
-              autoFocus
             />
           </PromptInputBody>
           <PromptInputFooter className="flex items-center justify-between px-3 pt-2 pb-3 md:px-4">
@@ -262,8 +268,8 @@ export function ChatPanel() {
                   <SparklesIcon className="mr-1.5 size-3.5" />
                   <PromptInputSelectValue className="truncate" />
                 </PromptInputSelectTrigger>
-                <PromptInputSelectContent className="bg-background/75">
-                  {models.map((model) => (
+                <PromptInputSelectContent className="bg-background/75" position="popper" side="top">
+                  {AVAILABLE_MODELS.map((model) => (
                     <PromptInputSelectItem key={model.id} value={model.id}>
                       {model.name}
                     </PromptInputSelectItem>
