@@ -1,9 +1,22 @@
 import { google } from "@ai-sdk/google"
+import { groq } from "@ai-sdk/groq"
 import { convertToModelMessages, smoothStream, streamText } from "ai"
 import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
 import { buildErrorResponse, handleStreamError } from "@/lib/ai/error-handler"
 import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
+
+function resolveModelInstance(selectedModel: string) {
+  if (selectedModel.startsWith("google/")) {
+    return google(selectedModel.replace("google/", ""))
+  }
+
+  if (selectedModel.startsWith("groq/")) {
+    return groq(selectedModel.replace("groq/", ""))
+  }
+
+  return google(selectedModel)
+}
 
 // Node.js runtime required: @supabase/supabase-js uses Node APIs (fetch, crypto)
 // not available in the Edge runtime.
@@ -29,9 +42,12 @@ export async function POST(req: Request) {
     // If the user hasn't typed anything meaningful, or if Supabase is down, it degrades gracefully to "".
     const context = userQuery ? await retrieveContext(userQuery) : ""
 
-    // 4. Start the AI Stream
+    // 4. Instanciar el SDK correcto según el prefijo del modelo seleccionado
+    const modelInstance = resolveModelInstance(selectedModel)
+
+    // 5. Start the AI Stream
     const result = streamText({
-      model: google(selectedModel),
+      model: modelInstance,
       messages: await convertToModelMessages(messages),
       
       // Inject the dynamically built prompt (Base Prompt + RAG Context)

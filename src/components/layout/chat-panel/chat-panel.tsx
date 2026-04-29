@@ -268,7 +268,7 @@ export function ChatPanel() {
                   <SparklesIcon className="mr-1.5 size-3.5" />
                   <PromptInputSelectValue className="truncate" />
                 </PromptInputSelectTrigger>
-                <PromptInputSelectContent className="bg-background/75">
+                <PromptInputSelectContent className="bg-background/75" position="popper" side="top">
                   {AVAILABLE_MODELS.map((model) => (
                     <PromptInputSelectItem key={model.id} value={model.id}>
                       {model.name}
