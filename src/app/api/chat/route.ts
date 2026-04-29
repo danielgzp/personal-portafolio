@@ -18,9 +18,6 @@ function resolveModelInstance(selectedModel: string) {
   return google(selectedModel)
 }
 
-// Node.js runtime required: @supabase/supabase-js uses Node APIs (fetch, crypto)
-// not available in the Edge runtime.
-export const runtime = "nodejs"
 
 /**
  * Main API Route Handler for the Chat endpoint.
