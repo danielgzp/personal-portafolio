@@ -7,6 +7,7 @@ import type { Metadata } from "next"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 import { notFound } from "next/navigation"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 type RootLayoutProps = {
   children: React.ReactNode
@@ -52,6 +53,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
         <NextIntlClientProvider>
           <ClientProviders>{children}</ClientProviders>
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   )
