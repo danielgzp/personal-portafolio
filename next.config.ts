@@ -5,6 +5,9 @@ const withNextIntl = createNextIntlPlugin("./src/lang/request.ts")
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["10.10.10.107"],
+  experimental: {
+  ppr: true,
+},
   async headers() {
     return [
       {
