@@ -3,7 +3,7 @@ import { GithubIcon, LinkedinIcon } from "@/assets/icons"
 import { m, Variants } from "framer-motion"
 import { MailIcon, DownloadIcon } from "lucide-react"
 import Link from "next/link"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 interface CTAProps {
   variants: Variants
@@ -20,6 +20,10 @@ const links = [
 
 export function CTASection({ variants, reduceMotion, className, showBorder = true }: CTAProps) {
   const t = useTranslations("profile")
+  const locale = useLocale()
+
+  const cvRef = locale === "en" ? "/CV_EN_2026_DanielGonzalez.pdf" : "/CV_2026_DanielGonzalez.pdf"
+
   return (
     <m.div
       variants={variants}
@@ -38,7 +42,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
         size="lg"
         asChild
       >
-        <Link href="/CV-2026-DanielGonzalez.pdf" target="_blank" rel="noopener noreferrer" prefetch={false}>
+        <Link href={cvRef} target="_blank" rel="noopener noreferrer" prefetch={false}>
           <DownloadIcon className="size-4" />
           {t("download_cv")}
         </Link>
