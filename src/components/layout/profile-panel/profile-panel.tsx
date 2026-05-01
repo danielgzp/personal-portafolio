@@ -18,7 +18,7 @@ export function ProfilePanel() {
       {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
-      <ScrollArea className="relative z-10 size-full">
+      <ScrollArea viewportId="profile-scroll-container" className="relative z-10 size-full">
         <m.div
           className="mx-auto flex h-full flex-col gap-8 p-6 pt-20 md:p-12"
           variants={pageVariants}

@@ -180,7 +180,7 @@ export function ChatPanel() {
         id="chat-scroll-container"
         className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
       > */}
-      <Conversation className="">
+      <Conversation>
         <ConversationContent
           scrollClassName="mask-b-from-95% mask-b-to-100%"
           className={cn("mx-auto w-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4", { "h-full": messages.length === 0 })}

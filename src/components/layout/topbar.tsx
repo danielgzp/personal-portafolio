@@ -26,6 +26,8 @@ const headerVariants: Variants = {
 // Tab pill spring — module-level so it's not inlined per render
 const pillTransition = { type: "spring", damping: 28, stiffness: 300 } as const
 
+const scrollId = "profile-scroll-container"
+
 interface TopbarProps {
   activeTab?: TabType
   onTabChange?: (tab: TabType) => void
@@ -47,7 +49,6 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
   }
 
   useEffect(() => {
-    const scrollId = activeTab === "chat" ? "chat-scroll-container" : "profile-scroll-container"
     const el = document.getElementById(scrollId)
     if (!el) return
 
