@@ -44,9 +44,9 @@ export function ExperienceSection() {
       <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
       <Timeline defaultValue={expirienceItems.length + 1}>
         {expirienceItems.map((item) => (
-          <TimelineItem key={item.id} step={item.id} className="not-last:pb-6!">
-            <TimelineSeparator />
-            <TimelineIndicator />
+          <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
+            {/* <TimelineSeparator className="max-sm:-left-4" />
+            <TimelineIndicator className="max-sm:-left-4" /> */}
             <m.div
               variants={cardVariants}
               initial={reduceMotion ? "visible" : "hidden"}
@@ -57,30 +57,32 @@ export function ExperienceSection() {
                 margin: "0px 0px -40px 0px",
               }}
               transition={{ delay: item.id - 1 * 0.08 }}
-              className="flex flex-col gap-4 rounded-xl border border-border/50 bg-card/90 p-6 shadow-sm transition-colors hover:bg-card/50"
+              className="group flex flex-col gap-4 rounded-2xl border border-border/40 bg-card/50 p-4 backdrop-blur-sm transition-all hover:bg-card/75 sm:p-6"
             >
               <TimelineHeader className="w-full pb-0">
-                <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex flex-col">
-                    <TimelineTitle className="text-sm font-bold text-foreground">{item.role}</TimelineTitle>
+                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground">
+                      {item.role}
+                    </TimelineTitle>
                     <span className="text-sm font-medium text-muted-foreground">{item.company}</span>
                   </div>
-                  <div className="flex flex-col sm:text-right">
+                  <div className="mt-1 flex flex-col sm:mt-0 sm:text-right">
                     <span className="text-sm font-semibold text-foreground">{item.location}</span>
-                    <TimelineDate className="mb-0! text-sm font-normal text-muted-foreground italic">
+                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic">
                       {item.date}
                     </TimelineDate>
                   </div>
                 </div>
               </TimelineHeader>
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                <p className="text-sm">{item.description}</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-sm/6">{item.description}</p>
+                <div className="flex flex-wrap gap-2 pt-1">
                   {item.skills.map((skill, idx) => (
                     <Badge
                       key={idx}
                       variant="secondary"
-                      className="h-6 rounded-full border border-dashed border-border px-2.5 text-xs"
+                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70"
                     >
                       {skill}
                     </Badge>

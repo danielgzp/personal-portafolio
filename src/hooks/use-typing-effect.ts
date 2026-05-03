@@ -5,17 +5,24 @@ interface UseTypingEffectOptions {
   deletingSpeed?: number
   pauseBeforeDelete?: number
   pauseBeforeType?: number
+  enabled?: boolean
 }
 
 export function useTypingEffect(phrases: string[], options: UseTypingEffectOptions = {}) {
-  const { typingSpeed = 50, deletingSpeed = 30, pauseBeforeDelete = 2000, pauseBeforeType = 500 } = options
+  const {
+    typingSpeed = 50,
+    deletingSpeed = 30,
+    pauseBeforeDelete = 2000,
+    pauseBeforeType = 500,
+    enabled = true,
+  } = options
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [currentText, setCurrentText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    if (!phrases || phrases.length === 0) return
+    if (!enabled || !phrases || phrases.length === 0) return
 
     const fullText = phrases[selectedIndex]
     let timeoutId: NodeJS.Timeout
@@ -39,7 +46,17 @@ export function useTypingEffect(phrases: string[], options: UseTypingEffectOptio
     }
 
     return () => clearTimeout(timeoutId)
-  }, [currentText, isDeleting, selectedIndex, phrases, typingSpeed, deletingSpeed, pauseBeforeDelete, pauseBeforeType])
+  }, [
+    currentText,
+    isDeleting,
+    selectedIndex,
+    phrases,
+    typingSpeed,
+    deletingSpeed,
+    pauseBeforeDelete,
+    pauseBeforeType,
+    enabled,
+  ])
 
   return currentText
 }

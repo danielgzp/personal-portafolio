@@ -1,58 +1,143 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Loader2, Send } from "lucide-react"
-import { useRef } from "react"
-import { Textarea } from "../../ui/textarea"
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
+import {
+  PromptInput,
+  PromptInputBody,
+  PromptInputFooter,
+  PromptInputMessage,
+  PromptInputSelect,
+  PromptInputSelectContent,
+  PromptInputSelectItem,
+  PromptInputSelectTrigger,
+  PromptInputSelectValue,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputTools,
+} from "@/components/ai-elements/prompt-input"
+import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
+import { useTypingEffect } from "@/hooks/use-typing-effect"
+import { useTranslations } from "next-intl"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import type { UseChatHelpers } from "@ai-sdk/react"
+import type { UIMessage } from "ai"
 
-interface ChatInputProps {
-  input: string
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void
-  isLoading: boolean
+export type ChatInputHandle = {
+  setInput: (value: string) => void
 }
 
-export function ChatInput({ input, handleInputChange, handleSubmit, isLoading }: ChatInputProps) {
-  const submitRef = useRef<HTMLButtonElement>(null)
+type ChatHelpers = UseChatHelpers<UIMessage>
 
-  // Submit con Enter
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      if (input.trim() && !isLoading && submitRef.current) {
-        submitRef.current.click()
+type Props = {
+  sendMessage: ChatHelpers["sendMessage"]
+  status: ChatHelpers["status"]
+  isChatStarted: boolean
+}
+
+export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
+  { sendMessage, status, isChatStarted },
+  ref
+) {
+  const tMessages = useTranslations("chat.messages")
+  const tActions = useTranslations("chat.actions")
+  const tChat = useTranslations("chat")
+
+  const placeholders = tChat.raw("placeholders") as string[]
+
+  const [input, setInput] = useState("")
+  const [model, setModel] = useState(DEFAULT_MODEL)
+
+  const currentPlaceholder = useTypingEffect(placeholders, {
+    typingSpeed: 30,
+    deletingSpeed: 15,
+    pauseBeforeType: 250,
+    enabled: !isChatStarted,
+  })
+
+  const isLoading = status === "submitted" || status === "streaming"
+
+  const isDesktop = useMediaQuery("(min-width: 1024px)")
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const handleSubmit = async (message: PromptInputMessage, e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const hasText = !!message.text.trim()
+    const hasFiles = message.files.length > 0
+
+    if (!hasText && !hasFiles) return
+
+    setInput("")
+
+    await sendMessage(
+      {
+        text: message.text,
+        files: message.files,
+      },
+      {
+        body: {
+          model,
+        },
       }
-    }
+    )
   }
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="relative flex w-full flex-col overflow-hidden rounded-xl border bg-background focus-within:ring-1 focus-within:ring-ring"
-    >
-      <Textarea
-        value={input}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Pregúntale a la IA sobre Daniel..."
-        className="min-h-[60px] w-full resize-none bg-transparent text-sm placeholder:text-muted-foreground focus-visible:border-inherit focus-visible:ring-0! sm:leading-6"
-        spellCheck={false}
-        rows={1}
-      />
-      <div className="flex items-center justify-between bg-muted/40 px-3 py-2">
-        <p className="flex items-center gap-1 text-xs text-muted-foreground">
-          <span className="hidden sm:inline">Presiona</span>
-          <kbd className="pointer-events-none inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground select-none">
-            <span className="text-xs">↵</span> Enter
-          </kbd>
-          <span className="hidden sm:inline">para enviar</span>
-        </p>
+  useEffect(() => {
+    if (isDesktop) {
+      const timer = setTimeout(() => {
+        const textarea = textareaRef.current
+        if (textarea) textarea.focus({ preventScroll: true })
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isDesktop])
 
-        <Button ref={submitRef} type="submit" size="sm" className="h-8 gap-1.5" disabled={isLoading}>
-          {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Enviar</span>
-        </Button>
-      </div>
-    </form>
+  useImperativeHandle(ref, () => ({
+    setInput: (value: string) => setInput(value),
+  }))
+
+  return (
+    <div className="mx-auto w-full max-w-3xl px-4 pb-4 md:pb-8">
+      <PromptInput
+        onSubmit={handleSubmit}
+        inputGroupClassName="bg-card border border-border/50 shadow-sm lg:shadow-[0_0_16px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4 rounded-2xl"
+      >
+        <PromptInputBody>
+          <PromptInputTextarea
+            ref={textareaRef}
+            className="min-h-12 px-4 py-0 lg:min-h-10 lg:text-base"
+            onChange={(e) => setInput(e.target.value)}
+            value={input}
+            placeholder={isChatStarted ? tMessages("input_placeholder_active") : currentPlaceholder}
+            name="message"
+          />
+        </PromptInputBody>
+        <PromptInputFooter className="flex items-center justify-between px-3 pt-2 pb-3 md:px-4">
+          <PromptInputTools className="pr-2">
+            <PromptInputSelect onValueChange={(value) => setModel(value)} value={model}>
+              <PromptInputSelectTrigger
+                aria-label={tActions("select_model")}
+                className="h-8 max-w-40 rounded-full bg-accent text-xs font-medium text-muted-foreground transition-colors md:max-w-xs dark:bg-accent/50"
+              >
+                <PromptInputSelectValue className="truncate" />
+              </PromptInputSelectTrigger>
+              <PromptInputSelectContent className="bg-background/75" position="popper" side="top">
+                {AVAILABLE_MODELS.map((m) => (
+                  <PromptInputSelectItem key={m.id} value={m.id}>
+                    {m.name}
+                  </PromptInputSelectItem>
+                ))}
+              </PromptInputSelectContent>
+            </PromptInputSelect>
+          </PromptInputTools>
+          <PromptInputSubmit
+            disabled={!input.trim() && !isLoading}
+            status={status}
+            className="ml-2 size-9 shrink-0 rounded-full bg-primary p-2 text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none md:size-10 md:p-2.5"
+          />
+        </PromptInputFooter>
+      </PromptInput>
+    </div>
   )
-}
+})
+
+export default React.memo(ChatInput)
