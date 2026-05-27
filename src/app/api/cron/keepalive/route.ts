@@ -6,11 +6,11 @@ import { supabase } from "@/lib/supabase"
  * Vercel Cron Job to keep Supabase database active.
  * Prevents the project from being paused due to inactivity.
  */
-export const runtime = "edge"
 
 export async function GET(request: Request) {
   // Check for Vercel Cron Authorization header 
   const authHeader = request.headers.get("authorization")
+  console.log("Received keep-alive request with auth header:", authHeader)
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response("Unauthorized", { status: 401 })
   }
