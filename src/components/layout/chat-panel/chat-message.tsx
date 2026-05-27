@@ -111,7 +111,20 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
               tooltip={t("copy_response")}
               className="size-8 rounded-full bg-accent hover:bg-accent/80"
             >
-              {isCopied ? <CheckIcon className="size-3.5 text-green-500" /> : <CopyIcon className="size-3.5" />}
+              <div className="relative flex items-center justify-center">
+                <CheckIcon
+                  className={cn(
+                    "absolute size-3.5 text-green-500 transition-all duration-300",
+                    isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                  )}
+                />
+                <CopyIcon
+                  className={cn(
+                    "size-3.5 transition-all duration-300",
+                    isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                  )}
+                />
+              </div>
             </MessageAction>
           </MessageActions>
         )}

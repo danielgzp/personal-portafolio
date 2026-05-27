@@ -95,6 +95,38 @@
         {
           "heading": "Resumen",
           "message": "Dame un resumen rápido de su perfil profesional."
+        },
+        {
+          "heading": "Integración de IA",
+          "message": "¿Cómo logró acelerar el ciclo de desarrollo en un 45% en Essertech?"
+        },
+        {
+          "heading": "Proyectos Críticos",
+          "message": "Cuéntame sobre la plataforma financiera en tiempo real que construyó."
+        },
+        {
+          "heading": "System Design",
+          "message": "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?"
+        },
+        {
+          "heading": "Manejo de Estado",
+          "message": "¿Por qué prefiere usar Zustand y SWR en aplicaciones Next.js?"
+        },
+        {
+          "heading": "Escalabilidad",
+          "message": "¿Cómo estructura y escala un proyecto grande desde cero hasta producción?"
+        },
+        {
+          "heading": "Visión de Producto",
+          "message": "¿Cómo equilibra la escritura de 'código limpio' con las urgencias del negocio?"
+        },
+        {
+          "heading": "Liderazgo Técnico",
+          "message": "¿Cómo fomenta las buenas prácticas y estándares de calidad en su equipo?"
+        },
+        {
+          "heading": "Resolución de Retos",
+          "message": "¿Cuál ha sido el desafío técnico más complejo que ha tenido que resolver?"
         }
       ]
     },

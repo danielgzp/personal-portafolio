@@ -14,6 +14,7 @@ import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import ChatInput, { ChatInputHandle } from "./chat-input"
 import { cn } from "@/lib/utils"
+import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation"
 
 // const COMMANDS = [
 //   { command: "/skills", description: "Lista de tecnologías" },
@@ -40,7 +41,8 @@ export function ChatPanel() {
   const setInputFromRef = useCallback((v: string) => chatInputRef.current?.setInput(v), [])
 
   return (
-    <section className="relative z-10 flex size-full flex-col overflow-hidden bg-accent dark:bg-background">
+    <section className="relative z-10 flex size-full flex-col overflow-hidden bg-transparent">
+      {/* <BackgroundGradientAnimation containerClassName="absolute inset-0 -z-10" /> */}
       <DottedGlowBackground
         className="-z-10"
         opacity={0.35}
@@ -53,7 +55,6 @@ export function ChatPanel() {
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" />
-
       {/* <div
         id="chat-scroll-container"
         className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
@@ -61,24 +62,26 @@ export function ChatPanel() {
       <Conversation>
         <ConversationContent
           scrollClassName="mask-b-from-95% mask-b-to-100%"
-          className={cn("mx-auto w-full max-w-3xl px-2 pt-18 lg:px-4 lg:pt-4", { "h-full": messages.length === 0 })}
+          className={cn("mx-auto w-full max-w-5xl px-2 pt-18 lg:px-4 lg:pt-4", { "h-full": messages.length === 0 })}
         >
           {messages.length === 0 ? (
             <ConversationEmptyState className="p-0">
               <EmptyState setInput={setInputFromRef} />
             </ConversationEmptyState>
           ) : (
-            messages.map((msg, idx) => (
-              <ChatMessage
-                key={msg.id}
-                message={msg}
-                // Mark the last assistant message as actively streaming
-                // so Streamdown's isAnimating and caret are properly activated
-                isStreaming={isLoading && idx === messages.length - 1 && msg.role === "assistant"}
-              />
-            ))
+            <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
+              {messages.map((msg, idx) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={msg}
+                  // Mark the last assistant message as actively streaming
+                  // so Streamdown's isAnimating and caret are properly activated
+                  isStreaming={isLoading && idx === messages.length - 1 && msg.role === "assistant"}
+                />
+              ))}
+              {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+            </div>
           )}
-          {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
           {messages.length > 0 && <div className="h-0.5 shrink-0" aria-hidden="true" />}
         </ConversationContent>
         <ConversationScrollButton />

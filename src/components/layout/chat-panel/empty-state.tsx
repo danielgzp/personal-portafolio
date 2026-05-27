@@ -3,56 +3,7 @@
 import { m } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
-
-// const suggestions = [
-//   // 🚀 IMPACTO Y MÉTRICAS (El gancho para CTOs)
-//   {
-//     heading: "Integración de IA",
-//     message: "¿Cómo logró acelerar el ciclo de desarrollo en un 45% en Essertech?",
-//   },
-//   {
-//     heading: "Proyectos Críticos",
-//     message: "Cuéntame sobre la plataforma financiera en tiempo real que construyó.",
-//   },
-
-//   // 🏗️ ARQUITECTURA (El gancho para Líderes Técnicos)
-//   {
-//     heading: "System Design",
-//     message: "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?",
-//   },
-//   {
-//     heading: "Manejo de Estado",
-//     message: "¿Por qué prefiere usar Zustand y SWR en aplicaciones Next.js?",
-//   },
-//   {
-//     heading: "Escalabilidad",
-//     message: "¿Cómo estructura y escala un proyecto grande desde cero hasta producción?",
-//   },
-
-//   // 🧠 LIDERAZGO Y NEGOCIO (El gancho para Managers/RRHH)
-//   {
-//     heading: "Visión de Producto",
-//     message: "¿Cómo equilibra la escritura de 'código limpio' con las urgencias del negocio?",
-//   },
-//   {
-//     heading: "Liderazgo Técnico",
-//     message: "¿Cómo fomenta las buenas prácticas y estándares de calidad en su equipo?",
-//   },
-//   {
-//     heading: "Resolución de Retos",
-//     message: "¿Cuál ha sido el desafío técnico más complejo que ha tenido que resolver?",
-//   },
-
-//   // ⚡ STACK Y RESUMEN (Las clásicas, pero elevadas)
-//   {
-//     heading: "Stack Ideal 2026",
-//     message: "¿Qué tecnologías componen su stack de desarrollo favorito actualmente?",
-//   },
-//   {
-//     heading: "Elevator Pitch",
-//     message: "Dame un resumen de 30 segundos de por qué debería contratar a Daniel.",
-//   },
-// ]
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
 
 export function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
   const [displayedText, setDisplayedText] = useState("")
@@ -87,6 +38,10 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   const t = useTranslations("chat.empty_state")
   const suggestions = t.raw("suggestions") as { heading: string; message: string }[]
 
+  const half = Math.ceil(suggestions.length / 2)
+  const firstRow = suggestions.slice(0, half)
+  const secondRow = suggestions.slice(half)
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -99,13 +54,13 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center overflow-x-hidden gap-y-8 lg:gap-y-12">
       {/* Hero Header */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-        className="mb-8 flex flex-col items-center gap-4 text-center lg:mb-12 lg:gap-6"
+        className="flex flex-col items-center gap-4 text-center lg:gap-6"
       >
         <div className="max-w-3xl space-y-4">
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
@@ -138,36 +93,41 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         </div>
       </m.div>
 
-      {/* Quick Actions (Pills / Cards) */}
+      {/* Quick Actions (Marquees) */}
       <m.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="flex w-full max-w-3xl flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-4"
+        className="flex w-full flex-col gap-4 overflow-hidden py-4"
       >
-        {suggestions.map((suggestion) => (
-          <m.button
-            variants={{
-              hidden: { opacity: 0, y: 0 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-              },
-            }}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            key={suggestion.heading}
-            onClick={() => setInput(suggestion.message)}
-            className="flex w-full items-center justify-center rounded-xl border border-border/60 bg-linear-to-b from-card via-card/75 to-card/25 px-4 py-3 text-center text-sm font-medium text-foreground/80 shadow-sm backdrop-blur-lg transition-all hover:cursor-pointer hover:border-primary/40 hover:from-primary/5 hover:to-primary/10 hover:text-primary hover:shadow-lg sm:h-20 sm:justify-start sm:rounded-2xl sm:px-6 sm:text-left sm:text-base"
-          >
-            {suggestion.message}
-          </m.button>
-        ))}
+        <m.div
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+            },
+          }}
+          className="w-full"
+        >
+          <InfiniteMovingCards items={firstRow} direction="left" speed="normal" onItemClick={setInput} />
+        </m.div>
+
+        {/* <m.div
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+            },
+          }}
+          className="w-full"
+        >
+          <InfiniteMovingCards items={secondRow} direction="right" speed="normal" onItemClick={setInput} />
+        </m.div> */}
       </m.div>
-      {/* <div className="relative mt-4 w-full overflow-hidden rounded-xl antialiased">
-        <InfiniteMovingCards items={suggestions} direction="right" speed="slow" className="mx-auto w-full max-w-5xl" />
-      </div> */}
     </div>
   )
 }

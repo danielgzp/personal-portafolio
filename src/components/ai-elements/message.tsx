@@ -36,7 +36,7 @@ export const MessageContent = ({ children, className, ...props }: MessageContent
     className={cn(
       "flex min-w-0 flex-col gap-2 overflow-hidden rounded-2xl border px-4 py-2.5 text-sm shadow-lg backdrop-blur-lg lg:px-5 lg:py-3",
 
-      "group-[.is-user]:ml-auto group-[.is-user]:max-w-[65%] group-[.is-user]:rounded-tr-xs group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground lg:group-[.is-user]:max-w-1/2",
+      "group-[.is-user]:ml-auto group-[.is-user]:max-w-[75%] group-[.is-user]:rounded-tr-xs group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground sm:group-[.is-user]:max-w-[65%] lg:group-[.is-user]:max-w-1/2",
 
       "group-[.is-assistant]:bg-card group-[.is-assistant]:text-card-foreground",
       className

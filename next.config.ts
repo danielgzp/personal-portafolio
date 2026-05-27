@@ -4,7 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin"
 const withNextIntl = createNextIntlPlugin("./src/lang/request.ts")
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["10.10.10.107"],
+  allowedDevOrigins: ["10.10.10.*"],
   async headers() {
     return [
       {
