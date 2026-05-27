@@ -3,16 +3,28 @@ import { type Variants, m, useReducedMotion } from "framer-motion"
 import { MapPin } from "lucide-react"
 import Image from "next/image"
 import { CTASection } from "./cta-section"
-import { sectionVariants, SPRING_SOFT } from "@/lib/animations"
+import { sectionVariants, SPRING_SOFT, SPRING_INTERACTIVE, SPRING_TAP } from "@/lib/animations"
 
-// Avatar: spring physics for an organic, weighted feel
+// Avatar: spring physics with slight rotate + tactile scale feedback
 const avatarVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.85, y: 8 },
+  hidden: { opacity: 0, scale: 0.85, y: 8, rotate: -4 },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
+    rotate: 0,
     transition: SPRING_SOFT,
+  },
+  hover: {
+    scale: 1.05,
+    rotate: 2,
+    borderColor: "var(--primary)",
+    transition: SPRING_INTERACTIVE,
+  },
+  tap: {
+    scale: 0.96,
+    rotate: -1,
+    transition: SPRING_TAP,
   },
 }
 
@@ -20,9 +32,20 @@ export function HeroSection() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <m.div variants={sectionVariants} className="flex flex-col space-y-4 lg:space-y-6">
-      <m.div variants={avatarVariants} initial={false}>
-        <Avatar className="size-18 border lg:size-24">
+    <m.div
+      variants={sectionVariants}
+      initial={reduceMotion ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      className="flex flex-col space-y-4 lg:space-y-6"
+    >
+      <m.div
+        variants={avatarVariants}
+        whileHover={reduceMotion ? {} : "hover"}
+        whileTap={reduceMotion ? {} : "tap"}
+        className="w-fit"
+      >
+        <Avatar className="size-18 border lg:size-24 cursor-pointer transition-colors duration-300">
           <AvatarImage src="/images/avatar.jpg" asChild>
             <Image
               src="/images/avatar.jpg"

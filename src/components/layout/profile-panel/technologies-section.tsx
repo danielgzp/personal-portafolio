@@ -16,7 +16,7 @@ import {
 } from "@/assets/icons"
 import { Badge } from "@/components/ui/badge"
 import { type Variants, m, useReducedMotion } from "framer-motion"
-import { sectionVariants, EASE_PREMIUM, SPRING_BOUNCY, SPRING_SNAPPY } from "@/lib/animations"
+import { sectionVariants, EASE_PREMIUM, SPRING_BOUNCY, SPRING_INTERACTIVE, SPRING_TAP } from "@/lib/animations"
 
 const SKILLS = [
   { icon: ReactIcon, name: "React" },
@@ -38,36 +38,32 @@ const SKILLS = [
 // Tech icon specific animation
 const iconVariants: Variants = {
   hover: {
-    scale: 1.2,
-    rotate: 12,
+    scale: 1.15,
+    rotate: 8,
     transition: SPRING_BOUNCY,
   },
 }
 
-// Stagger wrapper for badges (tight cadence = waterfall feel)
-const badgesVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
-  },
-}
-
-// Individual skill badge
+// Individual skill badge (uses GPU-accelerated properties and custom stagger delay)
 const badgeVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.8, y: 4 },
-  visible: {
+  hidden: { opacity: 0, scale: 0.85, y: 12 },
+  visible: (idx: number) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.28, ease: EASE_PREMIUM },
-  },
+    transition: { duration: 0.55, ease: EASE_PREMIUM, delay: idx * 0.05 },
+  }),
   hover: {
-    y: -2,
-    scale: 1.04,
-    transition: SPRING_SNAPPY,
+    scale: 1.05,
+    rotate: 2,
+    y: -3,
+    transition: SPRING_INTERACTIVE,
   },
   tap: {
-    scale: 0.95,
+    scale: 0.96,
+    rotate: -1,
+    y: -1,
+    transition: SPRING_TAP,
   },
 }
 
@@ -75,20 +71,31 @@ export function TechnologiesSection() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <m.div variants={sectionVariants} className="space-y-4">
+    <m.div
+      variants={sectionVariants}
+      initial={reduceMotion ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      className="space-y-4"
+    >
       <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
-      {/* Nested stagger — badges cascade in like a waterfall */}
-      <m.div variants={badgesVariants} className="flex flex-wrap gap-1.5 lg:gap-2">
-        {SKILLS.map((tech) => (
+      {/* Standard HTML flex container — each badge has its own viewport hook to guarantee execution */}
+      <div className="flex flex-wrap gap-1.5 lg:gap-2">
+        {SKILLS.map((tech, idx) => (
           <m.div
             key={tech.name}
             variants={badgeVariants}
+            initial={reduceMotion ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            custom={idx}
             whileHover={reduceMotion ? {} : "hover"}
             whileTap={reduceMotion ? {} : "tap"}
+            className="group"
           >
             <Badge
               variant="outline"
-              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 select-none"
+              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 select-none transition-colors duration-300 group-hover:border-primary"
             >
               <m.span variants={iconVariants} className="flex [&>svg]:size-4">
                 <tech.icon />
@@ -97,7 +104,7 @@ export function TechnologiesSection() {
             </Badge>
           </m.div>
         ))}
-      </m.div>
+      </div>
     </m.div>
   )
 }

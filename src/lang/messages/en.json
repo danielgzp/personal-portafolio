@@ -95,6 +95,38 @@
         {
           "heading": "Summary",
           "message": "Give me a quick summary of his professional profile."
+        },
+        {
+          "heading": "AI Integration",
+          "message": "How did he accelerate the development cycle by 45% at Essertech?"
+        },
+        {
+          "heading": "Critical Projects",
+          "message": "Tell me about the real-time financial platform he built."
+        },
+        {
+          "heading": "System Design",
+          "message": "What is his approach to building Pixel-Perfect component libraries?"
+        },
+        {
+          "heading": "State Management",
+          "message": "Why does he prefer using Zustand and SWR in Next.js applications?"
+        },
+        {
+          "heading": "Scalability",
+          "message": "How does he structure and scale a large project from scratch to production?"
+        },
+        {
+          "heading": "Product Vision",
+          "message": "How does he balance writing 'clean code' with business urgencies?"
+        },
+        {
+          "heading": "Technical Leadership",
+          "message": "How does he foster best practices and quality standards in his team?"
+        },
+        {
+          "heading": "Solving Challenges",
+          "message": "What has been the most complex technical challenge he had to solve?"
         }
       ]
     },

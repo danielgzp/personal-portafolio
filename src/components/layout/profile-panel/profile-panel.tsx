@@ -5,7 +5,7 @@ import { CTASection } from "./cta-section"
 import { ExperienceSection } from "./experience-section"
 import { HeroSection } from "./hero-section"
 import { TechnologiesSection } from "./technologies-section"
-import { pageVariants, sectionVariants } from "@/lib/animations"
+import { sectionVariants } from "@/lib/animations"
 
 export function ProfilePanel() {
   const t = useTranslations("profile")
@@ -18,18 +18,19 @@ export function ProfilePanel() {
       {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
-      <ScrollArea className="relative z-10 size-full">
-        <m.div
-          className="mx-auto flex h-full flex-col gap-8 p-6 pt-20 md:p-12"
-          variants={pageVariants}
-          initial="hidden"
-          animate="visible"
-        >
+      <ScrollArea viewportId="profile-scroll-container" className="relative z-10 size-full">
+        <div className="mx-auto flex h-full flex-col gap-8 p-6 pt-20 md:p-12">
           {/* ── Hero ── */}
           <HeroSection />
 
           {/* ── Bio ── */}
-          <m.div variants={sectionVariants} className="leading-relaxed text-foreground">
+          <m.div
+            variants={sectionVariants}
+            initial={reduceMotion ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="leading-relaxed text-foreground"
+          >
             <p className="text-sm text-pretty lg:md:text-base">{t("about")}</p>
           </m.div>
 
@@ -41,7 +42,7 @@ export function ProfilePanel() {
 
           {/* ── CTA Footer ── */}
           <CTASection variants={sectionVariants} reduceMotion={reduceMotion} className="mt-auto" />
-        </m.div>
+        </div>
       </ScrollArea>
     </div>
   )
