@@ -42,8 +42,8 @@ export function ChatPanel() {
 
   return (
     <section className="relative z-10 flex size-full flex-col overflow-hidden bg-transparent">
-      {/* <BackgroundGradientAnimation containerClassName="absolute inset-0 -z-10" /> */}
-      <DottedGlowBackground
+      <BackgroundGradientAnimation containerClassName="absolute inset-0 -z-10" />
+      {/* <DottedGlowBackground
         className="-z-10"
         opacity={0.35}
         gap={50}
@@ -54,7 +54,7 @@ export function ChatPanel() {
         glowColorDarkVar="--primary"
       />
 
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" /> */}
       {/* <div
         id="chat-scroll-container"
         className="flex-1 overflow-y-auto mask-[linear-gradient(to_bottom,black_80%,transparent)] pt-14 pb-4 lg:pt-4"
