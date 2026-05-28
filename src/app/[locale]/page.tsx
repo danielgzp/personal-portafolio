@@ -54,7 +54,7 @@ export default function Page() {
       <div className="relative flex size-full flex-1 overflow-hidden lg:flex-row">
         {/* ── Profile Panel ── slides out to the LEFT when Chat is active */}
         <m.section
-          className="absolute inset-0 z-20 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-[40%]"
+          className="absolute inset-0 z-20 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-1/2 xl:w-[40%]"
           initial={false}
           animate={{ x: isMobile && !isProfile ? "-100%" : 0 }}
           transition={slideTransition}

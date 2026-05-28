@@ -141,5 +141,12 @@
   "metadata": {
     "title": "Daniel González | Frontend Engineer",
     "description": "Portafolio interactivo y asistente de IA para Daniel González, Frontend Engineer."
+  },
+  "not_found": {
+    "title": "404 — Página no encontrada",
+    "subtitle": "404",
+    "heading": "Parece que te has perdido",
+    "description": "No pudimos encontrar la página que buscas. Puede que la dirección haya cambiado o el enlace ya no funcione.",
+    "button": "Volver al inicio"
   }
 }

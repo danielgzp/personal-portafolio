@@ -141,5 +141,12 @@
   "metadata": {
     "title": "Daniel González | Frontend Engineer",
     "description": "Interactive portfolio and AI assistant for Daniel González, Frontend Engineer."
+  },
+  "not_found": {
+    "title": "404 — Page Not Found",
+    "subtitle": "404",
+    "heading": "Looks like you're lost",
+    "description": "We couldn't find the page you're looking for. The link might be broken or the page may have been moved.",
+    "button": "Back to Home"
   }
 }
