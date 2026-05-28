@@ -5,6 +5,7 @@ import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
 import { buildErrorResponse, handleStreamError } from "@/lib/ai/error-handler"
 import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
+import { ratelimit, getClientIdentifier, buildRateLimitHeaders } from "@/lib/rate-limit"
 
 function resolveModelInstance(selectedModel: string) {
   if (selectedModel.startsWith("google/")) {
@@ -26,6 +27,36 @@ function resolveModelInstance(selectedModel: string) {
  */
 export async function POST(req: Request) {
   try {
+    // 0. Rate Limiting Guard
+    // Runs BEFORE body parsing, RAG, and model calls to save compute on abusive requests.
+    // Uses a sliding window of 10 requests per 60 seconds, identified by IP + User-Agent.
+    try {
+      const identifier = getClientIdentifier(req)
+      const { success, limit, remaining, reset } = await ratelimit.limit(identifier)
+
+      if (!success) {
+        // Client exceeded their quota — return 429 with standard rate-limit headers.
+        // The response format matches the existing error shape ({ error, message })
+        // so the frontend handles it consistently with other errors.
+        const headers = buildRateLimitHeaders(limit, remaining, reset)
+        return new Response(
+          JSON.stringify({
+            error: "rate_limit",
+            message: "Has enviado muchos mensajes. Por favor espera un momento antes de continuar.",
+          }),
+          {
+            status: 429,
+            headers: { "Content-Type": "application/json", ...headers },
+          },
+        )
+      }
+    } catch (rateLimitError) {
+      // Fail-open strategy: if Upstash Redis is unreachable (downtime, DNS, timeout),
+      // we log a warning and let the request through. This prioritizes portfolio
+      // availability over protection — a brief Redis outage shouldn't break the chat.
+      console.warn("[rate-limit] Upstash check failed, allowing request:", rateLimitError)
+    }
+
     const { messages, model } = await req.json()
 
     // 1. Model Validation: Default to the fastest model if an invalid one is passed.
