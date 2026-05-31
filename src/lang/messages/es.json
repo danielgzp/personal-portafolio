@@ -152,8 +152,8 @@
   "not_found": {
     "title": "404 — Página no encontrada",
     "subtitle": "404",
-    "heading": "Parece que te has perdido",
-    "description": "No pudimos encontrar la página que buscas. Puede que la dirección haya cambiado o el enlace ya no funcione.",
+    "heading": "Página no encontrada",
+    "description": "La página que estás buscando no existe o ha sido movida. Por favor, verifica la URL o regresa a la página de inicio.",
     "button": "Volver al inicio"
   }
 }

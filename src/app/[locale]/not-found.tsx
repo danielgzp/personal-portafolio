@@ -46,18 +46,18 @@ export default function NotFound() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-20 flex w-full max-w-md flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-xl backdrop-blur-xl dark:border-white/5 dark:bg-black/30"
+        className="relative z-20 flex w-full max-w-lg flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-xl backdrop-blur-xl lg:p-10 dark:border-white/5 dark:bg-black/30"
       >
         {/* Sleek and architectural 404 number */}
         <m.h1
           variants={childVariants}
-          className="text-7xl font-semibold tracking-tight text-foreground/90 select-none sm:text-8xl"
+          className="font-mono text-7xl font-semibold tracking-tight text-foreground/90 select-none sm:text-8xl"
         >
           {t("subtitle")}
         </m.h1>
 
         {/* Heading - Minimalist, clear spacing */}
-        <m.h2 variants={childVariants} className="mt-6 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+        <m.h2 variants={childVariants} className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {t("heading")}
         </m.h2>
 
@@ -67,7 +67,7 @@ export default function NotFound() {
         </m.p>
 
         {/* Go back action button */}
-        <m.div variants={childVariants} className="mt-8 w-full">
+        <m.div variants={childVariants} className="mt-6 w-full">
           <Button
             asChild
             size="lg"

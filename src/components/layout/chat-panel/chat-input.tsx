@@ -54,8 +54,6 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
     enabled: !isChatStarted,
   })
 
-  console.log("status", status)
-
   const isLoading = status === "submitted" || status === "streaming"
 
   const isDesktop = useMediaQuery("(min-width: 1024px)")
