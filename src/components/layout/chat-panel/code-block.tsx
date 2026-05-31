@@ -55,11 +55,11 @@ export function CodeBlock({ code, language = "tsx", className }: Props) {
         >
           {copied ? (
             <>
-              <Check className="h-3.5 w-3.5" /> Copiado
+              <Check className="size-3.5" /> Copiado
             </>
           ) : (
             <>
-              <Copy className="h-3.5 w-3.5" /> Copiar
+              <Copy className="size-3.5" /> Copiar
             </>
           )}
         </button>

@@ -61,7 +61,11 @@ export default function Page() {
           style={{ pointerEvents: isMobile && !isProfile ? "none" : "auto", willChange: "transform" }}
         >
           <ProfilePanel />
-          <div className="absolute top-4 right-4 z-50 hidden flex-row gap-2 lg:flex">
+          {/*
+              Floating switchers on desktop wrapped in a premium glassmorphic pill
+              to isolate them and prevent visual text overlapping on scroll.
+           */}
+          <div className="absolute top-4 right-4 z-50 hidden flex-row items-center gap-1 rounded-full border border-border/40 bg-background/80 p-1 shadow-xs backdrop-blur-lg lg:flex dark:bg-card/80">
             <LocaleSwitcher />
             <ThemeSwitcher />
           </div>
@@ -69,7 +73,7 @@ export default function Page() {
 
         {/* ── Chat Panel ── slides in from the RIGHT when Chat is active */}
         <m.section
-          className="absolute inset-0 z-10 flex h-full w-full flex-1 flex-col bg-background lg:relative lg:inset-auto lg:z-auto lg:order-2"
+          className="absolute inset-0 z-10 flex h-full w-full flex-1 flex-col bg-background lg:relative lg:inset-auto lg:z-auto lg:order-2 lg:w-1/2 lg:flex-initial xl:w-[60%]"
           initial={false}
           animate={{ x: isMobile && isProfile ? "100%" : 0 }}
           transition={slideTransition}
