@@ -1,42 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import {
-  Briefcase,
-  Boxes,
-  Code2,
-  User,
-  Bot,
-  Rocket,
-  Palette,
-  GitFork,
-  TrendingUp,
-  Lightbulb,
-  Shield,
-  Zap,
-  Sparkles,
-  ArrowUpRight,
-  type LucideIcon,
-} from "lucide-react"
 import React, { useEffect, useState } from "react"
-
-// Helper function to map translated category headings to appropriate Lucide icons in both English and Spanish
-const getIconForHeading = (heading: string): LucideIcon => {
-  const h = heading.toLowerCase()
-  if (h.includes("experience") || h.includes("experiencia")) return Briefcase
-  if (h.includes("architecture") || h.includes("arquitectura")) return Boxes
-  if (h.includes("tech")) return Code2
-  if (h.includes("summary") || h.includes("resumen")) return User
-  if (h.includes("ai") || h.includes("ia")) return Bot
-  if (h.includes("project") || h.includes("proyecto")) return Rocket
-  if (h.includes("design")) return Palette
-  if (h.includes("state") || h.includes("estado")) return GitFork
-  if (h.includes("scale") || h.includes("escala")) return TrendingUp
-  if (h.includes("vision") || h.includes("visión")) return Lightbulb
-  if (h.includes("leader") || h.includes("lider")) return Shield
-  if (h.includes("challenge") || h.includes("reto")) return Zap
-  return Sparkles
-}
 
 export const InfiniteMovingCards = ({
   items,
@@ -49,6 +14,7 @@ export const InfiniteMovingCards = ({
   items: {
     heading: string
     message: string
+    icon?: React.ReactNode
   }[]
   direction?: "left" | "right"
   speed?: "fast" | "normal" | "slow"
@@ -115,28 +81,29 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-2",
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-4",
           start && "animate-scroll",
           pauseOnHover && "hover:paused"
         )}
       >
         {items.map((item, idx) => {
-          const Icon = getIconForHeading(item.heading)
           return (
             <button
               onClick={() => onItemClick?.(item.message)}
-              className="group flex w-70 shrink-0 cursor-pointer flex-col gap-2.5 rounded-2xl border border-border bg-card px-5 py-4 text-left shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:w-[320px] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)]"
+              className="group flex w-62 shrink-0 cursor-pointer flex-col gap-1 rounded-2xl border border-border/50 bg-background/40 px-4 py-3.5 text-left shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-background/60 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:w-[320px] lg:gap-2 lg:px-5 lg:py-4 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20 dark:hover:bg-white/[0.08] dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.04)]"
               key={idx}
             >
               <div className="flex w-full items-center justify-between">
-                <span className="text-sm font-semibold tracking-tight text-foreground/90 transition-colors group-hover:text-primary">
+                <span className="text-[15px] font-semibold tracking-tight text-foreground/90 transition-colors group-hover:text-primary lg:text-base">
                   {item.heading}
                 </span>
-                <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary/20">
-                  <Icon className="size-4 transition-transform duration-300 group-hover:rotate-6" />
-                </div>
+                {item.icon && (
+                  <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary/20 [&>svg]:size-4 [&>svg]:transition-transform [&>svg]:duration-300 [&>svg]:group-hover:rotate-6">
+                    {item.icon}
+                  </div>
+                )}
               </div>
-              <p className="text-[13px] leading-relaxed font-normal text-muted-foreground transition-colors group-hover:text-foreground/80">
+              <p className="text-sm leading-relaxed font-normal text-muted-foreground transition-colors group-hover:text-foreground/80 lg:text-[15px]">
                 {item.message}
               </p>
             </button>

@@ -12,7 +12,7 @@ export interface AIModel {
  * Used by both the frontend UI (for selection) and the backend API (for validation).
  */
 export const AVAILABLE_MODELS: AIModel[] = [
-  {id: "google/gemini-3.0-flash", name: "Gemini 3.0 Flash", provider: "Google"},
+  {id: "google/gemini-3.1-flash-image-preview", name: "Gemini 3.1 Flash", provider: "Google"},
   { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash", provider: "Google" },
   { id: "groq/llama-3.3-70b-versatile", name: "Llama 3.3 70B", provider: "Groq" },
   { id: "groq/mixtral-8x7b-32768", name: "Mixtral 8x7B", provider: "Groq" },

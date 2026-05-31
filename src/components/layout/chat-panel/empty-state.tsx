@@ -4,6 +4,21 @@ import { m } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
+import {
+  Briefcase,
+  Boxes,
+  Code2,
+  User,
+  Bot,
+  Rocket,
+  Palette,
+  GitFork,
+  TrendingUp,
+  Lightbulb,
+  Shield,
+  Zap,
+  Sparkles,
+} from "lucide-react"
 
 export function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
   const [displayedText, setDisplayedText] = useState("")
@@ -30,17 +45,55 @@ export function Typewriter({ text, delay = 0, className }: { text: string; delay
   )
 }
 
+const getIconForHeading = (heading: string) => {
+  const h = heading.toLowerCase()
+  if (h.includes("experience") || h.includes("experiencia")) return <Briefcase />
+  if (h.includes("architecture") || h.includes("arquitectura")) return <Boxes />
+  if (h.includes("tech")) return <Code2 />
+  if (h.includes("summary") || h.includes("resumen")) return <User />
+  if (h.includes("ai") || h.includes("ia") || h.includes("integración")) return <Bot />
+  if (h.includes("project") || h.includes("proyecto")) return <Rocket />
+  if (h.includes("design")) return <Palette />
+  if (h.includes("state") || h.includes("estado")) return <GitFork />
+  if (h.includes("scale") || h.includes("escala")) return <TrendingUp />
+  if (h.includes("vision") || h.includes("visión")) return <Lightbulb />
+  if (h.includes("leader") || h.includes("lider")) return <Shield />
+  if (h.includes("challenge") || h.includes("reto")) return <Zap />
+  return <Sparkles />
+}
+
 interface EmptyStateProps {
   setInput: (input: string) => void
 }
 
 export function EmptyState({ setInput }: EmptyStateProps) {
   const t = useTranslations("chat.empty_state")
-  const suggestions = t.raw("suggestions") as { heading: string; message: string }[]
 
-  const half = Math.ceil(suggestions.length / 2)
-  const firstRow = suggestions.slice(0, half)
-  const secondRow = suggestions.slice(half)
+  const [shuffledSuggestions, setShuffledSuggestions] = useState<
+    Array<{ heading: string; message: string; icon: React.ReactNode }>
+  >([])
+
+  useEffect(() => {
+    const rawSuggestions = t.raw("suggestions") as { heading: string; message: string }[]
+    const mapped = rawSuggestions.map((item) => ({
+      ...item,
+      icon: getIconForHeading(item.heading),
+    }))
+
+    // Mezcla aleatoria usando Fisher-Yates para asegurar índices verdaderamente aleatorios
+    const shuffled = [...mapped]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+
+    const timeout = setTimeout(() => {
+      setShuffledSuggestions(shuffled)
+    }, 0)
+
+    return () => clearTimeout(timeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -54,7 +107,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center overflow-x-hidden gap-y-8 lg:gap-y-12">
+    <div className="flex w-full flex-col items-center justify-center gap-y-8 overflow-x-hidden lg:gap-y-12">
       {/* Hero Header */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
@@ -62,6 +115,16 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="flex flex-col items-center gap-4 text-center lg:gap-6"
       >
+        <m.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          className="relative flex size-12 items-center justify-center rounded-full bg-primary/5 text-primary ring-1 ring-primary/10 md:size-14"
+        >
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-transparent" />
+          <Sparkles className="size-6 md:size-7" strokeWidth={1.5} />
+        </m.div>
+
         <div className="max-w-3xl space-y-4">
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">
@@ -111,22 +174,10 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           }}
           className="w-full"
         >
-          <InfiniteMovingCards items={firstRow} direction="left" speed="normal" onItemClick={setInput} />
+          {shuffledSuggestions.length > 0 && (
+            <InfiniteMovingCards items={shuffledSuggestions} direction="left" speed="slow" onItemClick={setInput} />
+          )}
         </m.div>
-
-        {/* <m.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            show: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-            },
-          }}
-          className="w-full"
-        >
-          <InfiniteMovingCards items={secondRow} direction="right" speed="normal" onItemClick={setInput} />
-        </m.div> */}
       </m.div>
     </div>
   )

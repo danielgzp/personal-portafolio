@@ -15,11 +15,11 @@ import { TabType } from "@/app/[locale]/page"
 const headerVariants: Variants = {
   visible: {
     y: 0,
-    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] }, // ease-in
+    transition: { duration: 0.35, ease: [0.4, 0, 1, 1] }, // ease-in
   },
   hidden: {
     y: "-100%",
-    transition: { duration: 0.2, ease: "easeInOut" }, // ease-in
+    transition: { duration: 0.3, ease: "easeInOut" }, // ease-in
   },
 }
 
@@ -49,24 +49,30 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
   }
 
   useEffect(() => {
-    const el = document.getElementById(scrollId)
-    if (!el) return
+    let lastScrollY = 0
 
-    let lastScrollY = el.scrollTop
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement
+      if (!target || typeof target.scrollTop === "undefined") return
 
-    const handleScroll = () => {
-      const currentScrollY = el.scrollTop
-      // Hide when scrolling down more than 40px, show when scrolling up or at top
-      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+      // Detect if scroll event comes from either profile or chat panel containers
+      const isProfileScroll = target.id === scrollId
+      const isChatScroll = target.closest?.("[role='log']") || target.getAttribute?.("role") === "log"
+
+      if (!isProfileScroll && !isChatScroll) return
+
+      const currentScrollY = target.scrollTop
+      // Hide when scrolling down more than 50px, show when scrolling up or at top
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setHidden(true)
-      } else if (currentScrollY < lastScrollY || currentScrollY <= 40) {
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
         setHidden(false)
       }
       lastScrollY = currentScrollY
     }
 
-    el.addEventListener("scroll", handleScroll, { passive: true })
-    return () => el.removeEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true, capture: true })
+    return () => window.removeEventListener("scroll", handleScroll, { capture: true })
   }, [activeTab])
 
   return (

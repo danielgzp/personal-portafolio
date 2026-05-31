@@ -34,7 +34,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
         once: true,
         amount: 0.15,
       }}
-      className={`flex w-full flex-row justify-center gap-2 sm:justify-start ${
+      className={`flex w-full flex-row items-center gap-1.5 sm:gap-2 justify-center sm:justify-start ${
         showBorder ? "border-t border-border/50 pt-6" : ""
       } ${className || ""}`}
     >
@@ -46,7 +46,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
         className="flex flex-1 sm:flex-initial group"
       >
         <Button
-          className="mr-2 flex w-full flex-1 gap-2 transition-colors duration-300 hover:shadow-md sm:w-auto lg:flex-initial group-hover:border-primary"
+          className="h-9 px-3 text-xs sm:h-10 sm:px-4 sm:text-sm flex w-full flex-1 gap-1.5 transition-colors duration-300 hover:shadow-md sm:w-auto lg:flex-initial group-hover:border-primary"
           size="lg"
           asChild
         >
@@ -74,7 +74,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
         >
           <Button
             asChild
-            className="shrink-0 rounded-full border border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary"
+            className="shrink-0 size-9 sm:size-10 rounded-full border border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary"
             variant="secondary"
             size="icon-lg"
           >

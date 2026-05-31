@@ -221,20 +221,121 @@
   }
 
   @keyframes moveHorizontal {
-    0% { transform: translateX(-50%) translateY(-10%); }
-    50% { transform: translateX(50%) translateY(10%); }
-    100% { transform: translateX(-50%) translateY(-10%); }
+    0% {
+      transform: translateX(-50%) translateY(-10%);
+    }
+    50% {
+      transform: translateX(50%) translateY(10%);
+    }
+    100% {
+      transform: translateX(-50%) translateY(-10%);
+    }
   }
 
   @keyframes moveInCircle {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(180deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   @keyframes moveVertical {
-    0% { transform: translateY(-50%); }
-    50% { transform: translateY(50%); }
-    100% { transform: translateY(-50%); }
+    0% {
+      transform: translateY(-50%);
+    }
+    50% {
+      transform: translateY(50%);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
   }
 }
+
+/* ════════════════════════════════════════════
+   Experience Carousel — Swiper overrides
+   ════════════════════════════════════════════ */
+
+/* EffectFade: slides stack on top of each other at position:absolute.
+   With autoHeight={true}, the active slide determines the container height.
+   We align items to flex-start and let Swiper transition the wrapper height. */
+.exp-swiper {
+  overflow: hidden;
+  width: 100%;
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.exp-swiper .swiper-wrapper {
+  align-items: flex-start;
+  transition-property: transform, height;
+}
+
+.exp-swiper .swiper-slide {
+  height: auto;
+  pointer-events: none;
+}
+
+.exp-swiper .swiper-slide-active {
+  pointer-events: auto;
+}
+
+/* ── Pagination container ──
+   Swiper renders .swiper-pagination at the bottom of .swiper.
+   We pull it out of the clipping context by giving the swiper
+   enough padding-bottom, then anchor the bullets there.         */
+.exp-swiper {
+  padding-bottom: 1.5rem !important;
+}
+
+.exp-swiper .swiper-pagination {
+  bottom: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  /* Override Swiper's default position:absolute so it flows below the card */
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+/* ── Individual bullets (base state) ── */
+.exp-swiper .swiper-pagination-bullet {
+  /* Reset Swiper defaults */
+  margin: 0 !important;
+  background: none;
+  opacity: 1 !important;
+
+  /* Pill geometry */
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+
+  /* Inactive: muted dot */
+  background-color: var(--muted-foreground);
+  opacity: 0.3 !important;
+
+  /* Premium easing for morph */
+  transition:
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+
+  cursor: pointer;
+}
+
+/* ── Active bullet — morphs to a wider pill with primary color ── */
+.exp-swiper .swiper-pagination-bullet-active {
+  width: 24px;
+  background-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+

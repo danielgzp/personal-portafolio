@@ -130,7 +130,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
             </PromptInputSelect>
           </PromptInputTools>
           <PromptInputSubmit
-            disabled={!input.trim() && !isLoading}
+            disabled={(!input.trim() && !isLoading) || status === "submitted"}
             status={status}
             className="ml-2 size-9 shrink-0 rounded-full bg-primary p-2 text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none md:size-10 md:p-2.5"
           />

@@ -45,7 +45,7 @@ export function HeroSection() {
         whileTap={reduceMotion ? {} : "tap"}
         className="w-fit"
       >
-        <Avatar className="size-18 border lg:size-24 cursor-pointer transition-colors duration-300">
+        <Avatar className="size-18 border lg:size-20 xl:size-24 cursor-pointer transition-colors duration-300">
           <AvatarImage src="/images/avatar.jpg" asChild>
             <Image
               src="/images/avatar.jpg"
@@ -57,15 +57,15 @@ export function HeroSection() {
               loading="eager"
             />
           </AvatarImage>
-          <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-2xl">
+          <AvatarFallback className="bg-muted/50 text-xl font-bold text-muted-foreground lg:text-xl xl:text-2xl">
             DG
           </AvatarFallback>
         </Avatar>
       </m.div>
 
       <div className="flex w-full flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Daniel González</h1>
-        <h2 className="text-xl font-semibold text-foreground">Frontend Engineer</h2>
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl xl:text-4xl">Daniel González</h1>
+        <h2 className="text-xl font-semibold text-foreground lg:text-lg xl:text-xl">Frontend Engineer</h2>
         <div className="flex gap-2 text-sm text-muted-foreground">
           <MapPin className="size-4" />
           <span>Cabudare, Venezuela</span>

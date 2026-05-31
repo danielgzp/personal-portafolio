@@ -8,8 +8,17 @@ import { APICallError } from "ai"
  * @returns A Next.js Response object with the appropriate status code and JSON body.
  */
 export function buildErrorResponse(error: unknown): Response {
+  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
   // 1. Rate limit / quota exceeded (HTTP 429)
-  if (APICallError.isInstance(error) && error.statusCode === 429) {
+  const isRateLimit = 
+    (APICallError.isInstance(error) && error.statusCode === 429) || 
+    msg.includes("429") || 
+    msg.includes("quota") || 
+    msg.includes("rate limit") ||
+    msg.includes("too many requests");
+
+  if (isRateLimit) {
     return new Response(
       JSON.stringify({
         error: "rate_limit",
@@ -103,15 +112,24 @@ export function buildErrorResponse(error: unknown): Response {
 export function handleStreamError(error: unknown): string {
   console.error("[/api/chat] Stream error:", error)
 
+  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+  const isRateLimit = 
+    (APICallError.isInstance(error) && error.statusCode === 429) || 
+    msg.includes("429") || 
+    msg.includes("quota") || 
+    msg.includes("rate limit") ||
+    msg.includes("too many requests");
+
+  if (isRateLimit) {
+    return JSON.stringify({
+      error: "rate_limit",
+      message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
+    })
+  }
+
   if (APICallError.isInstance(error)) {
     const status = error.statusCode ?? 500
-
-    if (status === 429) {
-      return JSON.stringify({
-        error: "rate_limit",
-        message: "Has alcanzado el límite de solicitudes. Por favor, espera un momento e inténtalo de nuevo.",
-      })
-    }
 
     if (
       status === 400 &&

@@ -10,7 +10,7 @@ import { supabase } from "@/lib/supabase"
 export async function GET(request: Request) {
   // Check for Vercel Cron Authorization header 
   const authHeader = request.headers.get("authorization")
-  console.log("Received keep-alive request with auth header:", authHeader)
+  
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response("Unauthorized", { status: 401 })
   }
@@ -21,8 +21,7 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error("Supabase Keep-Alive Error:", error)
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
-    }
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 })    }
 
     return NextResponse.json({
       success: true,
