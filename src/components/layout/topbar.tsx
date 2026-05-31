@@ -15,11 +15,11 @@ import { TabType } from "@/app/[locale]/page"
 const headerVariants: Variants = {
   visible: {
     y: 0,
-    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] }, // ease-in
+    transition: { duration: 0.35, ease: [0.4, 0, 1, 1] }, // ease-in
   },
   hidden: {
     y: "-100%",
-    transition: { duration: 0.2, ease: "easeInOut" }, // ease-in
+    transition: { duration: 0.3, ease: "easeInOut" }, // ease-in
   },
 }
 
@@ -62,10 +62,10 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
       if (!isProfileScroll && !isChatScroll) return
 
       const currentScrollY = target.scrollTop
-      // Hide when scrolling down more than 40px, show when scrolling up or at top
-      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+      // Hide when scrolling down more than 50px, show when scrolling up or at top
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setHidden(true)
-      } else if (currentScrollY < lastScrollY || currentScrollY <= 40) {
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
         setHidden(false)
       }
       lastScrollY = currentScrollY

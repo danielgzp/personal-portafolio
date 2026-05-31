@@ -1,3 +1,5 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
 import {
   Timeline,
@@ -8,9 +10,16 @@ import {
   TimelineTitle,
 } from "@/components/ui/timeline"
 import { type Variants, m, useReducedMotion } from "framer-motion"
-import { sectionVariants, EASE_PREMIUM, SPRING_INTERACTIVE } from "@/lib/animations"
+import { sectionVariants, EASE_PREMIUM } from "@/lib/animations"
+import dynamic from "next/dynamic"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
+
+// Swiper reads browser-only APIs — must be loaded client-side only to avoid
+// hydration mismatches that crash the entire React tree on mobile.
+const ExperienceCarousel = dynamic(() => import("./experience-carousel").then((m) => m.ExperienceCarousel), {
+  ssr: false,
+})
 
 interface ExperienceItem {
   id: number
@@ -73,7 +82,7 @@ export function ExperienceSection() {
   const t = useTranslations("profile.experience")
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
 
-  const expirienceItems = t.raw("items") as ExperienceItem[]
+  const experienceItems = t.raw("items") as ExperienceItem[]
 
   return (
     <m.div
@@ -84,8 +93,16 @@ export function ExperienceSection() {
       className="space-y-4"
     >
       <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
-      <Timeline defaultValue={expirienceItems.length + 1}>
-        {expirienceItems.map((item, idx) => (
+
+      {/* ── Mobile: touch-friendly Swiper carousel (hidden on sm+) ── */}
+      <div className="block sm:hidden">
+        <ExperienceCarousel items={experienceItems} />
+      </div>
+
+      {/* ── Desktop/Tablet: animated vertical timeline (hidden on mobile) ── */}
+
+      <Timeline defaultValue={experienceItems.length + 1} className="hidden sm:block">
+        {experienceItems.map((item, idx) => (
           <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
             {/* Animated separator path with subtle glow on hover */}
             <div className="absolute self-start overflow-hidden bg-border/10 group-last/timeline-item:hidden group-data-[orientation=vertical]/timeline:-left-6 group-data-[orientation=vertical]/timeline:h-[calc(100%-1rem-0.25rem)] group-data-[orientation=vertical]/timeline:w-0.5 group-data-[orientation=vertical]/timeline:-translate-x-1/2 group-data-[orientation=vertical]/timeline:translate-y-4.5 max-sm:-left-4">
