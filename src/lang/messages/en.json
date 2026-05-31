@@ -64,6 +64,9 @@
       "token_limit": "The conversation is too long for this model. Try starting a new chat or using a model with a larger context window.",
       "auth_error": "Authentication error with the AI provider.",
       "service_unavailable": "The AI service is currently unavailable. Please try again later.",
+      "api_error": "AI provider error. Please try again.",
+      "invalid_request": "The request is invalid.",
+      "internal_error": "An unexpected error occurred. Please try again later.",
       "generic": "An unexpected error occurred. Please try again."
     },
     "actions": {
@@ -133,6 +136,10 @@
     "messages": {
       "thinking": "Generating response...",
       "input_placeholder_active": "Ask me anything..."
+    },
+    "rate_limit_banner": {
+      "title": "Interaction limit reached",
+      "description": "The assistant has reached the maximum number of requests allowed by the AI provider. Please try again in a few minutes or contact Daniel directly."
     }
   },
   "common": {

@@ -81,7 +81,7 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-2",
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-4",
           start && "animate-scroll",
           pauseOnHover && "hover:paused"
         )}
@@ -90,7 +90,7 @@ export const InfiniteMovingCards = ({
           return (
             <button
               onClick={() => onItemClick?.(item.message)}
-              className="group flex w-62 shrink-0 cursor-pointer flex-col gap-1 rounded-2xl border border-border bg-card px-4 py-3.5 text-left shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:w-[320px] lg:gap-2 lg:px-5 lg:py-4 dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)]"
+              className="group flex w-62 shrink-0 cursor-pointer flex-col gap-1 rounded-2xl border border-border/50 bg-background/40 px-4 py-3.5 text-left shadow-md backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-background/60 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:w-[320px] lg:gap-2 lg:px-5 lg:py-4 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white/20 dark:hover:bg-white/[0.08] dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.04)]"
               key={idx}
             >
               <div className="flex w-full items-center justify-between">

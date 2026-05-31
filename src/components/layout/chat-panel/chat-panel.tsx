@@ -16,14 +16,33 @@ import ChatInput, { ChatInputHandle } from "./chat-input"
 import { cn } from "@/lib/utils"
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation"
 import { useTranslations } from "next-intl"
-import { AnimatePresence, motion } from "framer-motion"
-import { AlertCircle, X } from "lucide-react"
+import { AnimatePresence, m } from "framer-motion"
+import { AlertCircle, X, MessageSquareWarning } from "lucide-react"
 
 /**
  * Known error codes returned by our API.
  * These map directly to the i18n keys under "chat.errors".
  */
-type ChatErrorCode = "rate_limit" | "token_limit" | "auth_error" | "service_unavailable" | "generic"
+type ChatErrorCode =
+  | "rate_limit"
+  | "token_limit"
+  | "auth_error"
+  | "service_unavailable"
+  | "api_error"
+  | "invalid_request"
+  | "internal_error"
+  | "generic"
+
+const KNOWN_ERROR_CODES: ChatErrorCode[] = [
+  "rate_limit",
+  "token_limit",
+  "auth_error",
+  "service_unavailable",
+  "api_error",
+  "invalid_request",
+  "internal_error",
+  "generic",
+]
 
 /**
  * Try to extract a structured error code from the useChat error.
@@ -40,14 +59,22 @@ function parseErrorCode(error: Error): ChatErrorCode {
   try {
     const parsed = JSON.parse(msg)
     if (parsed?.error && typeof parsed.error === "string") {
-      return parsed.error as ChatErrorCode
+      if (KNOWN_ERROR_CODES.includes(parsed.error as ChatErrorCode)) {
+        return parsed.error as ChatErrorCode
+      }
     }
   } catch {
     // Not JSON — check for known patterns in the message text
   }
 
   // Fallback: check for HTTP status codes or known keywords
-  if (msg.includes("429") || msg.toLowerCase().includes("rate")) return "rate_limit"
+  if (
+    msg.includes("429") ||
+    msg.toLowerCase().includes("rate") ||
+    msg.toLowerCase().includes("quota") ||
+    msg.toLowerCase().includes("too many requests")
+  )
+    return "rate_limit"
   if (msg.includes("token") || msg.includes("context")) return "token_limit"
   if (msg.includes("401") || msg.includes("403")) return "auth_error"
   if (msg.includes("503") || msg.includes("502")) return "service_unavailable"
@@ -65,6 +92,7 @@ function parseErrorCode(error: Error): ChatErrorCode {
 export function ChatPanel() {
   const tErrors = useTranslations("chat.errors")
   const tActions = useTranslations("chat.actions")
+  const tRateLimit = useTranslations("chat.rate_limit_banner")
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -88,7 +116,8 @@ export function ChatPanel() {
   const setInputFromRef = useCallback((v: string) => chatInputRef.current?.setInput(v), [])
 
   // Derive the translated error message from the error code
-  const errorMessage = error ? tErrors(parseErrorCode(error)) : null
+  const errorCode = error ? parseErrorCode(error) : null
+  const errorMessage = errorCode ? tErrors(errorCode) : null
 
   return (
     <section className="relative z-10 flex size-full flex-col overflow-hidden bg-transparent">
@@ -139,30 +168,56 @@ export function ChatPanel() {
 
       {/* Error banner — slides in above the input when an API error occurs */}
       <AnimatePresence>
-        {showError && errorMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.2 }}
-            className="mx-auto flex w-full max-w-3xl items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive backdrop-blur-sm"
-            role="alert"
-          >
-            <AlertCircle className="size-4 shrink-0" />
-            <span className="flex-1">{errorMessage}</span>
-            <button
-              onClick={() => setDismissedError(error)}
-              className="shrink-0 rounded-md p-1 transition-colors hover:bg-destructive/20"
-              aria-label={tActions("dismiss")}
+        <div className="mx-auto w-full max-w-3xl px-4">
+          {showError && errorCode === "rate_limit" && (
+            <m.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
+              className="mb-2 flex w-full items-start justify-between gap-3 rounded-2xl border border-border/50 bg-background px-4 py-3 text-sm text-card-foreground shadow-sm"
+              role="alert"
             >
-              <X className="size-3.5" />
-            </button>
-          </motion.div>
-        )}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2 font-medium text-foreground">
+                  <MessageSquareWarning className="size-4 shrink-0 text-muted-foreground" />
+                  <span>{tRateLimit("title")}</span>
+                </div>
+                <p className="text-muted-foreground">{tRateLimit("description")}</p>
+              </div>
+              <button
+                onClick={() => setDismissedError(error)}
+                className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                aria-label={tActions("dismiss")}
+              >
+                <X className="size-4" />
+              </button>
+            </m.div>
+          )}
+          {showError && errorCode !== "rate_limit" && errorMessage && (
+            <m.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
+              className="flex w-full items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive backdrop-blur-sm"
+              role="alert"
+            >
+              <AlertCircle className="size-4 shrink-0" />
+              <span className="flex-1">{errorMessage}</span>
+              <button
+                onClick={() => setDismissedError(error)}
+                className="shrink-0 rounded-md p-1 transition-colors hover:bg-destructive/20"
+                aria-label={tActions("dismiss")}
+              >
+                <X className="size-3.5" />
+              </button>
+            </m.div>
+          )}
+        </div>
       </AnimatePresence>
 
       <ChatInput ref={chatInputRef} sendMessage={sendMessage} status={status} isChatStarted={isChatStarted} />
     </section>
   )
 }
-

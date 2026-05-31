@@ -115,6 +115,16 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="flex flex-col items-center gap-4 text-center lg:gap-6"
       >
+        <m.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          className="relative flex size-12 items-center justify-center rounded-full bg-primary/5 text-primary ring-1 ring-primary/10 md:size-14"
+        >
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-transparent" />
+          <Sparkles className="size-6 md:size-7" strokeWidth={1.5} />
+        </m.div>
+
         <div className="max-w-3xl space-y-4">
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             <span className="sm:hidden">

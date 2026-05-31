@@ -64,6 +64,9 @@
       "token_limit": "La conversación es demasiado larga para este modelo. Intenta iniciar una nueva conversación o usa un modelo con mayor contexto.",
       "auth_error": "Error de autenticación con el proveedor de IA.",
       "service_unavailable": "El servicio de IA no está disponible en este momento. Inténtalo más tarde.",
+      "api_error": "Error del proveedor de IA. Por favor, inténtalo de nuevo.",
+      "invalid_request": "La solicitud no es válida.",
+      "internal_error": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
       "generic": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
     },
     "actions": {
@@ -133,6 +136,10 @@
     "messages": {
       "thinking": "Generando respuesta...",
       "input_placeholder_active": "Pregúntame algo..."
+    },
+    "rate_limit_banner": {
+      "title": "Límite de interacciones alcanzado",
+      "description": "El asistente ha alcanzado el límite de solicitudes permitidas por el proveedor de IA. Por favor, intenta de nuevo en unos minutos o contacta a Daniel directamente."
     }
   },
   "common": {
