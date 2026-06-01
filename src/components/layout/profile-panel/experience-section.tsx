@@ -14,6 +14,7 @@ import { sectionVariants, EASE_PREMIUM } from "@/lib/animations"
 import dynamic from "next/dynamic"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
+import { Separator } from "@/components/ui/separator"
 
 // Swiper reads browser-only APIs — must be loaded client-side only to avoid
 // hydration mismatches that crash the entire React tree on mobile.
@@ -164,7 +165,7 @@ export function ExperienceSection() {
               custom={idx}
               onMouseEnter={() => setHoveredIdx(idx)}
               onMouseLeave={() => setHoveredIdx(null)}
-              className="group flex flex-col gap-4 rounded-2xl border border-border/40 bg-card/90 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 hover:bg-card/70 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:p-6 dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.15)]"
+              className="group flex flex-col gap-3 rounded-2xl border border-border/40 bg-card/90 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 hover:bg-card/70 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:p-6 dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.15)]"
             >
               <TimelineHeader className="w-full pb-0">
                 <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
@@ -182,6 +183,8 @@ export function ExperienceSection() {
                   </div>
                 </div>
               </TimelineHeader>
+              <Separator />
+
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
                 <p className="text-sm/6">{item.description}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
