@@ -98,14 +98,14 @@ export function ExperienceSection() {
               <TimelineHeader className="w-full pb-0">
                 <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex flex-col">
-                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground">
+                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground xl:text-lg">
                       {item.role}
                     </TimelineTitle>
-                    <span className="text-sm font-medium text-muted-foreground">{item.company}</span>
+                    <span className="text-sm font-medium text-muted-foreground xl:text-base">{item.company}</span>
                   </div>
                   <div className="mt-1 flex flex-col sm:mt-0 sm:text-right">
-                    <span className="text-sm font-semibold text-foreground">{item.location}</span>
-                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic">
+                    <span className="text-sm font-semibold text-foreground xl:text-base">{item.location}</span>
+                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic xl:text-sm">
                       {item.date}
                     </TimelineDate>
                   </div>
@@ -114,13 +114,13 @@ export function ExperienceSection() {
               <Separator />
 
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                <p className="text-sm/6">{item.description}</p>
+                <p className="text-sm/6 xl:text-base/6">{item.description}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   {item.skills.map((skill, idx) => (
                     <Badge
                       key={idx}
                       variant="secondary"
-                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70"
+                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70 xl:px-3 xl:text-sm"
                     >
                       {skill}
                     </Badge>

@@ -82,7 +82,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
     },
   }
 
-  const aiWords = t("title_explore_ai")
+  const aiWordsDesktop = t("title_explore_ai")
     .split(" ")
     .map((w) => ({
       text: w,
@@ -114,12 +114,14 @@ export function EmptyState({ setInput }: EmptyStateProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className={`text-3xl font-bold tracking-wide text-foreground sm:text-4xl md:text-5xl`}
+            className={`text-3xl leading-[1.2] font-extrabold tracking-tight text-foreground sm:text-4xl sm:leading-[1.2] md:text-5xl`}
           >
-            <span className="sm:hidden">{t("title_ai")} </span>
+            <span className="block bg-linear-to-br from-foreground via-foreground/75 to-primary/10 bg-clip-text text-center text-transparent drop-shadow-sm sm:hidden">
+              {t("title_ai")}
+            </span>
             <span className="hidden sm:inline">{t("title_explore")} </span>
-            <span className="mt-2 inline-block sm:mt-0">
-              <TypewriterEffect words={aiWords} className="text-left" />
+            <span className="mt-2 hidden sm:mt-0 sm:inline-block">
+              <TypewriterEffect words={aiWordsDesktop} className="text-left font-extrabold tracking-tight" />
             </span>
           </m.h2>
           <m.p

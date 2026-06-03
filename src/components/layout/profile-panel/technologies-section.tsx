@@ -6,6 +6,7 @@ import {
   MotionIcon,
   NextjsIcon,
   NodejsIcon,
+  PostgreSQLIcon,
   ReactIcon,
   ShadcnIcon,
   SupabaseIcon,
@@ -32,6 +33,7 @@ const SKILLS = [
   { icon: ZustandIcon, name: "Zustand" },
   { icon: ZodIcon, name: "Zod" },
   { icon: SupabaseIcon, name: "Supabase" },
+  { icon: PostgreSQLIcon, name: "PostgreSQL" },
   { icon: DockerIcon, name: "Docker" },
   { icon: EslintIcon, name: "ESLint" },
   { icon: FigmaIcon, name: "Figma" },
@@ -92,9 +94,9 @@ export function TechnologiesSection() {
           >
             <Badge
               variant="outline"
-              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary"
+              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary xl:gap-x-1.5 xl:px-2.5 xl:py-1.5 xl:text-sm"
             >
-              <m.span variants={iconVariants} className="flex [&>svg]:size-4">
+              <m.span variants={iconVariants} className="flex [&>svg]:size-4 xl:[&>svg]:size-4.5">
                 <tech.icon />
               </m.span>
               {tech.name}
