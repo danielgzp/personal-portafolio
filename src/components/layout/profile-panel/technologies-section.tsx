@@ -17,6 +17,8 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { type Variants, m, useReducedMotion } from "framer-motion"
 import { sectionVariants, EASE_PREMIUM, SPRING_BOUNCY, SPRING_INTERACTIVE, SPRING_TAP } from "@/lib/animations"
+import { useTranslations } from "next-intl"
+import { UnderlinedTitle } from "@/components/ui/underlined-title"
 
 const SKILLS = [
   { icon: ReactIcon, name: "React" },
@@ -44,14 +46,14 @@ const iconVariants: Variants = {
   },
 }
 
-// Individual skill badge (uses GPU-accelerated properties and custom stagger delay)
+// Individual skill badge — enters with a slow, floating reveal staggered by index
 const badgeVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.85, y: 12 },
+  hidden: { opacity: 0, scale: 0.8, y: 16 },
   visible: (idx: number) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.55, ease: EASE_PREMIUM, delay: idx * 0.05 },
+    transition: { duration: 0.9, ease: EASE_PREMIUM, delay: idx * 0.07 },
   }),
   hover: {
     scale: 1.05,
@@ -69,17 +71,15 @@ const badgeVariants: Variants = {
 
 export function TechnologiesSection() {
   const reduceMotion = useReducedMotion()
+  const t = useTranslations("profile")
 
   return (
     <m.div
       variants={sectionVariants}
-      initial={reduceMotion ? "visible" : "hidden"}
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
       className="space-y-4"
     >
-      <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Tecnologías Core</h3>
-      {/* Standard HTML flex container — each badge has its own viewport hook to guarantee execution */}
+      <UnderlinedTitle>{t("core_technologies")}</UnderlinedTitle>
+      {/* Each badge controls its own entrance — staggered by index via custom prop */}
       <div className="flex flex-wrap gap-1.5 lg:gap-2">
         {SKILLS.map((tech, idx) => (
           <m.div
@@ -95,7 +95,7 @@ export function TechnologiesSection() {
           >
             <Badge
               variant="outline"
-              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 select-none transition-colors duration-300 group-hover:border-primary"
+              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary"
             >
               <m.span variants={iconVariants} className="flex [&>svg]:size-4">
                 <tech.icon />

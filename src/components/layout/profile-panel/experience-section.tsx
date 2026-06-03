@@ -6,7 +6,9 @@ import {
   TimelineContent,
   TimelineDate,
   TimelineHeader,
+  TimelineIndicator,
   TimelineItem,
+  TimelineSeparator,
   TimelineTitle,
 } from "@/components/ui/timeline"
 import { type Variants, m, useReducedMotion } from "framer-motion"
@@ -15,6 +17,7 @@ import dynamic from "next/dynamic"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
+import { UnderlinedTitle } from "@/components/ui/underlined-title"
 
 // Swiper reads browser-only APIs — must be loaded client-side only to avoid
 // hydration mismatches that crash the entire React tree on mobile.
@@ -32,41 +35,13 @@ interface ExperienceItem {
   skills: string[]
 }
 
-// Draw timeline vertical path down on entry
-const lineVariants: Variants = {
-  hidden: { scaleY: 0 },
-  visible: (idx: number) => ({
-    scaleY: 1,
-    transition: {
-      duration: 0.5,
-      ease: EASE_PREMIUM,
-      delay: idx * 0.08,
-    },
-  }),
-}
-
-// Indicator pops in with spring
-const dotVariants: Variants = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: (idx: number) => ({
-    scale: 1,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 15,
-      delay: idx * 0.08 + 0.12,
-    },
-  }),
-}
-
 // Individual experience card entry and hover elevation
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: (idx: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: EASE_PREMIUM, delay: idx * 0.08 },
+    transition: { duration: 0.8, ease: EASE_PREMIUM, delay: idx * 0.12 },
   }),
   hover: {
     y: -2,
@@ -88,12 +63,9 @@ export function ExperienceSection() {
   return (
     <m.div
       variants={sectionVariants}
-      initial={reduceMotion ? "visible" : "hidden"}
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
       className="space-y-4"
     >
-      <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase">Experiencia Laboral</h3>
+      <UnderlinedTitle>{t("title")}</UnderlinedTitle>
 
       {/* ── Mobile: touch-friendly Swiper carousel (hidden on sm+) ── */}
       <div className="block sm:hidden">
@@ -105,52 +77,11 @@ export function ExperienceSection() {
       <Timeline defaultValue={experienceItems.length + 1} className="hidden sm:block">
         {experienceItems.map((item, idx) => (
           <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
-            {/* Animated separator path with subtle glow on hover */}
-            <div className="absolute self-start overflow-hidden bg-border/10 group-last/timeline-item:hidden group-data-[orientation=vertical]/timeline:-left-6 group-data-[orientation=vertical]/timeline:h-[calc(100%-1rem-0.25rem)] group-data-[orientation=vertical]/timeline:w-0.5 group-data-[orientation=vertical]/timeline:-translate-x-1/2 group-data-[orientation=vertical]/timeline:translate-y-4.5 max-sm:-left-4">
-              <m.div
-                variants={lineVariants}
-                initial={reduceMotion ? "visible" : "hidden"}
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.15 }}
-                custom={idx}
-                style={{ transformOrigin: "top" }}
-                className="absolute inset-0 bg-border/30"
-              />
-              <m.div
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: hoveredIdx === idx ? 1 : 0 }}
-                transition={{ duration: 0.4, ease: EASE_PREMIUM }}
-                style={{ transformOrigin: "top" }}
-                className="absolute inset-0 bg-gradient-to-b from-primary via-primary/50 to-transparent"
-              />
-            </div>
+            {/* Clean separator path using native component */}
+            <TimelineSeparator className="bg-border/20 max-sm:-left-4" />
 
-            {/* Animated timeline indicator dot with interactive scaling and styling on hover */}
-            <m.div
-              initial={reduceMotion ? "visible" : "hidden"}
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.15 }}
-              custom={idx}
-              animate={hoveredIdx === idx ? "hover" : "visible"}
-              variants={{
-                ...dotVariants,
-                hover: {
-                  scale: 1.2,
-                  transition: { type: "spring", stiffness: 400, damping: 20 },
-                },
-              }}
-              className={`absolute z-10 flex size-4 items-center justify-center rounded-full border bg-background transition-colors duration-300 group-data-[orientation=vertical]/timeline:top-0 group-data-[orientation=vertical]/timeline:-left-6 group-data-[orientation=vertical]/timeline:-translate-x-1/2 max-sm:-left-4 ${
-                hoveredIdx === idx ? "border-primary" : "border-border/40"
-              }`}
-            >
-              <m.div
-                animate={{
-                  scale: hoveredIdx === idx ? 1.25 : 1,
-                }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="size-1.5 rounded-full bg-primary"
-              />
-            </m.div>
+            {/* Native indicator component with simple hover styling */}
+            <TimelineIndicator />
 
             <m.div
               variants={cardVariants}

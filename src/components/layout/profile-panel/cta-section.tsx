@@ -28,12 +28,6 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
   return (
     <m.div
       variants={variants}
-      initial={reduceMotion ? "visible" : "hidden"}
-      whileInView="visible"
-      viewport={{
-        once: true,
-        amount: 0.15,
-      }}
       className={`flex w-full flex-row items-center gap-1.5 sm:gap-2 justify-center sm:justify-start ${
         showBorder ? "border-t border-border/50 pt-6" : ""
       } ${className || ""}`}

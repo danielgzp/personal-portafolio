@@ -10,6 +10,7 @@ import { useState } from "react"
 import { EffectFade, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Separator } from "@/components/ui/separator"
+import { useTranslations } from "next-intl"
 
 interface ExperienceItem {
   id: number
@@ -27,6 +28,7 @@ interface ExperienceCarouselProps {
 
 export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
   const [activeIdx, setActiveIdx] = useState(0)
+  const t = useTranslations("profile.experience")
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-3 overflow-hidden">
@@ -65,6 +67,7 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
               <div className="flex min-w-0 flex-col gap-0.5">
                 <h4 className="truncate text-sm font-bold tracking-tight text-foreground">{item.role}</h4>
                 <span className="truncate text-xs font-medium text-muted-foreground">{item.company}</span>
+              
               </div>
 
               {/* Location & date */}

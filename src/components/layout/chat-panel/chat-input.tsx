@@ -92,7 +92,18 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
   }, [isDesktop])
 
   useImperativeHandle(ref, () => ({
-    setInput: (value: string) => setInput(value),
+    setInput: (value: string) => {
+      setInput(value)
+      if (textareaRef.current) {
+        textareaRef.current.focus()
+        // Wait a microtask to make sure the value is updated so we can set cursor position
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = textareaRef.current.selectionEnd = value.length
+          }
+        }, 0)
+      }
+    },
   }))
 
   return (
