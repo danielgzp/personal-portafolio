@@ -67,7 +67,6 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
               <div className="flex min-w-0 flex-col gap-0.5">
                 <h4 className="truncate text-sm font-bold tracking-tight text-foreground">{item.role}</h4>
                 <span className="truncate text-xs font-medium text-muted-foreground">{item.company}</span>
-              
               </div>
 
               {/* Location & date */}
@@ -79,15 +78,15 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
               <Separator className="bg-border/50" />
 
               {/* Description */}
-              <p className="line-clamp-3 text-xs/5 text-muted-foreground">{item.description}</p>
+              <p className="line-clamp-3 text-sm text-muted-foreground">{item.description}</p>
 
               {/* Skills */}
               <div className="flex flex-wrap gap-1.5">
-                {item.skills.map((skill, sIdx) => (
+                {item.skills.map((skill) => (
                   <Badge
-                    key={sIdx}
+                    key={skill}
                     variant="secondary"
-                    className="h-5 rounded-full border-dashed border-border bg-secondary px-2 text-[10px] font-medium text-secondary-foreground"
+                    className="h-5 rounded-full border-dashed border-border bg-secondary px-2 text-[11px] font-medium text-secondary-foreground"
                   >
                     {skill}
                   </Badge>

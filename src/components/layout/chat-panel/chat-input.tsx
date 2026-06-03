@@ -110,7 +110,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
     <div className="mx-auto w-full max-w-3xl px-4 pb-4 md:pb-8">
       <PromptInput
         onSubmit={handleSubmit}
-        inputGroupClassName="bg-card border border-border/50 shadow-sm lg:shadow-[0_0_38px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4 rounded-2xl"
+        inputGroupClassName="bg-card border border-border/50 shadow-[0_0_24px_0] lg:shadow-[0_0_38px_0] shadow-foreground/5 transition-shadow hover:shadow-foreground/10 pt-4 rounded-2xl"
       >
         <PromptInputBody>
           <PromptInputTextarea

@@ -1,6 +1,6 @@
 "use client"
 
-import { m } from "framer-motion"
+import { m, type Variants } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
@@ -38,6 +38,76 @@ const getIconForHeading = (heading: string) => {
   return <Sparkles />
 }
 
+// ─── Animation Variants ──────────────────────────────────────────────────────
+//
+// Single orchestration tree: the root container controls ALL staggering.
+// Avoids 7 independent timers firing in parallel with competing delays.
+//
+// Principles applied (emilkowal-animations):
+//  • polish-stagger-children   — one parent, staggered children
+//  • ease-spring-natural       — spring for elements entering the stage
+//  • timing-300ms-max          — UI animations ≤ 300ms; only the marquee reveal
+//                                is 350ms because it's a large layout reveal
+//  • transform-never-scale-zero — icon enters from scale(0.85), never 0
+//  • strategy-purpose-required — removed redundant wrapper m.div around cards
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      // Drive the whole sequence from this single stagger cascade
+      staggerChildren: 0.12,
+      delayChildren: 0,
+    },
+  },
+}
+
+// Icon orb — spring enter from slightly below + scale
+const iconVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.85, y: 8 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    // Spring feels organic for circular icons (ease-spring-natural)
+    transition: { type: "spring", stiffness: 200, damping: 20 },
+  },
+}
+
+// Heading — fast ease-out slide up (timing-300ms-max)
+const headingVariants: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: [0.23, 1, 0.32, 1] }, // strong ease-out
+  },
+}
+
+// Description — pure fade, no movement (it's secondary content)
+const descriptionVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.25, ease: "easeOut" },
+  },
+}
+
+// Cards marquee — slides up from a subtle offset; slightly longer because
+// the content is wide and needs to feel like a "reveal" (350ms is acceptable
+// for a marketing-style entrance, per strategy-marketing-exception)
+const cardsVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+  },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface EmptyStateProps {
   setInput: (input: string) => void
 }
@@ -56,33 +126,17 @@ export function EmptyState({ setInput }: EmptyStateProps) {
       icon: getIconForHeading(item.heading),
     }))
 
-    // Mezcla aleatoria usando Fisher-Yates para asegurar índices verdaderamente aleatorios
+    // Fisher-Yates shuffle for truly random ordering on every mount
     const shuffled = [...mapped]
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
       ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
 
-    const timeout = setTimeout(() => {
-      setShuffledSuggestions(shuffled)
-    }, 0)
+    setShuffledSuggestions(shuffled)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return () => clearTimeout(timeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 1.5, // Retrasamos su entrada un poco
-      },
-    },
-  }
-
-  const aiWords = t("title_explore_ai")
+  const aiWordsDesktop = t("title_explore_ai")
     .split(" ")
     .map((w) => ({
       text: w,
@@ -91,18 +145,18 @@ export function EmptyState({ setInput }: EmptyStateProps) {
     }))
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-y-8 overflow-x-hidden lg:gap-y-12">
-      {/* Hero Header */}
-      <m.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        className="flex flex-col items-center gap-6 text-center lg:gap-8"
-      >
+    // Root orchestrator — a single "show" cascade fans out to all children
+    <m.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="flex w-full flex-col items-center justify-center gap-y-8 overflow-x-hidden lg:gap-y-12"
+    >
+      {/* ── Hero Header ────────────────────────────────────────────────── */}
+      <div className="flex flex-col items-center gap-6 text-center lg:gap-8">
+        {/* Icon orb */}
         <m.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          variants={iconVariants}
           className="relative flex size-12 items-center justify-center rounded-full bg-primary/5 text-primary ring-1 ring-primary/10 md:size-14"
         >
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-transparent" />
@@ -110,53 +164,37 @@ export function EmptyState({ setInput }: EmptyStateProps) {
         </m.div>
 
         <div className="max-w-4xl space-y-6">
+          {/* Heading */}
           <m.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className={`text-3xl font-bold tracking-wide text-foreground sm:text-4xl md:text-5xl`}
+            variants={headingVariants}
+            className="text-3xl leading-[1.2] font-extrabold tracking-tight text-foreground sm:text-4xl sm:leading-[1.2] md:text-5xl"
           >
-            <span className="sm:hidden">{t("title_ai")} </span>
+            <span className="block bg-linear-to-br from-foreground via-foreground/75 to-primary/10 bg-clip-text text-center text-transparent drop-shadow-sm sm:hidden">
+              {t("title_ai")}
+            </span>
             <span className="hidden sm:inline">{t("title_explore")} </span>
-            <span className="mt-2 inline-block sm:mt-0">
-              <TypewriterEffect words={aiWords} className="text-left" />
+            <span className="mt-2 hidden sm:mt-0 sm:inline-block">
+              <TypewriterEffect words={aiWordsDesktop} className="text-left font-extrabold tracking-tight" />
             </span>
           </m.h2>
+
+          {/* Description */}
           <m.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            variants={descriptionVariants}
             className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
           >
             <span className="sm:hidden">{t("description_mobile")}</span>
             <span className="hidden sm:inline">{t("description_desktop")}</span>
           </m.p>
         </div>
-      </m.div>
+      </div>
 
-      {/* Quick Actions (Marquees) */}
-      <m.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="flex w-full flex-col gap-4 overflow-hidden py-4"
-      >
-        <m.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            show: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 100, damping: 20 },
-            },
-          }}
-          className="w-full"
-        >
-          {shuffledSuggestions.length > 0 && (
-            <InfiniteMovingCards items={shuffledSuggestions} direction="left" speed="slow" onItemClick={setInput} />
-          )}
+      {/* ── Quick Actions (Marquee) ─────────────────────────────────────── */}
+      {shuffledSuggestions.length > 0 && (
+        <m.div variants={cardsVariants} className="w-full overflow-hidden py-4">
+          <InfiniteMovingCards items={shuffledSuggestions} direction="left" speed="slow" onItemClick={setInput} />
         </m.div>
-      </m.div>
-    </div>
+      )}
+    </m.div>
   )
 }

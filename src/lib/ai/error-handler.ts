@@ -1,22 +1,22 @@
 import { APICallError } from "ai"
 
 /**
- * A centralized error handler that maps unexpected exceptions and AI SDK errors 
+ * A centralized error handler that maps unexpected exceptions and AI SDK errors
  * into standardized HTTP Response objects. Used when an error occurs BEFORE the stream starts.
- * 
+ *
  * @param error - The caught exception.
  * @returns A Next.js Response object with the appropriate status code and JSON body.
  */
 export function buildErrorResponse(error: unknown): Response {
-  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
 
   // 1. Rate limit / quota exceeded (HTTP 429)
-  const isRateLimit = 
-    (APICallError.isInstance(error) && error.statusCode === 429) || 
-    msg.includes("429") || 
-    msg.includes("quota") || 
+  const isRateLimit =
+    (APICallError.isInstance(error) && error.statusCode === 429) ||
+    msg.includes("429") ||
+    msg.includes("quota") ||
     msg.includes("rate limit") ||
-    msg.includes("too many requests");
+    msg.includes("too many requests")
 
   if (isRateLimit) {
     return new Response(
@@ -105,21 +105,21 @@ export function buildErrorResponse(error: unknown): Response {
 /**
  * Generates an error callback used during the streaming process (onError parameter).
  * Returns a JSON string that will be sent to the client if the stream breaks midway.
- * 
+ *
  * @param error - The error caught during streaming.
  * @returns A JSON stringified error message.
  */
 export function handleStreamError(error: unknown): string {
   console.error("[/api/chat] Stream error:", error)
 
-  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+  const msg = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
 
-  const isRateLimit = 
-    (APICallError.isInstance(error) && error.statusCode === 429) || 
-    msg.includes("429") || 
-    msg.includes("quota") || 
+  const isRateLimit =
+    (APICallError.isInstance(error) && error.statusCode === 429) ||
+    msg.includes("429") ||
+    msg.includes("quota") ||
     msg.includes("rate limit") ||
-    msg.includes("too many requests");
+    msg.includes("too many requests")
 
   if (isRateLimit) {
     return JSON.stringify({

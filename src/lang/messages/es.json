@@ -1,5 +1,14 @@
 {
+  "topbar": {
+    "tabs": {
+      "profile": "Resumen",
+      "chat": "Chat"
+    }
+  },
   "profile": {
+    "name": "Daniel González",
+    "role": "Frontend Engineer",
+    "location": "Cabudare, Venezuela",
     "download_cv": "Descargar CV",
     "about_title": "Sobre Mí",
     "available": "Disponible para trabajar",
@@ -85,7 +94,7 @@
       "title_ai": "Asistente Virtual",
       "title_explore": "Explora y conoce el perfil de Daniel mediante",
       "title_explore_ai": "Inteligencia Artificial",
-      "description_mobile": "Asistente entrenado el perfil profesional y experiencia. Elige un tema para empezar.",
+      "description_mobile": "Asistente entrenado con el perfil profesional y experiencia. Elige un tema para empezar.",
       "description_desktop": "Soy un agente entrenado con su trayectoria, decisiones de arquitectura y visión de producto. Hazme una pregunta técnica o elige un tema para empezar.",
       "suggestions": [
         {

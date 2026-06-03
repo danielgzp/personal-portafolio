@@ -14,7 +14,7 @@ export interface MatchedDocument {
 /**
  * Extracts the user's text query from the messages array sent by the Vercel AI SDK.
  * Handles different structural variations that the SDK might send (strings vs 'parts' arrays).
- * 
+ *
  * @param messages - The array of conversation messages.
  * @returns The extracted user text query, or an empty string if not found.
  */
@@ -22,24 +22,26 @@ export interface MatchedDocument {
 export function extractUserQuery(messages: any[]): string {
   // Extract the last user message from the array
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")
-  
+
   if (!lastUserMessage) return ""
 
   // The AI SDK frontend may send the content as a direct string
   if (typeof lastUserMessage.content === "string") {
     return lastUserMessage.content
-  } 
-  
+  }
+
   // Or it may send the content wrapped inside a 'parts' array
   if (Array.isArray(lastUserMessage.parts)) {
-    return lastUserMessage.parts
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .filter((p: any) => p.type === "text")
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((p: any) => p.text)
-      .join(" ")
-  } 
-  
+    return (
+      lastUserMessage.parts
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .filter((p: any) => p.type === "text")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((p: any) => p.text)
+        .join(" ")
+    )
+  }
+
   // Or inside a 'content' array
   if (Array.isArray(lastUserMessage.content)) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,9 +52,9 @@ export function extractUserQuery(messages: any[]): string {
 }
 
 /**
- * Generates an embedding for the user's query and searches the Supabase 
+ * Generates an embedding for the user's query and searches the Supabase
  * database for the most semantically similar 'War Stories'.
- * 
+ *
  * @param query - The user's parsed text query.
  * @returns A formatted string containing the matching context, or an empty string if nothing matches.
  */
@@ -67,7 +69,7 @@ export async function retrieveContext(query: string): Promise<string> {
   const { data, error } = await supabase.rpc("match_documents", {
     query_embedding: embedding,
     match_threshold: 0.7, // Only return results with > 70% semantic similarity
-    match_count: 5,       // Maximum number of chunks to return
+    match_count: 5, // Maximum number of chunks to return
   })
 
   // 3. Handle database errors gracefully (non-fatal, chat continues without RAG)

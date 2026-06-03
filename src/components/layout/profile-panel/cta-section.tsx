@@ -41,7 +41,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="flex h-9 w-full flex-1 gap-1.5 px-3 text-xs transition-all duration-200 hover:scale-[1.03] hover:border-primary hover:shadow-md active:scale-[0.97] sm:h-10 sm:w-auto sm:px-4 sm:text-sm lg:flex-initial"
+            className="flex h-9 w-full flex-1 gap-1.5 px-3 text-xs transition-all duration-200 hover:scale-[1.03] hover:border-primary hover:shadow-md active:scale-[0.97] sm:h-10 sm:w-auto sm:px-4 sm:text-sm lg:flex-initial xl:gap-2 xl:px-5 xl:text-base"
             size="lg"
           >
             <m.span
@@ -49,7 +49,7 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
               animate={reduceMotion ? {} : { y: [0, -2, 0] }}
               transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
             >
-              <DownloadIcon className="size-4" />
+              <DownloadIcon className="size-4 xl:size-4.5" />
             </m.span>
             {t("download_cv")}
           </Button>
@@ -78,12 +78,12 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
         >
           <Button
             asChild
-            className="size-9 shrink-0 rounded-full border border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary sm:size-10"
+            className="size-9 shrink-0 rounded-full border-2 border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary sm:size-10 sm:border xl:size-11"
             variant="secondary"
             size="icon-lg"
           >
             <Link href={link.url} target="_blank" rel="noopener noreferrer">
-              <link.icon className="size-4" />
+              <link.icon className="size-4 xl:size-5" />
               <span className="sr-only">{link.name}</span>
             </Link>
           </Button>

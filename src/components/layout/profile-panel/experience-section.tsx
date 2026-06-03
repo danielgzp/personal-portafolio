@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { UnderlinedTitle } from "@/components/ui/underlined-title"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Swiper reads browser-only APIs — must be loaded client-side only to avoid
 // hydration mismatches that crash the entire React tree on mobile.
@@ -57,24 +58,23 @@ export function ExperienceSection() {
   const reduceMotion = useReducedMotion()
   const t = useTranslations("profile.experience")
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+  // Conditional rendering — only the active layout is mounted in the DOM.
+  // This prevents Swiper from registering listeners on desktop and
+  // framer-motion timeline animations from running on mobile.
+  const isMobile = useMediaQuery("(max-width: 639px)")
 
   const experienceItems = t.raw("items") as ExperienceItem[]
 
   return (
-    <m.div
-      variants={sectionVariants}
-      className="space-y-4"
-    >
+    <m.div variants={sectionVariants} className="space-y-4">
       <UnderlinedTitle>{t("title")}</UnderlinedTitle>
 
-      {/* ── Mobile: touch-friendly Swiper carousel (hidden on sm+) ── */}
-      <div className="block sm:hidden">
+      {/* Conditionally render only the active layout for the current breakpoint */}
+
+      {isMobile ? (
         <ExperienceCarousel items={experienceItems} />
-      </div>
-
-      {/* ── Desktop/Tablet: animated vertical timeline (hidden on mobile) ── */}
-
-      <Timeline defaultValue={experienceItems.length + 1} className="hidden sm:block">
+      ) : (
+        <Timeline defaultValue={experienceItems.length + 1}>
         {experienceItems.map((item, idx) => (
           <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
             {/* Clean separator path using native component */}
@@ -101,14 +101,14 @@ export function ExperienceSection() {
               <TimelineHeader className="w-full pb-0">
                 <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex flex-col">
-                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground">
+                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground xl:text-lg">
                       {item.role}
                     </TimelineTitle>
-                    <span className="text-sm font-medium text-muted-foreground">{item.company}</span>
+                    <span className="text-sm font-medium text-muted-foreground xl:text-base">{item.company}</span>
                   </div>
                   <div className="mt-1 flex flex-col sm:mt-0 sm:text-right">
-                    <span className="text-sm font-semibold text-foreground">{item.location}</span>
-                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic">
+                    <span className="text-sm font-semibold text-foreground xl:text-base">{item.location}</span>
+                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic xl:text-sm">
                       {item.date}
                     </TimelineDate>
                   </div>
@@ -117,13 +117,13 @@ export function ExperienceSection() {
               <Separator />
 
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                <p className="text-sm/6">{item.description}</p>
+                <p className="text-sm/6 xl:text-base/6">{item.description}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {item.skills.map((skill, idx) => (
+                  {item.skills.map((skill) => (
                     <Badge
-                      key={idx}
+                      key={skill}
                       variant="secondary"
-                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70"
+                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70 xl:px-3 xl:text-sm"
                     >
                       {skill}
                     </Badge>
@@ -134,6 +134,7 @@ export function ExperienceSection() {
           </TimelineItem>
         ))}
       </Timeline>
+      )}
     </m.div>
   )
 }

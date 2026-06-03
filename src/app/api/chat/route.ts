@@ -19,7 +19,6 @@ function resolveModelInstance(selectedModel: string) {
   return google(selectedModel)
 }
 
-
 /**
  * Main API Route Handler for the Chat endpoint.
  * It coordinates parsing the user request, retrieving RAG context from Supabase,
@@ -47,7 +46,7 @@ export async function POST(req: Request) {
           {
             status: 429,
             headers: { "Content-Type": "application/json", ...headers },
-          },
+          }
         )
       }
     } catch (rateLimitError) {
@@ -60,7 +59,7 @@ export async function POST(req: Request) {
     const { messages, model } = await req.json()
 
     // 1. Model Validation: Default to the fastest model if an invalid one is passed.
-    const allowedModels = new Set(AVAILABLE_MODELS.map(m => m.id))
+    const allowedModels = new Set(AVAILABLE_MODELS.map((m) => m.id))
     const selectedModel = allowedModels.has(model) ? model : DEFAULT_MODEL
 
     // 2. Extract User Query: Cleanly extract the text from the complex Vercel AI payload.
@@ -77,16 +76,16 @@ export async function POST(req: Request) {
     const result = streamText({
       model: modelInstance,
       messages: await convertToModelMessages(messages),
-      
+
       // Inject the dynamically built prompt (Base Prompt + RAG Context)
       system: buildSystemPrompt(context),
-      
+
       // Throttle output to word-by-word for a natural reading pace on the frontend
       experimental_transform: smoothStream({
         chunking: "word",
         delayInMs: 35,
       }),
-      
+
       onFinish: ({ usage }) => {
         const hasContext = context.length > 0
         console.log(
@@ -103,7 +102,6 @@ export async function POST(req: Request) {
       // If the stream breaks midway, handleStreamError generates the JSON error message
       onError: handleStreamError,
     })
-
   } catch (error) {
     // If an error happens before the stream starts (e.g. rate limits, syntax errors),
     // buildErrorResponse handles the HTTP status and JSON mapping.

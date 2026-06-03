@@ -28,18 +28,15 @@ export function ProfilePanel() {
         variants={pageVariants}
         initial={reduceMotion ? "visible" : "hidden"}
         animate="visible"
-        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-4 overflow-y-auto p-6 pt-20 sm:gap-y-6 md:p-12 md:pt-20 lg:gap-y-8 lg:gap-y-10 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
+        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-y-8 overflow-y-auto p-6 pt-18 md:p-12 md:pt-20 lg:gap-y-10 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
       >
         {/* ── Hero ── */}
         <HeroSection />
 
         {/* ── Bio ── */}
-        <m.div
-          variants={sectionVariants}
-          className="flex flex-col gap-3"
-        >
+        <m.div variants={sectionVariants} className="flex flex-col gap-3">
           <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
-          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base">
+          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-lg">
             {t.rich("about", {
               highlight: (chunks) => <span className="font-medium text-primary/65">{chunks}</span>,
             })}

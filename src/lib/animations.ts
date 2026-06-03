@@ -11,7 +11,6 @@ export const SPRING_INTERACTIVE: Transition = { type: "spring", stiffness: 300, 
 // Ultra fast and damp physical feedback for taps
 export const SPRING_TAP: Transition = { type: "spring", stiffness: 500, damping: 26 }
 
-
 // Level 1: top-level page stagger — each section enters with deliberate cadence
 export const pageVariants: Variants = {
   hidden: {},
