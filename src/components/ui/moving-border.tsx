@@ -72,9 +72,15 @@ export const MovingBorder = ({
 }) => {
   const pathRef = useRef<any>(null)
   const progress = useMotionValue<number>(0)
+  // Cache total path length — getTotalLength() is a costly DOM operation.
+  // We compute it once and store it so the animation frame loop is cheap.
+  const lengthRef = useRef<number>(0)
 
   useAnimationFrame((time) => {
-    const length = pathRef.current?.getTotalLength()
+    if (!lengthRef.current && pathRef.current) {
+      lengthRef.current = pathRef.current.getTotalLength()
+    }
+    const length = lengthRef.current
     if (length) {
       const pxPerMillisecond = length / duration
       progress.set((time * pxPerMillisecond) % length)

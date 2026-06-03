@@ -89,11 +89,11 @@ export function HeroSection() {
       </div>
 
       <div className="flex w-full flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl xl:text-4xl">Daniel González</h1>
-        <h2 className="text-xl font-semibold text-foreground lg:text-lg xl:text-xl">Frontend Engineer</h2>
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl xl:text-4xl">{t("name")}</h1>
+        <h2 className="text-xl font-semibold text-foreground lg:text-lg xl:text-xl">{t("role")}</h2>
         <div className="flex items-center gap-2 text-sm text-muted-foreground xl:text-base">
           <MapPin className="size-4" />
-          <span>Cabudare, Venezuela</span>
+          <span>{t("location")}</span>
         </div>
       </div>
       <CTASection variants={sectionVariants} reduceMotion={reduceMotion} showBorder={false} />

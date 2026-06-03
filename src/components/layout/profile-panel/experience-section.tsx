@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { UnderlinedTitle } from "@/components/ui/underlined-title"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Swiper reads browser-only APIs — must be loaded client-side only to avoid
 // hydration mismatches that crash the entire React tree on mobile.
@@ -57,6 +58,10 @@ export function ExperienceSection() {
   const reduceMotion = useReducedMotion()
   const t = useTranslations("profile.experience")
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+  // Conditional rendering — only the active layout is mounted in the DOM.
+  // This prevents Swiper from registering listeners on desktop and
+  // framer-motion timeline animations from running on mobile.
+  const isMobile = useMediaQuery("(max-width: 639px)")
 
   const experienceItems = t.raw("items") as ExperienceItem[]
 
@@ -64,14 +69,12 @@ export function ExperienceSection() {
     <m.div variants={sectionVariants} className="space-y-4">
       <UnderlinedTitle>{t("title")}</UnderlinedTitle>
 
-      {/* ── Mobile: touch-friendly Swiper carousel (hidden on sm+) ── */}
-      <div className="block sm:hidden">
+      {/* Conditionally render only the active layout for the current breakpoint */}
+
+      {isMobile ? (
         <ExperienceCarousel items={experienceItems} />
-      </div>
-
-      {/* ── Desktop/Tablet: animated vertical timeline (hidden on mobile) ── */}
-
-      <Timeline defaultValue={experienceItems.length + 1} className="hidden sm:block">
+      ) : (
+        <Timeline defaultValue={experienceItems.length + 1}>
         {experienceItems.map((item, idx) => (
           <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
             {/* Clean separator path using native component */}
@@ -116,9 +119,9 @@ export function ExperienceSection() {
               <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
                 <p className="text-sm/6 xl:text-base/6">{item.description}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {item.skills.map((skill, idx) => (
+                  {item.skills.map((skill) => (
                     <Badge
-                      key={idx}
+                      key={skill}
                       variant="secondary"
                       className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70 xl:px-3 xl:text-sm"
                     >
@@ -131,6 +134,7 @@ export function ExperienceSection() {
           </TimelineItem>
         ))}
       </Timeline>
+      )}
     </m.div>
   )
 }

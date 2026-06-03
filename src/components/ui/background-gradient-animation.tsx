@@ -51,6 +51,11 @@ export const BackgroundGradientAnimation = ({
     if (!interactive) return
 
     let animationFrameId: number
+    // Pause the RAF loop when the component is not visible (e.g. when the
+    // chat panel is slid off-screen on mobile). This prevents unnecessary
+    // GPU compositing work for a component the user cannot see.
+    let isVisible = true
+
     const curRef = {
       x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
       y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
@@ -60,7 +65,9 @@ export const BackgroundGradientAnimation = ({
       y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
     }
 
-    const handleGlobalMouseMove = (event: MouseEvent) => {
+    // Must listen on window — the container sits at z-index:-10 so it
+    // never receives pointer events directly when overlaid by other elements.
+    const handleMouseMove = (event: MouseEvent) => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect()
         tgRef.x = event.clientX - rect.left
@@ -69,7 +76,7 @@ export const BackgroundGradientAnimation = ({
     }
 
     const updatePosition = () => {
-      if (interactiveRef.current) {
+      if (isVisible && interactiveRef.current) {
         curRef.x += (tgRef.x - curRef.x) * 0.08
         curRef.y += (tgRef.y - curRef.y) * 0.08
         interactiveRef.current.style.transform = `translate(${Math.round(curRef.x)}px, ${Math.round(curRef.y)}px)`
@@ -77,11 +84,25 @@ export const BackgroundGradientAnimation = ({
       animationFrameId = requestAnimationFrame(updatePosition)
     }
 
-    window.addEventListener("mousemove", handleGlobalMouseMove)
+    // Pause RAF when the component is scrolled out of view or hidden (e.g.
+    // the chat panel slides off-screen on mobile).
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting
+      },
+      { threshold: 0.1 }
+    )
+
+    if (containerRef.current) {
+      intersectionObserver.observe(containerRef.current)
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
     animationFrameId = requestAnimationFrame(updatePosition)
 
     return () => {
-      window.removeEventListener("mousemove", handleGlobalMouseMove)
+      window.removeEventListener("mousemove", handleMouseMove)
+      intersectionObserver.disconnect()
       cancelAnimationFrame(animationFrameId)
     }
   }, [interactive])

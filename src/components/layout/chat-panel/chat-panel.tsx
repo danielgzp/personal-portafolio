@@ -9,7 +9,7 @@ import {
 import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useRef, useCallback, useState, useEffect } from "react"
+import { useRef, useCallback, useState, useEffect, useMemo } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import ChatInput, { ChatInputHandle } from "./chat-input"
@@ -94,10 +94,10 @@ export function ChatPanel() {
   const tActions = useTranslations("chat.actions")
   const tRateLimit = useTranslations("chat.rate_limit_banner")
 
+  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), [])
+
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-    }),
+    transport,
     onError: (err) => {
       console.error("[ChatPanel] useChat error:", err)
     },
@@ -165,14 +165,17 @@ export function ChatPanel() {
 
       {/* Error banner — slides in above the input when an API error occurs */}
       <AnimatePresence>
-        <div className="mx-auto w-full max-w-3xl px-4">
-          {showError && errorCode === "rate_limit" && (
-            <m.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.2 }}
-              className="mb-2 flex w-full items-start justify-between gap-3 rounded-2xl border border-border/50 bg-background px-4 py-3 text-sm text-card-foreground shadow-sm"
+        {showError && errorCode === "rate_limit" && (
+          <m.div
+            key="rate-limit-banner"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+            className="mx-auto mb-2 w-full max-w-3xl px-4"
+          >
+            <div
+              className="flex w-full items-start justify-between gap-3 rounded-2xl border border-border/50 bg-background px-4 py-3 text-sm text-card-foreground shadow-sm"
               role="alert"
             >
               <div className="flex flex-col gap-1.5">
@@ -189,14 +192,19 @@ export function ChatPanel() {
               >
                 <X className="size-4" />
               </button>
-            </m.div>
-          )}
-          {showError && errorCode !== "rate_limit" && errorMessage && (
-            <m.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.2 }}
+            </div>
+          </m.div>
+        )}
+        {showError && errorCode !== "rate_limit" && errorMessage && (
+          <m.div
+            key="error-banner"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+            className="mx-auto w-full max-w-3xl px-4"
+          >
+            <div
               className="flex w-full items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive backdrop-blur-sm"
               role="alert"
             >
@@ -209,9 +217,9 @@ export function ChatPanel() {
               >
                 <X className="size-3.5" />
               </button>
-            </m.div>
-          )}
-        </div>
+            </div>
+          </m.div>
+        )}
       </AnimatePresence>
 
       <ChatInput ref={chatInputRef} sendMessage={sendMessage} status={status} isChatStarted={isChatStarted} />

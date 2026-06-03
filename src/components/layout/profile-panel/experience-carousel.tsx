@@ -82,9 +82,9 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
 
               {/* Skills */}
               <div className="flex flex-wrap gap-1.5">
-                {item.skills.map((skill, sIdx) => (
+                {item.skills.map((skill) => (
                   <Badge
-                    key={sIdx}
+                    key={skill}
                     variant="secondary"
                     className="h-5 rounded-full border-dashed border-border bg-secondary px-2 text-[11px] font-medium text-secondary-foreground"
                   >

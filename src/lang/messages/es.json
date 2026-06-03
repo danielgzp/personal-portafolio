@@ -1,5 +1,14 @@
 {
+  "topbar": {
+    "tabs": {
+      "profile": "Resumen",
+      "chat": "Chat"
+    }
+  },
   "profile": {
+    "name": "Daniel González",
+    "role": "Frontend Engineer",
+    "location": "Cabudare, Venezuela",
     "download_cv": "Descargar CV",
     "about_title": "Sobre Mí",
     "available": "Disponible para trabajar",

@@ -3,10 +3,10 @@
 import { type Variants, m, LayoutGroup, useReducedMotion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-
+import { useTranslations } from "next-intl"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LocaleSwitcher } from "../locale-switcher"
-import { TabType } from "@/app/[locale]/page"
+import { TabType } from "@/components/layout/panel-layout"
 
 // Module-level variants — defined once, never recreated on re-renders.
 // Each variant carries its own transition for asymmetric easing:
@@ -37,6 +37,7 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
   const [hidden, setHidden] = useState(false)
   const [prevTab, setPrevTab] = useState(activeTab)
   const reduceMotion = useReducedMotion()
+  const t = useTranslations("topbar.tabs")
 
   // When activeTab changes, show the topbar immediately.
   // This is the React-idiomatic way to reset state on prop changes:
@@ -90,10 +91,10 @@ export function Topbar({ activeTab = "profile", onTabChange }: TopbarProps) {
             <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as TabType)}>
               <TabsList className="relative rounded-full bg-card/90 px-2 py-1 backdrop-blur-lg group-data-horizontal/tabs:h-9.5">
                 <TabsTrigger value="profile" className="relative rounded-full">
-                  <span className="relative z-10">Resumen</span>
+                  <span className="relative z-10">{t("profile")}</span>
                 </TabsTrigger>
                 <TabsTrigger value="chat" className="relative rounded-full">
-                  <span className="relative z-10">Chat</span>
+                  <span className="relative z-10">{t("chat")}</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>

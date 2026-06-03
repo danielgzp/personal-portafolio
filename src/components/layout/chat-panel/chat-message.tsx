@@ -46,11 +46,13 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
     [message]
   )
 
-  const reasoningText = reasoningParts
-    .map((part) => part.text)
-    .join("\n\n")
-    .trim()
-  const reasoningStreaming = reasoningParts.some((part) => part.state === "streaming")
+  const { reasoningText, reasoningStreaming } = useMemo(
+    () => ({
+      reasoningText: reasoningParts.map((part) => part.text).join("\n\n").trim(),
+      reasoningStreaming: reasoningParts.some((part) => part.state === "streaming"),
+    }),
+    [reasoningParts]
+  )
 
   const sourceUrlParts = useMemo(
     () => message.parts.filter((part): part is SourceUrlUIPart => part.type === "source-url"),
