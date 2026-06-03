@@ -1,10 +1,13 @@
-import { Button } from "@/components/ui/button"
+"use client"
+
 import { GithubIcon, LinkedinIcon } from "@/assets/icons"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { SPRING_INTERACTIVE } from "@/lib/animations"
 import { m, Variants } from "framer-motion"
-import { MailIcon, DownloadIcon } from "lucide-react"
+import { DownloadIcon, MailIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { useLocale, useTranslations } from "next-intl"
-import { SPRING_INTERACTIVE, SPRING_TAP } from "@/lib/animations"
 
 interface CTAProps {
   variants: Variants
@@ -12,6 +15,11 @@ interface CTAProps {
   className?: string
   showBorder?: boolean
 }
+
+const CV_OPTIONS = [
+  { filename: "CV_2026_DanielGonzalez.pdf", flag: "🇪🇸", href: "/CV_2026_DanielGonzalez.pdf" },
+  { filename: "CV_EN_2026_DanielGonzalez.pdf", flag: "🇺🇸", href: "/CV_EN_2026_DanielGonzalez.pdf" },
+] as const
 
 const links = [
   { name: "LinkedIn", url: "https://linkedin.com/in/danielgzp", icon: LinkedinIcon },
@@ -21,30 +29,21 @@ const links = [
 
 export function CTASection({ variants, reduceMotion, className, showBorder = true }: CTAProps) {
   const t = useTranslations("profile")
-  const locale = useLocale()
-
-  const cvRef = locale === "en" ? "/CV_EN_2026_DanielGonzalez.pdf" : "/CV_2026_DanielGonzalez.pdf"
 
   return (
     <m.div
       variants={variants}
-      className={`flex w-full flex-row items-center gap-1.5 sm:gap-2 justify-center sm:justify-start ${
+      className={`flex w-full flex-row items-center justify-center gap-1.5 sm:justify-start sm:gap-2 ${
         showBorder ? "border-t border-border/50 pt-6" : ""
       } ${className || ""}`}
     >
-      {/* Premium Spring-driven CV Button with subtle breathing icon cue */}
-      <m.div
-        whileHover={reduceMotion ? {} : { scale: 1.05, rotate: 1, y: -3 }}
-        whileTap={reduceMotion ? {} : { scale: 0.95, rotate: -0.5, y: -1 }}
-        transition={SPRING_INTERACTIVE}
-        className="flex flex-1 sm:flex-initial group"
-      >
-        <Button
-          className="h-9 px-3 text-xs sm:h-10 sm:px-4 sm:text-sm flex w-full flex-1 gap-1.5 transition-colors duration-300 hover:shadow-md sm:w-auto lg:flex-initial group-hover:border-primary"
-          size="lg"
-          asChild
-        >
-          <Link href={cvRef} target="_blank" rel="noopener noreferrer" prefetch={false}>
+      {/* CV Download button with language dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            className="flex h-9 w-full flex-1 gap-1.5 px-3 text-xs transition-all duration-200 hover:scale-[1.03] hover:border-primary hover:shadow-md active:scale-[0.97] sm:h-10 sm:w-auto sm:px-4 sm:text-sm lg:flex-initial"
+            size="lg"
+          >
             <m.span
               className="inline-flex"
               animate={reduceMotion ? {} : { y: [0, -2, 0] }}
@@ -53,9 +52,20 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
               <DownloadIcon className="size-4" />
             </m.span>
             {t("download_cv")}
-          </Link>
-        </Button>
-      </m.div>
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="start" className="min-w-72">
+          {CV_OPTIONS.map(({ filename, flag, href }) => (
+            <DropdownMenuItem key={filename} asChild>
+              <Link href={href} target="_blank" rel="noopener noreferrer" prefetch={false}>
+                <span className="text-base leading-none">{flag}</span>
+                <span>{filename}</span>
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {/* Premium Spring-driven Social Link Buttons */}
       {links.map((link, idx) => (
@@ -64,11 +74,11 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
           whileHover={reduceMotion ? {} : { scale: 1.05, rotate: 2, y: -3 }}
           whileTap={reduceMotion ? {} : { scale: 0.95, rotate: -1, y: -1 }}
           transition={SPRING_INTERACTIVE}
-          className="shrink-0 group"
+          className="group shrink-0"
         >
           <Button
             asChild
-            className="shrink-0 size-9 sm:size-10 rounded-full border border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary"
+            className="size-9 shrink-0 rounded-full border border-dashed border-border bg-card shadow-md transition-colors duration-300 group-hover:border-primary sm:size-10"
             variant="secondary"
             size="icon-lg"
           >
