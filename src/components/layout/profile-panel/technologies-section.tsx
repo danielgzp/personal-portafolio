@@ -74,10 +74,7 @@ export function TechnologiesSection() {
   const t = useTranslations("profile")
 
   return (
-    <m.div
-      variants={sectionVariants}
-      className="space-y-4"
-    >
+    <m.div variants={sectionVariants} className="space-y-4">
       <UnderlinedTitle>{t("core_technologies")}</UnderlinedTitle>
       {/* Each badge controls its own entrance — staggered by index via custom prop */}
       <div className="flex flex-wrap gap-1.5 lg:gap-2">

@@ -61,10 +61,7 @@ export function ExperienceSection() {
   const experienceItems = t.raw("items") as ExperienceItem[]
 
   return (
-    <m.div
-      variants={sectionVariants}
-      className="space-y-4"
-    >
+    <m.div variants={sectionVariants} className="space-y-4">
       <UnderlinedTitle>{t("title")}</UnderlinedTitle>
 
       {/* ── Mobile: touch-friendly Swiper carousel (hidden on sm+) ── */}

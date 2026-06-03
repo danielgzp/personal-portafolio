@@ -67,7 +67,6 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
               <div className="flex min-w-0 flex-col gap-0.5">
                 <h4 className="truncate text-sm font-bold tracking-tight text-foreground">{item.role}</h4>
                 <span className="truncate text-xs font-medium text-muted-foreground">{item.company}</span>
-              
               </div>
 
               {/* Location & date */}

@@ -67,11 +67,7 @@ export function getClientIdentifier(req: Request): string {
  * - X-RateLimit-Reset: Unix timestamp (ms) when the window resets
  * - Retry-After: seconds until the client should retry (required by HTTP 429 spec)
  */
-export function buildRateLimitHeaders(
-  limit: number,
-  remaining: number,
-  reset: number,
-): Record<string, string> {
+export function buildRateLimitHeaders(limit: number, remaining: number, reset: number): Record<string, string> {
   const retryAfterSeconds = Math.max(1, Math.ceil((reset - Date.now()) / 1000))
   return {
     "X-RateLimit-Limit": limit.toString(),

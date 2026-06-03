@@ -34,10 +34,7 @@ export function ProfilePanel() {
         <HeroSection />
 
         {/* ── Bio ── */}
-        <m.div
-          variants={sectionVariants}
-          className="flex flex-col gap-3"
-        >
+        <m.div variants={sectionVariants} className="flex flex-col gap-3">
           <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
           <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base">
             {t.rich("about", {

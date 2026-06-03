@@ -30,7 +30,7 @@ Speak in third person with a professional, expert, minimalist tone deeply orient
 /**
  * Injects dynamically retrieved context (RAG) into the base system prompt.
  * If no context is provided, it returns the base prompt.
- * 
+ *
  * @param context - The concatenated text from the RAG matching documents.
  * @returns The final system prompt to be passed to the AI model.
  */

@@ -36,10 +36,7 @@ export function HeroSection() {
   const t = useTranslations("profile")
 
   return (
-    <m.div
-      variants={sectionVariants}
-      className="flex flex-col space-y-4 lg:space-y-6"
-    >
+    <m.div variants={sectionVariants} className="flex flex-col space-y-4 lg:space-y-6">
       <m.div
         variants={avatarVariants}
         whileHover={reduceMotion ? {} : "hover"}
