@@ -4,6 +4,7 @@ import { m } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards"
+import { TypewriterEffect } from "@/components/ui/typewriter-effect"
 import {
   Briefcase,
   Boxes,
@@ -19,31 +20,6 @@ import {
   Zap,
   Sparkles,
 } from "lucide-react"
-
-export function Typewriter({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
-  const [displayedText, setDisplayedText] = useState("")
-
-  useEffect(() => {
-    let i = 0
-    const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        i++
-        setDisplayedText(text.slice(0, i))
-        if (i > text.length) clearInterval(interval)
-      }, 30) // Velocidad de escritura: 30ms por letra
-      return () => clearInterval(interval)
-    }, delay)
-    return () => clearTimeout(timeout)
-  }, [text, delay])
-
-  return (
-    <span className={className}>
-      {displayedText}
-      {/* Mantenemos el ancho ocupado por el resto del texto para evitar saltos de diseño molestos */}
-      <span className="opacity-0">{text.slice(displayedText.length)}</span>
-    </span>
-  )
-}
 
 const getIconForHeading = (heading: string) => {
   const h = heading.toLowerCase()
@@ -106,14 +82,22 @@ export function EmptyState({ setInput }: EmptyStateProps) {
     },
   }
 
+  const aiWords = t("title_explore_ai")
+    .split(" ")
+    .map((w) => ({
+      text: w,
+      className:
+        "bg-linear-to-r from-primary via-primary/80 to-primary/50 bg-clip-text text-transparent drop-shadow-sm",
+    }))
+
   return (
     <div className="flex w-full flex-col items-center justify-center gap-y-8 overflow-x-hidden lg:gap-y-12">
       {/* Hero Header */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-        className="flex flex-col items-center gap-4 text-center lg:gap-6"
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        className="flex flex-col items-center gap-6 text-center lg:gap-8"
       >
         <m.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -125,29 +109,23 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           <Sparkles className="size-6 md:size-7" strokeWidth={1.5} />
         </m.div>
 
-        <div className="max-w-3xl space-y-4">
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
-            <span className="sm:hidden">
-              <Typewriter
-                text={t("title_ai")}
-                delay={200}
-                className="bg-linear-to-br from-foreground via-foreground/75 to-primary/10 bg-clip-text text-transparent drop-shadow-sm"
-              />
+        <div className="max-w-4xl space-y-6">
+          <m.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className={`text-3xl font-bold tracking-wide text-foreground sm:text-4xl md:text-5xl`}
+          >
+            <span className="sm:hidden">{t("title_ai")} </span>
+            <span className="hidden sm:inline">{t("title_explore")} </span>
+            <span className="mt-2 inline-block sm:mt-0">
+              <TypewriterEffect words={aiWords} className="text-left" />
             </span>
-            <span className="hidden sm:inline">
-              <Typewriter text={t("title_explore")} delay={0} />
-              <br className="hidden sm:block" />
-              <Typewriter
-                text={t("title_explore_ai")}
-                delay={1300}
-                className="bg-linear-to-b from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent drop-shadow-sm"
-              />
-            </span>
-          </h2>
+          </m.h2>
           <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
             className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
           >
             <span className="sm:hidden">{t("description_mobile")}</span>
@@ -169,7 +147,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
             show: {
               opacity: 1,
               y: 0,
-              transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+              transition: { type: "spring", stiffness: 100, damping: 20 },
             },
           }}
           className="w-full"

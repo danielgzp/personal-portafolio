@@ -4,7 +4,8 @@ import { CTASection } from "./cta-section"
 import { ExperienceSection } from "./experience-section"
 import { HeroSection } from "./hero-section"
 import { TechnologiesSection } from "./technologies-section"
-import { sectionVariants } from "@/lib/animations"
+import { pageVariants, sectionVariants } from "@/lib/animations"
+import { UnderlinedTitle } from "@/components/ui/underlined-title"
 
 export function ProfilePanel() {
   const t = useTranslations("profile")
@@ -22,9 +23,12 @@ export function ProfilePanel() {
           reverting to pt-12 (via lg:pt-12) only on desktop screens where
           the Topbar is hidden.
        */}
-      <div
+      <m.div
         id="profile-scroll-container"
-        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-4 overflow-y-auto p-6 pt-20 sm:gap-6 md:p-12 md:pt-20 lg:gap-8 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
+        variants={pageVariants}
+        initial={reduceMotion ? "visible" : "hidden"}
+        animate="visible"
+        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-4 overflow-y-auto p-6 pt-20 sm:gap-y-6 md:p-12 md:pt-20 lg:gap-y-8 lg:gap-y-10 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
       >
         {/* ── Hero ── */}
         <HeroSection />
@@ -32,25 +36,27 @@ export function ProfilePanel() {
         {/* ── Bio ── */}
         <m.div
           variants={sectionVariants}
-          initial={reduceMotion ? "visible" : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="leading-relaxed text-foreground"
+          className="flex flex-col gap-3"
         >
-          <p className="text-sm text-pretty md:text-base">{t("about")}</p>
+          <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
+          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base">
+            {t.rich("about", {
+              highlight: (chunks) => <span className="font-medium text-primary/65">{chunks}</span>,
+            })}
+          </p>
         </m.div>
 
         {/* ── Technologies ── */}
         <TechnologiesSection />
 
         {/* ── Experience ── */}
-        <div className="w-full min-w-0">
+        <m.div variants={sectionVariants} className="w-full min-w-0">
           <ExperienceSection />
-        </div>
+        </m.div>
 
         {/* ── CTA Footer ── */}
         <CTASection variants={sectionVariants} reduceMotion={reduceMotion} className="mt-auto" />
-      </div>
+      </m.div>
     </div>
   )
 }

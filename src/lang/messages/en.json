@@ -1,8 +1,13 @@
 {
   "profile": {
     "download_cv": "Download Resume",
-    "about": "I'm a software developer with over 3 years of experience, specializing in the React and Next.js ecosystem. I consider myself highly product-driven; my goal isn't just to write clean code, but to deeply understand the business needs in order to build scalable architectures that solve real-world problems. I thrive on taking projects from their initial concept all the way through to production.",
+    "about_title": "About Me",
+    "available": "Available for work",
+    "core_technologies": "Core Technologies",
+    "about": "I'm a software developer with <highlight>over 3 years of experience</highlight>, specializing in the <highlight>React and Next.js</highlight> ecosystem. I consider myself highly product-driven; my goal isn't just to write clean code, but to deeply understand business needs to build <highlight>scalable architectures</highlight> that solve real-world problems. I thrive on taking projects from initial concept all the way to production.",
     "experience": {
+      "title": "Work Experience",
+      "present_badge": "Current",
       "items": [
         {
           "id": 1,

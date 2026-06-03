@@ -12,23 +12,23 @@ export const SPRING_INTERACTIVE: Transition = { type: "spring", stiffness: 300, 
 export const SPRING_TAP: Transition = { type: "spring", stiffness: 500, damping: 26 }
 
 
-// Level 1: top-level page stagger
+// Level 1: top-level page stagger — each section enters with deliberate cadence
 export const pageVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.14,
-      delayChildren: 0.05,
+      staggerChildren: 0.22,
+      delayChildren: 0.1,
     },
   },
 }
 
-// Level 2: each section fades + rises with a stately, elegant movement
+// Level 2: each section fades + rises with a slow, cinematic reveal
 export const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.85, ease: EASE_PREMIUM },
+    transition: { duration: 1.1, ease: EASE_PREMIUM },
   },
 }

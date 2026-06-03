@@ -1,8 +1,13 @@
 {
   "profile": {
     "download_cv": "Descargar CV",
-    "about": "Soy desarrollador de software con más de 3 años de experiencia, enfocado principalmente en el ecosistema de React y Next.js. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código limpio, si no entender bien el negocio para construir arquitecturas que escalen y resuelvan problemas reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.",
+    "about_title": "Sobre Mí",
+    "available": "Disponible para trabajar",
+    "core_technologies": "Tecnologías Core",
+    "about": "Soy desarrollador de software con <highlight>más de 3 años de experiencia</highlight>, enfocado principalmente en el ecosistema de <highlight>React y Next.js</highlight>. Me considero un perfil muy orientado a producto; mi meta no es solo hacer código limpio, si no entender bien el negocio para construir <highlight>arquitecturas que escalen</highlight> y resuelvan problemas reales. Me apasiona tomar un proyecto desde que es una idea hasta llevarlo a producción.",
     "experience": {
+      "title": "Experiencia Laboral",
+      "present_badge": "Actual",
       "items": [
         {
           "id": 1,

@@ -6,11 +6,11 @@ import "swiper/css/effect-fade"
 import "swiper/css/pagination"
 
 import { Badge } from "@/components/ui/badge"
-import { EASE_PREMIUM } from "@/lib/animations"
-import { m, useReducedMotion } from "framer-motion"
 import { useState } from "react"
 import { EffectFade, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { Separator } from "@/components/ui/separator"
+import { useTranslations } from "next-intl"
 
 interface ExperienceItem {
   id: number
@@ -22,28 +22,18 @@ interface ExperienceItem {
   skills: string[]
 }
 
-// Card entrance — subtle rise on first render
-const slideVariants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: EASE_PREMIUM, delay: i * 0.05 },
-  }),
-}
-
 interface ExperienceCarouselProps {
   items: ExperienceItem[]
 }
 
 export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
-  const reduceMotion = useReducedMotion()
   const [activeIdx, setActiveIdx] = useState(0)
+  const t = useTranslations("profile.experience")
 
   return (
-    <div className="w-full min-w-0 overflow-hidden flex flex-col gap-3">
+    <div className="flex w-full min-w-0 flex-col gap-3 overflow-hidden">
       {/*
-        EffectFade requires allowTouchMove:true and behaves beautifully with autoHeight={true}.
+        EffectFade behaves beautifully with autoHeight={true}.
       */}
       <Swiper
         className="exp-swiper w-full"
@@ -51,7 +41,7 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
         effect="fade"
         fadeEffect={{ crossFade: true }}
         autoHeight={true}
-        speed={reduceMotion ? 0 : 500}
+        speed={500}
         slidesPerView={1}
         spaceBetween={24}
         allowTouchMove
@@ -67,21 +57,17 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
           },
         }}
       >
-        {items.map((item, idx) => (
+        {items.map((item) => (
           <SwiperSlide key={item.id}>
-            <m.div
-              variants={slideVariants}
-              initial={reduceMotion ? "visible" : "hidden"}
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              custom={idx}
+            <div
               // h-auto lets each card size to its natural content, transitioning dynamically via autoHeight
-              className="flex h-auto min-w-0 flex-col gap-3 overflow-hidden rounded-2xl border border-border/40 bg-card/90 p-4 backdrop-blur-sm"
+              className="flex h-auto min-w-0 flex-col gap-3 overflow-hidden rounded-2xl border border-border/40 bg-card/90 p-4 shadow-sm backdrop-blur-sm"
             >
               {/* Role + company */}
               <div className="flex min-w-0 flex-col gap-0.5">
                 <h4 className="truncate text-sm font-bold tracking-tight text-foreground">{item.role}</h4>
                 <span className="truncate text-xs font-medium text-muted-foreground">{item.company}</span>
+              
               </div>
 
               {/* Location & date */}
@@ -90,8 +76,7 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
                 <time className="shrink-0 text-xs font-medium text-muted-foreground italic">{item.date}</time>
               </div>
 
-              {/* Divider */}
-              <div className="h-px shrink-0 bg-border/30" />
+              <Separator className="bg-border/50" />
 
               {/* Description */}
               <p className="line-clamp-3 text-xs/5 text-muted-foreground">{item.description}</p>
@@ -108,7 +93,7 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
                   </Badge>
                 ))}
               </div>
-            </m.div>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
