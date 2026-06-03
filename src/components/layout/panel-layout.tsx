@@ -4,15 +4,17 @@ import { Topbar } from "@/components/layout/topbar"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { m, useReducedMotion } from "framer-motion"
-import { useState } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { ChatPanel } from "@/components/layout/chat-panel"
 import { ProfilePanel } from "@/components/layout/profile-panel"
 import { LocaleSwitcher } from "@/components/locale-switcher"
+import { cn } from "@/lib/utils"
 
-// True easeInOut (cubic-bezier): starts and ends softly — no jarring snap.
+// Premium iOS-style drawer easing (emilkowal-animations)
+// 500ms duration with a strong deceleration curve for a natural swipe-like feel
 const SLIDE_TRANSITION = {
-  duration: 0.35,
-  ease: [0.4, 0, 0.3, 1] as [number, number, number, number],
+  duration: 0.5,
+  ease: [0.32, 0.72, 0, 1] as [number, number, number, number],
 }
 
 export type TabType = "chat" | "profile"
@@ -32,6 +34,15 @@ export function PanelLayout() {
   // hydration (false → true) from triggering a slide animation on load.
   const [hasInteracted, setHasInteracted] = useState(false)
 
+  // React 18/19 Modern SSR Bypass: 
+  // Avoids the cascading render warning of useEffect by using useSyncExternalStore.
+  // It returns false on the server (SSR), and true immediately on the client.
+  const isMounted = useSyncExternalStore(
+    () => () => {}, // dummy subscribe
+    () => true,     // client value
+    () => false     // server value
+  )
+
   const handleTabChange = (tab: TabType) => {
     if (!hasInteracted) setHasInteracted(true)
     setActiveTab(tab)
@@ -49,21 +60,22 @@ export function PanelLayout() {
       <Topbar activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/*
-          Both panels stay mounted at all times → chat state is preserved
-          when the user switches tabs and comes back.
-
-          On mobile: panels are absolute-positioned and slide left/right.
-            - Profile: z-20 so it's on top on initial load (correct default).
-            - Chat: starts off-screen at x:100%, slides in when active.
-          On desktop (lg): panels become relative and flex side-by-side;
-            x is always 0 so the slide logic is inert.
+          Premium mobile transitions:
+          Chat (z-20) slides in from the right over Profile (z-10).
+          Profile performs a parallax "scale down & blur" effect into the background.
+          On desktop, they snap to a standard flex row layout.
         */}
       <div className="relative flex size-full flex-1 overflow-hidden lg:flex-row">
-        {/* ── Profile Panel ── slides out to the LEFT when Chat is active */}
+        {/* ── Profile Panel ── scales back & blurs when Chat is active */}
         <m.section
-          className="absolute inset-0 z-20 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-1/2 xl:w-[40%]"
+          className="absolute inset-0 z-10 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-1/2 xl:w-[40%]"
           initial={false}
-          animate={{ x: isMobile && !isProfile ? "-100%" : 0 }}
+          animate={{
+            x: isMobile && !isProfile ? "-10%" : "0%",
+            scale: isMobile && !isProfile ? 0.96 : 1,
+            opacity: isMobile && !isProfile ? 0.4 : 1,
+            filter: isMobile && !isProfile ? "blur(2px)" : "blur(0px)",
+          }}
           transition={slideTransition}
           style={{ pointerEvents: isMobile && !isProfile ? "none" : "auto", willChange }}
         >
@@ -78,11 +90,14 @@ export function PanelLayout() {
           </div>
         </m.section>
 
-        {/* ── Chat Panel ── slides in from the RIGHT when Chat is active */}
+        {/* ── Chat Panel ── slides in from the RIGHT over the Profile */}
         <m.section
-          className="absolute inset-0 z-10 flex h-full w-full flex-1 flex-col bg-background lg:relative lg:inset-auto lg:z-auto lg:order-2 lg:w-1/2 lg:flex-initial xl:w-[60%]"
+          className={cn(
+            "absolute inset-0 z-20 flex h-full w-full flex-1 flex-col bg-background shadow-2xl lg:relative lg:inset-auto lg:z-auto lg:order-2 lg:w-1/2 lg:flex-initial lg:shadow-none xl:w-[60%]",
+            !isMounted && "max-lg:hidden" // Prevent SSR FOUC: totally hidden in mobile until hydrated
+          )}
           initial={false}
-          animate={{ x: isMobile && isProfile ? "100%" : 0 }}
+          animate={{ x: isMobile && isProfile ? "100%" : "0%" }}
           transition={slideTransition}
           style={{ pointerEvents: isMobile && isProfile ? "none" : "auto", willChange }}
         >
