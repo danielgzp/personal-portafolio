@@ -6,6 +6,12 @@
       "sourceType": "github",
       "computedHash": "6462f04969f59f771150e6410e6a11fa397f2934be0b51e8650f495feed1e28d"
     },
+    "emilkowal-animations": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "skillPath": "skills/.experimental/emilkowal-animations/SKILL.md",
+      "computedHash": "f9d5fc89ddc9b7b1ce1b323c7152881c3a01d8088ccec5ddfd4c7aebc0c9c936"
+    },
     "framer-motion-animator": {
       "source": "patricio0312rev/skills",
       "sourceType": "github",
