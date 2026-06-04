@@ -154,7 +154,8 @@
     "rate_limit_banner": {
       "title": "Interaction limit reached",
       "description": "The assistant has reached the maximum number of requests allowed by the AI provider. Please try again in a few minutes or contact Daniel directly."
-    }
+    },
+    "disclaimer": "I am an AI and can make mistakes or provide inaccurate information. Please verify important details."
   },
   "common": {
     "language": "{locale, select, es {Spanish} en {English} other {unknown}}"

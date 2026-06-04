@@ -152,6 +152,9 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
           />
         </PromptInputFooter>
       </PromptInput>
+      <p className="mt-3 px-2 text-center text-[11px] font-medium text-muted-foreground/80 sm:text-xs">
+        {tChat("disclaimer")}
+      </p>
     </div>
   )
 })
