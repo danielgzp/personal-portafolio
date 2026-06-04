@@ -94,7 +94,7 @@ export function TechnologiesSection() {
           >
             <Badge
               variant="outline"
-              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary xl:gap-x-1.5 xl:px-2.5 xl:py-1.5 xl:text-sm"
+              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary xl:px-2.5 xl:text-[13px]"
             >
               <m.span variants={iconVariants} className="flex [&>svg]:size-4 xl:[&>svg]:size-4.5">
                 <tech.icon />

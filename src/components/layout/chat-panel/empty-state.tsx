@@ -167,22 +167,22 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           {/* Heading */}
           <m.h2
             variants={headingVariants}
-            className="text-3xl leading-[1.2] font-extrabold tracking-tight text-foreground sm:text-4xl sm:leading-[1.2] md:text-5xl"
+            className="text-3xl leading-[1.2] font-extrabold tracking-tight text-foreground sm:text-4xl sm:leading-[1.2]"
           >
             <span className="block bg-linear-to-br from-foreground via-foreground/75 to-primary/10 bg-clip-text text-center text-transparent drop-shadow-sm sm:hidden">
               {t("title_ai")}
             </span>
             <span className="hidden sm:inline">{t("title_explore")} </span>
             <span className="mt-2 hidden sm:mt-0 sm:inline-block">
-              <TypewriterEffect words={aiWordsDesktop} className="text-left font-extrabold tracking-tight" />
+              <TypewriterEffect
+                words={aiWordsDesktop}
+                className="text-left text-3xl font-extrabold tracking-tight lg:text-4xl"
+              />
             </span>
           </m.h2>
 
           {/* Description */}
-          <m.p
-            variants={descriptionVariants}
-            className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
-          >
+          <m.p variants={descriptionVariants} className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
             <span className="sm:hidden">{t("description_mobile")}</span>
             <span className="hidden sm:inline">{t("description_desktop")}</span>
           </m.p>

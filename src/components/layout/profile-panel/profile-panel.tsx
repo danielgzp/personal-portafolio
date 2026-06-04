@@ -36,7 +36,7 @@ export function ProfilePanel() {
         {/* ── Bio ── */}
         <m.div variants={sectionVariants} className="flex flex-col gap-3">
           <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
-          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-lg">
+          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-base">
             {t.rich("about", {
               highlight: (chunks) => <span className="font-medium text-primary/65">{chunks}</span>,
             })}

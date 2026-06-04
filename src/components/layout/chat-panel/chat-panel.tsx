@@ -96,7 +96,7 @@ export function ChatPanel() {
 
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), [])
 
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, status, error, stop } = useChat({
     transport,
     onError: (err) => {
       console.error("[ChatPanel] useChat error:", err)
@@ -222,7 +222,7 @@ export function ChatPanel() {
         )}
       </AnimatePresence>
 
-      <ChatInput ref={chatInputRef} sendMessage={sendMessage} status={status} isChatStarted={isChatStarted} />
+      <ChatInput ref={chatInputRef} sendMessage={sendMessage} status={status} isChatStarted={isChatStarted} stop={stop} />
     </section>
   )
 }

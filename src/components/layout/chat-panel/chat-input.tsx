@@ -32,10 +32,11 @@ type Props = {
   sendMessage: ChatHelpers["sendMessage"]
   status: ChatHelpers["status"]
   isChatStarted: boolean
+  stop: ChatHelpers["stop"]
 }
 
 export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
-  { sendMessage, status, isChatStarted },
+  { sendMessage, status, isChatStarted, stop },
   ref
 ) {
   const tMessages = useTranslations("chat.messages")
@@ -61,6 +62,9 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
 
   const handleSubmit = async (message: PromptInputMessage, e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (isLoading) return
+
     const hasText = !!message.text.trim()
     const hasFiles = message.files.length > 0
 
@@ -143,6 +147,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
           <PromptInputSubmit
             disabled={(!input.trim() && !isLoading) || status === "submitted"}
             status={status}
+            onStop={stop}
             className="ml-2 size-9 shrink-0 rounded-full bg-primary p-2 text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none md:size-10 md:p-2.5"
           />
         </PromptInputFooter>

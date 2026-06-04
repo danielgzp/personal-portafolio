@@ -48,7 +48,10 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
 
   const { reasoningText, reasoningStreaming } = useMemo(
     () => ({
-      reasoningText: reasoningParts.map((part) => part.text).join("\n\n").trim(),
+      reasoningText: reasoningParts
+        .map((part) => part.text)
+        .join("\n\n")
+        .trim(),
       reasoningStreaming: reasoningParts.some((part) => part.state === "streaming"),
     }),
     [reasoningParts]
@@ -75,35 +78,69 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       className={cn("relative flex w-full items-start", isUser ? "ml-auto flex-row-reverse" : "mb-2 flex-row")}
     >
       <Message from={message.role}>
-        <MessageContent className="backdrop-blur-2xl backdrop-saturate-150 group-[.is-assistant]:bg-card/50">
-          {!!sourceUrlParts.length && (
-            <Sources>
-              <SourcesTrigger count={sourceUrlParts.length} />
-              <SourcesContent>
-                {sourceUrlParts.map((source) => (
-                  <Source href={source.url} key={source.sourceId} title={source.title ?? source.url} />
-                ))}
-              </SourcesContent>
-            </Sources>
+        <div
+          className={cn("group/content flex w-full gap-2", isUser ? "flex-row items-center justify-end" : "flex-col")}
+        >
+          {isUser && !!textContent && (
+            <MessageActions
+              className={cn(
+                "transition-opacity duration-200 group-hover/content:opacity-100",
+                isCopied ? "opacity-100" : "opacity-0"
+              )}
+            >
+              <MessageAction
+                label={t("copy_response")}
+                onClick={handleCopy}
+                tooltip={t("copy_response")}
+                className="size-8 rounded-full bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+              >
+                <div className="relative flex items-center justify-center">
+                  <CheckIcon
+                    className={cn(
+                      "absolute size-4 text-green-500 transition-all duration-300",
+                      isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                    )}
+                  />
+                  <CopyIcon
+                    className={cn(
+                      "size-4 transition-all duration-300",
+                      isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                    )}
+                  />
+                </div>
+              </MessageAction>
+            </MessageActions>
           )}
+          <MessageContent className="backdrop-blur-2xl backdrop-saturate-150 group-[.is-assistant]:bg-card/50 group-[.is-user]:ml-0">
+            {!!sourceUrlParts.length && (
+              <Sources>
+                <SourcesTrigger count={sourceUrlParts.length} />
+                <SourcesContent>
+                  {sourceUrlParts.map((source) => (
+                    <Source href={source.url} key={source.sourceId} title={source.title ?? source.url} />
+                  ))}
+                </SourcesContent>
+              </Sources>
+            )}
 
-          {!!reasoningText && (
-            <Reasoning isStreaming={reasoningStreaming}>
-              <ReasoningTrigger />
-              <ReasoningContent>{reasoningText}</ReasoningContent>
-            </Reasoning>
-          )}
+            {!!reasoningText && (
+              <Reasoning isStreaming={reasoningStreaming}>
+                <ReasoningTrigger />
+                <ReasoningContent>{reasoningText}</ReasoningContent>
+              </Reasoning>
+            )}
 
-          {isUser ? (
-            <div className="prose-chat">{textContent}</div>
-          ) : (
-            <div className="prose leading-relaxed prose-slate dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
-              <MessageResponse animated isAnimating={isStreaming}>
-                {textContent}
-              </MessageResponse>
-            </div>
-          )}
-        </MessageContent>
+            {isUser ? (
+              <div className="prose-chat">{textContent}</div>
+            ) : (
+              <div className="prose leading-relaxed prose-slate dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
+                <MessageResponse animated isAnimating={isStreaming}>
+                  {textContent}
+                </MessageResponse>
+              </div>
+            )}
+          </MessageContent>
+        </div>
 
         {!isUser && !!textContent && (
           <MessageActions className="flex justify-end">

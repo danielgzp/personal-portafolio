@@ -75,65 +75,65 @@ export function ExperienceSection() {
         <ExperienceCarousel items={experienceItems} />
       ) : (
         <Timeline defaultValue={experienceItems.length + 1}>
-        {experienceItems.map((item, idx) => (
-          <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
-            {/* Clean separator path using native component */}
-            <TimelineSeparator className="bg-border/20 max-sm:-left-4" />
+          {experienceItems.map((item, idx) => (
+            <TimelineItem key={item.id} step={item.id} className="not-last:pb-6! max-sm:ms-0!">
+              {/* Clean separator path using native component */}
+              <TimelineSeparator className="bg-border/20 max-sm:-left-4" />
 
-            {/* Native indicator component with simple hover styling */}
-            <TimelineIndicator />
+              {/* Native indicator component with simple hover styling */}
+              <TimelineIndicator />
 
-            <m.div
-              variants={cardVariants}
-              initial={reduceMotion ? "visible" : "hidden"}
-              whileInView="visible"
-              whileHover={reduceMotion ? {} : "hover"}
-              viewport={{
-                once: true,
-                amount: 0.15,
-                margin: "0px 0px -40px 0px",
-              }}
-              custom={idx}
-              onMouseEnter={() => setHoveredIdx(idx)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              className="group flex flex-col gap-3 rounded-2xl border border-border/40 bg-card/90 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 hover:bg-card/70 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:p-6 dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.15)]"
-            >
-              <TimelineHeader className="w-full pb-0">
-                <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                  <div className="flex flex-col">
-                    <TimelineTitle className="text-base font-bold tracking-tight text-foreground xl:text-lg">
-                      {item.role}
-                    </TimelineTitle>
-                    <span className="text-sm font-medium text-muted-foreground xl:text-base">{item.company}</span>
+              <m.div
+                variants={cardVariants}
+                initial={reduceMotion ? "visible" : "hidden"}
+                whileInView="visible"
+                whileHover={reduceMotion ? {} : "hover"}
+                viewport={{
+                  once: true,
+                  amount: 0.15,
+                  margin: "0px 0px -40px 0px",
+                }}
+                custom={idx}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                className="group flex flex-col gap-3 rounded-2xl border border-border/40 bg-card/90 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 hover:bg-card/70 hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] sm:p-6 dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.15)]"
+              >
+                <TimelineHeader className="w-full pb-0">
+                  <div className="flex w-full flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                    <div className="flex flex-col">
+                      <TimelineTitle className="text-base font-bold tracking-tight text-foreground">
+                        {item.role}
+                      </TimelineTitle>
+                      <span className="text-sm font-medium text-muted-foreground xl:text-[15px]">{item.company}</span>
+                    </div>
+                    <div className="mt-1 flex flex-col sm:mt-0 sm:text-right">
+                      <span className="text-sm font-semibold text-foreground xl:text-[15px]">{item.location}</span>
+                      <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic xl:text-[13px]">
+                        {item.date}
+                      </TimelineDate>
+                    </div>
                   </div>
-                  <div className="mt-1 flex flex-col sm:mt-0 sm:text-right">
-                    <span className="text-sm font-semibold text-foreground xl:text-base">{item.location}</span>
-                    <TimelineDate className="mt-0.5 mb-0! text-xs font-medium text-muted-foreground italic xl:text-sm">
-                      {item.date}
-                    </TimelineDate>
-                  </div>
-                </div>
-              </TimelineHeader>
-              <Separator />
+                </TimelineHeader>
+                <Separator />
 
-              <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
-                <p className="text-sm/6 xl:text-base/6">{item.description}</p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {item.skills.map((skill) => (
-                    <Badge
-                      key={skill}
-                      variant="secondary"
-                      className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70 xl:px-3 xl:text-sm"
-                    >
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </TimelineContent>
-            </m.div>
-          </TimelineItem>
-        ))}
-      </Timeline>
+                <TimelineContent className="space-y-4 leading-relaxed text-muted-foreground">
+                  <p className="text-sm/6 xl:text-base/6">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.skills.map((skill) => (
+                      <Badge
+                        key={skill}
+                        variant="secondary"
+                        className="h-6 rounded-full border-dashed border-border bg-secondary px-2.5 text-xs font-medium text-secondary-foreground transition-colors group-hover:bg-secondary/70 xl:px-3 xl:text-[13px]"
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </TimelineContent>
+              </m.div>
+            </TimelineItem>
+          ))}
+        </Timeline>
       )}
     </m.div>
   )
