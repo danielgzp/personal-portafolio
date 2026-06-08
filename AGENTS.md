@@ -31,3 +31,6 @@ pnpm dev    # Start dev server
 pnpm build  # Production build
 pnpm lint   # Linting
 ```
+
+## 🗄️ Database & RAG Rules
+- **RAG Updates:** Whenever any changes are made to the RAG database (`public.documents` or similar), YOU MUST document the modifications in `docs/RAG_CHANGELOG.md`. Include the date, the specific documents altered, and the rationale behind the change.
