@@ -34,3 +34,6 @@ pnpm lint   # Linting
 
 ## 🗄️ Database & RAG Rules
 - **RAG Updates:** Whenever any changes are made to the RAG database (`public.documents` or similar), YOU MUST document the modifications in `docs/RAG_CHANGELOG.md`. Include the date, the specific documents altered, and the rationale behind the change.
+- **Migrations-First Pattern:** ALWAYS create local migration files in `supabase/migrations/` when making schema changes or adding new tables. 
+- **MCP Usage:** Use the Supabase MCP (`execute_sql`) ONLY for reading data, querying context, or editing row data. DO NOT use MCP to execute schema migrations or create tables directly on the remote database.
+- **Applying Migrations:** DO NOT execute `supabase db push` or apply migrations directly. Leave the execution of the migrations to the user.

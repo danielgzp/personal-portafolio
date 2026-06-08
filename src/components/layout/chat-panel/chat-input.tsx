@@ -33,10 +33,12 @@ type Props = {
   status: ChatHelpers["status"]
   isChatStarted: boolean
   stop: ChatHelpers["stop"]
+  sessionId: string
+  onClear: () => void
 }
 
 export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
-  { sendMessage, status, isChatStarted, stop },
+  { sendMessage, status, isChatStarted, stop, sessionId, onClear },
   ref
 ) {
   const tMessages = useTranslations("chat.messages")
@@ -70,6 +72,12 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
 
     if (!hasText && !hasFiles) return
 
+    if (message.text.trim() === "/clear") {
+      onClear()
+      setInput("")
+      return
+    }
+
     setInput("")
 
     await sendMessage(
@@ -80,6 +88,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
       {
         body: {
           model,
+          sessionId,
         },
       }
     )

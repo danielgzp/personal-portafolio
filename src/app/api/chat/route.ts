@@ -1,11 +1,13 @@
 import { google } from "@ai-sdk/google"
 import { groq } from "@ai-sdk/groq"
 import { convertToModelMessages, smoothStream, streamText } from "ai"
+import { waitUntil } from "@vercel/functions"
 import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
 import { buildErrorResponse, handleStreamError } from "@/lib/ai/error-handler"
 import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
 import { ratelimit, getClientIdentifier, buildRateLimitHeaders } from "@/lib/rate-limit"
+import { supabase } from "@/lib/supabase"
 
 function resolveModelInstance(selectedModel: string) {
   if (selectedModel.startsWith("google/")) {
@@ -56,7 +58,7 @@ export async function POST(req: Request) {
       console.warn("[rate-limit] Upstash check failed, allowing request:", rateLimitError)
     }
 
-    const { messages, model } = await req.json()
+    const { messages, model, sessionId } = await req.json()
 
     // 1. Model Validation: Default to the fastest model if an invalid one is passed.
     const allowedModels = new Set(AVAILABLE_MODELS.map((m) => m.id))
@@ -73,6 +75,7 @@ export async function POST(req: Request) {
     const modelInstance = resolveModelInstance(selectedModel)
 
     // 5. Start the AI Stream
+    const startTime = Date.now()
     const result = streamText({
       model: modelInstance,
       messages: await convertToModelMessages(messages),
@@ -86,11 +89,40 @@ export async function POST(req: Request) {
         delayInMs: 35,
       }),
 
-      onFinish: ({ usage }) => {
+      onFinish: ({ usage, text }) => {
+        const generationTimeMs = Date.now() - startTime
         const hasContext = context.length > 0
         console.log(
-          `[/api/chat] Stream finished — model: ${selectedModel} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)}`
+          `[/api/chat] Stream finished — model: ${selectedModel} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)} | time: ${generationTimeMs}ms`
         )
+
+        if (sessionId) {
+          waitUntil(
+            (async () => {
+              try {
+                // Ensure the session exists
+                await supabase.from("chat_sessions").upsert(
+                  { id: sessionId, updated_at: new Date().toISOString() },
+                  { onConflict: "id" }
+                )
+
+                // Track the interaction
+                await supabase.from("chat_messages").insert({
+                  session_id: sessionId,
+                  model: selectedModel,
+                  user_query: userQuery || "",
+                  ai_response: text,
+                  rag_context_used: hasContext,
+                  prompt_tokens: (usage as any)?.promptTokens || 0,
+                  completion_tokens: (usage as any)?.completionTokens || 0,
+                  generation_time_ms: generationTimeMs,
+                })
+              } catch (dbError) {
+                console.error("[/api/chat] Error tracking chat interaction:", dbError)
+              }
+            })()
+          )
+        }
       },
       onAbort: () => {
         console.log(`[/api/chat] Stream aborted — model: ${selectedModel}`)

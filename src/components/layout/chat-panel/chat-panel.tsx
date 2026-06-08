@@ -9,7 +9,7 @@ import {
 import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useRef, useCallback, useState, useEffect, useMemo } from "react"
+import { useRef, useCallback, useState, useMemo } from "react"
 import { ChatMessage, ChatMessageThinking } from "./chat-message"
 import { EmptyState } from "./empty-state"
 import ChatInput, { ChatInputHandle } from "./chat-input"
@@ -96,12 +96,22 @@ export function ChatPanel() {
 
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), [])
 
-  const { messages, sendMessage, status, error, stop } = useChat({
+  const { messages, setMessages, sendMessage, status, error, stop } = useChat({
     transport,
     onError: (err) => {
       console.error("[ChatPanel] useChat error:", err)
     },
   })
+
+  // 1. Generate a persistent sessionId when the user starts a chat.
+  // 3. Ensure the sessionId remains the same for the duration of the thread.
+  const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID())
+
+  const handleClearChat = useCallback(() => {
+    stop()
+    setMessages([])
+    setSessionId(crypto.randomUUID())
+  }, [setMessages, stop])
 
   // Track whether the user has dismissed the current error banner.
   // Resets automatically when a new (different) error occurs.
@@ -222,7 +232,15 @@ export function ChatPanel() {
         )}
       </AnimatePresence>
 
-      <ChatInput ref={chatInputRef} sendMessage={sendMessage} status={status} isChatStarted={isChatStarted} stop={stop} />
+      <ChatInput
+        ref={chatInputRef}
+        sendMessage={sendMessage}
+        status={status}
+        isChatStarted={isChatStarted}
+        stop={stop}
+        sessionId={sessionId}
+        onClear={handleClearChat}
+      />
     </section>
   )
 }
