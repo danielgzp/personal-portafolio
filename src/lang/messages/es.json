@@ -21,16 +21,27 @@
         {
           "id": 1,
           "company": "Essertech LLC",
-          "role": "Lead Frontend Developer",
+          "role": "Frontend Engineer",
           "location": "Cabudare, Venezuela",
           "date": "Mayo 2025 — Actualidad",
-          "description": "Lideré el desarrollo end-to-end de un ERP para ISP. Definí la arquitectura modular y creé un System Design con estándares Pixel-Perfect. Integré asistentes de IA, acelerando el ciclo de desarrollo en un 45%.",
+          "description": "Desarrollo de producto y arquitectura de módulos críticos para el ERP interno.",
           "skills": [
+            "React",
             "Next.js",
             "TypeScript",
+            "Node.js",
             "Tailwind CSS",
             "Shadcn UI",
-            "System Design"
+            "Zustand",
+            "SWR",
+            "Recharts",
+            "Docker"
+          ],
+          "achievements": [
+            "Lideré la arquitectura y el desarrollo de módulos críticos para un ERP de proveedores de internet (FTTH, facturación, inventario), centralizando toda la operatividad.",
+            "Construí una librería de componentes escalable bajo estrictos estándares Pixel-Perfect.",
+            "Establecí las bases técnicas del proyecto y mentoricé a nuevos desarrolladores.",
+            "Integré activamente herramientas de Inteligencia Artificial, automatizando código repetitivo y acelerando significativamente los tiempos de entrega."
           ]
         },
         {
@@ -39,27 +50,43 @@
           "role": "Junior Frontend Developer",
           "location": "Cabudare, Venezuela",
           "date": "Agosto 2023 — Mayo 2025",
-          "description": "Desarrollé un sistema finanzas a medida en tiempo real, optimicé el rendimiento de un ecosistema SaaS y trabajé en el desarrollo de un marketplace multi-tenant global con internacionalización robusta.",
+          "description": "Desarrollo de plataforma financiera a medida y rediseño UI/UX de sistema SaaS.",
           "skills": [
             "React",
             "Next.js",
+            "Tailwind CSS",
             "Zustand",
+            "SWR",
             "Supabase",
+            "Clerk",
             "i18n"
+          ],
+          "achievements": [
+            "Desarrollé una plataforma financiera en tiempo real a medida para una casa de cambio, reemplazando procesos manuales y acelerando la atención al cliente.",
+            "Optimicé el rendimiento y rediseñé la UI/UX de un sistema SaaS, ejecutando su migración a una arquitectura de autenticación moderna.",
+            "Construí desde cero un marketplace global multi-tenant con un sistema robusto de internacionalización, interconectado directamente con el producto principal."
           ]
         },
         {
           "id": 3,
           "company": "Grupo Corporativo Marna",
-          "role": "Software Developer",
+          "role": "Software Developer (Pasantía)",
           "location": "Barquisimeto, Venezuela",
           "date": "Agosto 2022 — Noviembre 2022",
-          "description": "Rediseñé la interfaz y mejoré la usabilidad de un sistema de citas para spas, implementando su internacionalización. Además, desarrollé la landing page comercial para su distribución.",
+          "description": "Modernización de UI y desarrollo web para sistema de gestión de citas.",
           "skills": [
             "PHP",
             "PostgreSQL",
+            "jQuery",
             "HTML5",
-            "CSS"
+            "CSS",
+            "Bootstrap",
+            "Materialize"
+          ],
+          "achievements": [
+            "Modernicé la interfaz de usuario y optimicé la usabilidad de un sistema de gestión de citas para spas.",
+            "Implementé la internacionalización del código base para habilitar la comercialización del sistema en nuevos mercados.",
+            "Elaboré la landing page comercial del producto, enfocada en maximizar la conversión y presentar especificaciones técnicas."
           ]
         }
       ]
@@ -122,7 +149,7 @@
           "message": "Cuéntame sobre la plataforma financiera en tiempo real que construyó."
         },
         {
-          "heading": "System Design",
+          "heading": "Design System",
           "message": "¿Cuál es su enfoque para construir librerías de componentes Pixel-Perfect?"
         },
         {

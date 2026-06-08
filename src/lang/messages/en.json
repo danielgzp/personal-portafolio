@@ -21,16 +21,27 @@
         {
           "id": 1,
           "company": "Essertech LLC",
-          "role": "Lead Frontend Developer",
+          "role": "Frontend Engineer",
           "location": "Cabudare, Venezuela",
           "date": "May 2025 — Present",
-          "description": "Led the end-to-end development of an ERP system for ISPs. Architected a modular system and established a Pixel-Perfect System Design. Integrated AI assistants, accelerating the development cycle by 45%.",
+          "description": "Product development and architecture of critical modules for the internal ERP.",
           "skills": [
+            "React",
             "Next.js",
             "TypeScript",
+            "Node.js",
             "Tailwind CSS",
             "Shadcn UI",
-            "System Design"
+            "Zustand",
+            "SWR",
+            "Recharts",
+            "Docker"
+          ],
+          "achievements": [
+            "Led the architecture and development of critical modules for an ISP ERP (FTTH, billing, inventory), centralizing all operations.",
+            "Built a scalable component library under strict Pixel-Perfect standards.",
+            "Established the project's technical foundations and mentored new developers.",
+            "Actively integrated Artificial Intelligence tools, automating repetitive code and significantly accelerating delivery times."
           ]
         },
         {
@@ -39,27 +50,43 @@
           "role": "Junior Frontend Developer",
           "location": "Cabudare, Venezuela",
           "date": "August 2023 — May 2025",
-          "description": "Developed a custom real-time financial system, optimized the performance of a SaaS ecosystem, and contributed to the development of a global multi-tenant marketplace with robust internationalization.",
+          "description": "Development of a custom financial platform and UI/UX redesign of a SaaS system.",
           "skills": [
             "React",
             "Next.js",
+            "Tailwind CSS",
             "Zustand",
+            "SWR",
             "Supabase",
+            "Clerk",
             "i18n"
+          ],
+          "achievements": [
+            "Developed a custom real-time financial platform for a currency exchange, replacing manual processes and accelerating customer service.",
+            "Optimized the performance and redesigned the UI/UX of a SaaS system, executing its migration to a modern authentication architecture.",
+            "Built a global multi-tenant marketplace from scratch with a robust internationalization system, interconnected with the core product."
           ]
         },
         {
           "id": 3,
           "company": "Grupo Corporativo Marna",
-          "role": "Software Developer",
+          "role": "Software Developer Intern",
           "location": "Barquisimeto, Venezuela",
           "date": "August 2022 — November 2022",
-          "description": "Redesigned the UI and improved the overall usability of a spa booking system, implementing full internationalization. Additionally, developed the commercial landing page for its market release.",
+          "description": "UI modernization and web development for a booking management system.",
           "skills": [
             "PHP",
             "PostgreSQL",
+            "jQuery",
             "HTML5",
-            "CSS"
+            "CSS",
+            "Bootstrap",
+            "Materialize"
+          ],
+          "achievements": [
+            "Modernized the user interface and optimized the usability of a spa booking system.",
+            "Implemented internationalization across the codebase to enable the system's commercialization in new markets.",
+            "Developed the product's commercial landing page, focused on maximizing conversion and presenting technical specifications."
           ]
         }
       ]
@@ -122,7 +149,7 @@
           "message": "Tell me about the real-time financial platform he built."
         },
         {
-          "heading": "System Design",
+          "heading": "Design System",
           "message": "What is his approach to building Pixel-Perfect component libraries?"
         },
         {

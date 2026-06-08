@@ -1,108 +1,33 @@
-# Personal Portfolio — AI Assistant Instructions
+# Master AI Assistants Instructions (Cross-Agent Compatible)
 
-## Project Overview
+## 🤖 Universal Compatibility Guidelines
+This project is configured to be developed iteratively with any AI Code Assistant (Gemini CLI, Claude Code, GitHub Copilot, Cursor).
+- **Agnostic Tooling:** Always use the standard tools available in your environment (e.g., `read_file`, `run_shell_command`, `replace`, `grep_search`, `write_file`). If a specific CLI tool isn't available, fallback to shell execution.
+- **Autonomy:** Be proactive. Do not wait for explicit permission to read files, search the codebase, or run tests. Validate your assumptions empiricaly.
+- **No Co-authoring:** Never add AI signatures to commit messages.
+- **Communication:** Speak to the user in Spanish. Write code, comments, and commit messages in English. Be concise (no pleasantries, no preamble).
 
-Interactive Personal Portfolio for Daniel (`danieldev`).
-Built with Next.js App Router, React, TypeScript, Tailwind CSS, and Shadcn/ui.
-Includes a custom AI Chat interface.
+## 🏗 Project Architecture & Stack
+**Tech Stack:** Next.js App Router (React, TypeScript), Tailwind CSS v4, Shadcn/ui, Framer Motion, Vercel AI SDK.
+- Keep the architecture simple, modern, and production-grade.
+- Prioritize clean UI/UX over complex enterprise patterns.
+- Follow a strict Mobile-First approach.
 
-## Rules
+## 🧠 Reasoning & Execution Flow
+1. **Research (Empirical):** Read existing files, grep for dependencies, and snapshot the layout before writing code.
+2. **Strategy:** Formulate a plan silently. If the task is complex, use Plan Mode or draft a markdown plan.
+3. **Execution:** Apply surgical edits (prefer replacing/editing over rewriting). Keep changes focused.
+4. **Validation:** ALWAYS verify your work (e.g., `pnpm lint`, `pnpm build`, or mental dry-runs for UI changes). Never assume success.
 
-- **Never run the linter or formatter** (`eslint`, `prettier`, `pnpm lint`, etc.) automatically, nor suggest it. Write lint-compliant and well-formatted code directly.
-- **Never list AI code assistants as co-authors.**
-- **Keep it simple:** Avoid over-engineering. This is a portfolio, so prioritize clean architecture, smooth animations, and perfect responsive design over enterprise complexity.
+## 💅 Styling & Frontend Standards
+- **Tailwind v4:** Use `size-{n}` (e.g., `size-4`). Use CSS variables for theming.
+- **Shadcn/UI:** Use `cn()` from `src/lib/utils`.
+- **Interactivity:** Use Framer Motion for animations. Keep animations <= 300ms.
+- **Next.js:** Default to React Server Components. Use `'use client'` strictly for interactivity.
 
-## Core Rules
-
-Short sentences only (8-10 words max).
-No filler, no preamble, no pleasantries.
-Tool first. Result first. No explanations unless asked.
-Code stays normal. English gets compressed.
-
----
-
-## Formatting
-
-Output sounds human. Never AI-generated.
-Never use em-dashes or replacement hyphens.
-Avoid parenthetical clauses entirely.
-Hyphens map to standard grammar only.
-
-## Approach
-
-- Think before acting. Read existing files before writing code.
-- Be concise in output but thorough in reasoning.
-- Prefer editing over rewriting whole files.
-- Test your code mentally before declaring done.
-- Keep solutions simple and direct. Maintain high UI/UX standards.
-- User instructions always override this file.
-
-## Commands
-
+## 🛠 Available Scripts
 ```bash
-pnpm dev          # Start local development server
-pnpm build        # Build for production
-pnpm lint         # Check for linting issues
+pnpm dev    # Start dev server
+pnpm build  # Production build
+pnpm lint   # Linting
 ```
-
-## Architecture
-
-```text
-src/
-├── app/          # Next.js App Router (routes, layouts, pages, api)
-│   └── api/chat/ # AI Chatbot API routes
-├── components/   # UI Components
-│   ├── chat/     # Interactive AI chat interface
-│   ├── common/   # Reusable generic components
-│   ├── layout/   # Structural components (nav, panels)
-│   └── ui/       # Shadcn/ui base components
-├── hooks/        # Custom React hooks (e.g., use-auto-scroll)
-└── lib/          # Utilities (e.g., cn() for tailwind)
-```
-
-## Code Style
-
-### Naming
-- Directories: `lowercase-with-dashes` (e.g., `chat-area`, `theme-provider`).
-- Components & types: `PascalCase`.
-- Functions & variables: `camelCase`.
-- Constants: `UPPER_SNAKE_CASE`.
-- Event handlers: prefix with `handle` (e.g., `handleSubmit`).
-- Booleans: prefix with auxiliary verbs (`isLoading`, `hasError`).
-
-### TypeScript
-- Prefer `interface` over `type` for object shapes.
-- Avoid `enum` — use `const` objects with `as const`.
-- Avoid `any` — use `unknown` if truly unknown.
-
-### Tailwind CSS
-- Use `size-{n}` instead of `h-{n} w-{n}` for equal dimensions.
-- Use `cn()` from `src/lib/utils` for conditional class merging.
-- Follow a strict mobile-first approach.
-- Prioritize CSS variables for theming to support dark/light modes seamlessly.
-
-### React / Next.js
-- Favor React Server Components. Only add `'use client'` when strictly necessary (hooks, interactivity, browser APIs).
-- Maintain smooth UX. Use custom hooks like `use-auto-scroll` for the chat interface.
-- Always `await` Next.js runtime APIs when required by the newer Next.js versions.
-
-## Communication
-
-- **Chat with user:** Spanish.
-- **Code, comments, commits:** English.
-
-## Key Libraries
-
-| Library | Purpose |
-|---|---|
-| `next` | Core framework (App Router) |
-| `shadcn/ui` + `radix-ui` | Accessible base UI components |
-| `tailwindcss` | Utility-first styling |
-| `framer-motion` | Smooth UI animations & transitions |
-| `lucide-react` | Icons |
-| Vercel AI SDK | Streaming AI chat responses (implied API) |
-
-## Git Workflow
-
-- Conventional commits format in English.
-- Atomic, focused commits.
