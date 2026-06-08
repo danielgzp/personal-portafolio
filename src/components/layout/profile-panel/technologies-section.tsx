@@ -2,10 +2,13 @@ import {
   DockerIcon,
   EslintIcon,
   FigmaIcon,
+  GitIcon,
   JavascriptIcon,
   MotionIcon,
+  NextAuthIcon,
   NextjsIcon,
   NodejsIcon,
+  PlaywrightIcon,
   PostgreSQLIcon,
   ReactIcon,
   ShadcnIcon,
@@ -37,6 +40,9 @@ const SKILLS = [
   { icon: DockerIcon, name: "Docker" },
   { icon: EslintIcon, name: "ESLint" },
   { icon: FigmaIcon, name: "Figma" },
+  { icon: GitIcon, name: "Git" },
+  { icon: PlaywrightIcon, name: "Playwright" },
+  { icon: NextAuthIcon, name: "NextAuth" },
 ]
 
 // Tech icon specific animation

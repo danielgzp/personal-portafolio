@@ -78,8 +78,8 @@ export function ExperienceSection() {
 
               {/* Native indicator component with ping animation for current job */}
               <TimelineIndicator
-                className={cn("border-3 bg-background transition-all duration-300 group-hover/timeline-item:border-primary group-hover/timeline-item:shadow-[0_0_14px_var(--color-primary)]", {
-                  "border-primary! shadow-[0_0_14px_var(--color-primary)]": idx === 0,
+                className={cn("bg-background transition-all duration-300 group-hover/timeline-item:border-primary", {
+                  "border-primary! shadow-[0_0_14px] shadow-primary/75": idx === 0,
                 })}
               />
 
@@ -98,7 +98,7 @@ export function ExperienceSection() {
                 className="group relative flex flex-col gap-2 pb-4 opacity-100 transition-opacity duration-300"
               >
                 <TimelineHeader className="w-full pb-0">
-                  <div className="flex w-full flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <div className="flex w-full flex-col sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                     <div className="flex flex-col gap-y-2.5">
                       <TimelineTitle
                         className={cn(
@@ -116,11 +116,15 @@ export function ExperienceSection() {
                       </div>
                     </div>
 
-                    <div className="mt-3 flex flex-col sm:mt-0 sm:items-end">
-                      <TimelineDate className="mt-0.5 mb-0! rounded-full border border-border/50 bg-card/90 px-3 py-1 text-xs font-medium text-muted-foreground sm:text-[13px]">
-                        {item.date}
-                      </TimelineDate>
-                    </div>
+                    <TimelineDate className="mt-0.5 mb-0! flex items-center gap-1.5 rounded-full border border-border/50 bg-card/90 px-3 py-1 text-xs font-medium text-muted-foreground sm:text-[13px]">
+                      {idx === 0 && (
+                        <span className="relative flex size-2">
+                          <span className="absolute size-2 animate-ping rounded-full bg-primary/50" />
+                          <span className="size-full rounded-full bg-primary" />
+                        </span>
+                      )}
+                      {item.date}
+                    </TimelineDate>
                   </div>
                 </TimelineHeader>
 
