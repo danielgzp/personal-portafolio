@@ -145,7 +145,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
             {lastUsedModel && (
               <div className="flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-medium text-muted-foreground dark:bg-accent/50">
                 <Sparkles className="size-3 shrink-0" />
-                <span className="truncate max-w-36">{lastUsedModel}</span>
+                <span className="max-w-36 truncate">{lastUsedModel}</span>
               </div>
             )}
             {/* <PromptInputSelect onValueChange={(value) => setModel(value)} value={model}>

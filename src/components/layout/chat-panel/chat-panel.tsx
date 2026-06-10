@@ -180,17 +180,18 @@ export function ChatPanel() {
                     isStreaming={isLoading && idx === filtered.length - 1 && msg.role === "assistant"}
                   />
                 ))}
-              {isLoading && (() => {
-                const last = messages[messages.length - 1]
-                // Show thinking indicator when:
-                // 1. Still waiting for the assistant message to arrive (last is user), OR
-                // 2. Assistant message exists but has no text yet (smoothStream buffer delay)
-                const lastIsUser = last?.role === "user"
-                const lastIsEmptyAssistant =
-                  last?.role === "assistant" &&
-                  !last.parts?.some((p) => p.type === "text" && (p as any).text?.length > 0)
-                return (lastIsUser || lastIsEmptyAssistant) ? <ChatMessageThinking /> : null
-              })()}
+              {isLoading &&
+                (() => {
+                  const last = messages[messages.length - 1]
+                  // Show thinking indicator when:
+                  // 1. Still waiting for the assistant message to arrive (last is user), OR
+                  // 2. Assistant message exists but has no text yet (smoothStream buffer delay)
+                  const lastIsUser = last?.role === "user"
+                  const lastIsEmptyAssistant =
+                    last?.role === "assistant" &&
+                    !last.parts?.some((p) => p.type === "text" && (p as any).text?.length > 0)
+                  return lastIsUser || lastIsEmptyAssistant ? <ChatMessageThinking /> : null
+                })()}
             </div>
           )}
           {messages.length > 0 && <div className="h-0.5 shrink-0" aria-hidden="true" />}

@@ -53,7 +53,8 @@ export async function POST(req: Request) {
     const { messages, model, sessionId } = await req.json()
 
     // 1. Determine Model order for auto-fallback
-    const requestedModel = AVAILABLE_MODELS.find((m) => m.id === model) || AVAILABLE_MODELS.find((m) => m.id === DEFAULT_MODEL)!
+    const requestedModel =
+      AVAILABLE_MODELS.find((m) => m.id === model) || AVAILABLE_MODELS.find((m) => m.id === DEFAULT_MODEL)!
     const modelPriority = [requestedModel, ...AVAILABLE_MODELS.filter((m) => m.id !== requestedModel.id)]
 
     let lastError: unknown
@@ -96,10 +97,9 @@ export async function POST(req: Request) {
                 (async () => {
                   try {
                     // Ensure the session exists
-                    await supabase.from("chat_sessions").upsert(
-                      { id: sessionId, updated_at: new Date().toISOString() },
-                      { onConflict: "id" }
-                    )
+                    await supabase
+                      .from("chat_sessions")
+                      .upsert({ id: sessionId, updated_at: new Date().toISOString() }, { onConflict: "id" })
 
                     // Record which model actually handled the request (post-fallback)
                     await supabase.from("chat_messages").insert({

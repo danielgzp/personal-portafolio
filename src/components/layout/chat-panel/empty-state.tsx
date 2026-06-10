@@ -133,8 +133,9 @@ export function EmptyState({ setInput }: EmptyStateProps) {
       ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShuffledSuggestions(shuffled)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [t])
 
   const aiWordsDesktop = t("title_explore_ai")
     .split(" ")
