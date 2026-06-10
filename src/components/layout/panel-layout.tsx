@@ -1,14 +1,14 @@
 "use client"
 
-import { Topbar } from "@/components/layout/topbar"
-import { ThemeSwitcher } from "@/components/theme-switcher"
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { m, useReducedMotion } from "framer-motion"
-import { useState, useEffect, useSyncExternalStore } from "react"
 import { ChatPanel } from "@/components/layout/chat-panel"
 import { ProfilePanel } from "@/components/layout/profile-panel"
+import { Topbar } from "@/components/layout/topbar"
 import { LocaleSwitcher } from "@/components/locale-switcher"
+import { ThemeSwitcher } from "@/components/theme-switcher"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
+import { m, useReducedMotion } from "framer-motion"
+import { useState, useSyncExternalStore } from "react"
 
 // Premium iOS-style drawer easing (emilkowal-animations)
 // 500ms duration with a strong deceleration curve for a natural swipe-like feel
@@ -34,13 +34,13 @@ export function PanelLayout() {
   // hydration (false → true) from triggering a slide animation on load.
   const [hasInteracted, setHasInteracted] = useState(false)
 
-  // React 18/19 Modern SSR Bypass: 
+  // React 18/19 Modern SSR Bypass:
   // Avoids the cascading render warning of useEffect by using useSyncExternalStore.
   // It returns false on the server (SSR), and true immediately on the client.
   const isMounted = useSyncExternalStore(
     () => () => {}, // dummy subscribe
-    () => true,     // client value
-    () => false     // server value
+    () => true, // client value
+    () => false // server value
   )
 
   const handleTabChange = (tab: TabType) => {
@@ -68,7 +68,7 @@ export function PanelLayout() {
       <div className="relative flex size-full flex-1 overflow-hidden lg:flex-row">
         {/* ── Profile Panel ── scales back & blurs when Chat is active */}
         <m.section
-          className="absolute inset-0 z-10 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-1/2 xl:w-[40%]"
+          className="absolute inset-0 z-10 flex h-full w-full flex-col border-r border-border/40 bg-sidebar lg:relative lg:inset-auto lg:z-auto lg:order-1 lg:w-1/2 xl:w-[45%]"
           initial={false}
           animate={{
             x: isMobile && !isProfile ? "-10%" : "0%",

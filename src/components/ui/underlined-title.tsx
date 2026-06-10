@@ -9,8 +9,8 @@ interface UnderlinedTitleProps {
 // Three-layer technique: wide outer glow + tight inner glow + sharp line on top.
 export function UnderlinedTitle({ children, className }: UnderlinedTitleProps) {
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
-      <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase xl:text-base">{children}</h3>
+    <div className={cn("flex flex-col gap-2 pb-2", className)}>
+      <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase xl:text-[15px]">{children}</h3>
       {/* Underline container — overflow-visible so glow bleeds outside the line bounds */}
       <div className="relative h-0.5 w-24 overflow-visible">
         {/* Layer 1: wide diffuse outer glow */}

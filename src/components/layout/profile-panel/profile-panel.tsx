@@ -14,7 +14,7 @@ export function ProfilePanel() {
   return (
     <div className="relative size-full bg-background">
       {/* Minimalist grid */}
-      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-40" />
+      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
       {/* Radial fade mask */}
       <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
@@ -36,7 +36,7 @@ export function ProfilePanel() {
         {/* ── Bio ── */}
         <m.div variants={sectionVariants} className="flex flex-col gap-3">
           <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
-          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-lg">
+          <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-base">
             {t.rich("about", {
               highlight: (chunks) => <span className="font-medium text-primary/65">{chunks}</span>,
             })}

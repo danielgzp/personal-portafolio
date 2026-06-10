@@ -2,10 +2,13 @@ import {
   DockerIcon,
   EslintIcon,
   FigmaIcon,
+  GitIcon,
   JavascriptIcon,
   MotionIcon,
+  NextAuthIcon,
   NextjsIcon,
   NodejsIcon,
+  PlaywrightIcon,
   PostgreSQLIcon,
   ReactIcon,
   ShadcnIcon,
@@ -37,6 +40,9 @@ const SKILLS = [
   { icon: DockerIcon, name: "Docker" },
   { icon: EslintIcon, name: "ESLint" },
   { icon: FigmaIcon, name: "Figma" },
+  { icon: GitIcon, name: "Git" },
+  { icon: PlaywrightIcon, name: "Playwright" },
+  { icon: NextAuthIcon, name: "NextAuth" },
 ]
 
 // Tech icon specific animation
@@ -94,7 +100,7 @@ export function TechnologiesSection() {
           >
             <Badge
               variant="outline"
-              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary xl:gap-x-1.5 xl:px-2.5 xl:py-1.5 xl:text-sm"
+              className="mr-0.5 h-6.5 cursor-default border-dashed bg-card px-2 py-1 transition-colors duration-300 select-none group-hover:border-primary xl:px-2.5 xl:text-[13px]"
             >
               <m.span variants={iconVariants} className="flex [&>svg]:size-4 xl:[&>svg]:size-4.5">
                 <tech.icon />

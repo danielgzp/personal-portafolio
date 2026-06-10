@@ -11,6 +11,7 @@ import { EffectFade, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
+import { MapPin, Building2 } from "lucide-react"
 
 interface ExperienceItem {
   id: number
@@ -19,6 +20,7 @@ interface ExperienceItem {
   location: string
   date: string
   description: string
+  achievements?: string[]
   skills: string[]
 }
 
@@ -64,21 +66,40 @@ export function ExperienceCarousel({ items }: ExperienceCarouselProps) {
               className="flex h-auto min-w-0 flex-col gap-3 overflow-hidden rounded-2xl border border-border/40 bg-card/90 p-4 shadow-sm backdrop-blur-sm"
             >
               {/* Role + company */}
-              <div className="flex min-w-0 flex-col gap-0.5">
-                <h4 className="truncate text-sm font-bold tracking-tight text-foreground">{item.role}</h4>
-                <span className="truncate text-xs font-medium text-muted-foreground">{item.company}</span>
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <h4 className="truncate text-base font-bold tracking-tight text-primary">{item.role}</h4>
+                <span className="flex items-center gap-1.5 truncate text-sm font-semibold text-foreground">
+                  {item.company}
+                </span>
               </div>
 
               {/* Location & date */}
               <div className="flex min-w-0 items-center justify-between gap-2">
-                <span className="truncate text-xs font-semibold text-foreground">{item.location}</span>
-                <time className="shrink-0 text-xs font-medium text-muted-foreground italic">{item.date}</time>
+                <span className="flex items-center gap-1.5 truncate text-xs font-medium text-muted-foreground">
+                  <MapPin className="size-3.5" />
+                  {item.location}
+                </span>
+                <time className="shrink-0 rounded-full border border-border/50 bg-secondary/20 px-2 py-0.5 text-[11px] font-medium text-muted-foreground/80">
+                  {item.date}
+                </time>
               </div>
 
               <Separator className="bg-border/50" />
 
               {/* Description */}
-              <p className="line-clamp-3 text-sm text-muted-foreground">{item.description}</p>
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+                {item.achievements && item.achievements.length > 0 && (
+                  <ul className="flex flex-col gap-1.5">
+                    {item.achievements.map((ach, i) => (
+                      <li key={i} className="relative pl-4 text-xs text-muted-foreground">
+                        <span className="absolute top-1.5 left-0 size-1.5 rounded-full bg-primary/40" />
+                        {ach}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
               {/* Skills */}
               <div className="flex flex-wrap gap-1.5">
