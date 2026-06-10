@@ -4,19 +4,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button, MovingBorder } from "@/components/ui/moving-border"
 import { sectionVariants, SPRING_INTERACTIVE, SPRING_SOFT, SPRING_TAP } from "@/lib/animations"
 import { type Variants, m, useReducedMotion } from "framer-motion"
-import { MapPin, SparklesIcon } from "lucide-react"
+import { MapPin, MapPinIcon, SparklesIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { CTASection } from "./cta-section"
 
 // Avatar: spring physics with slight rotate + tactile scale feedback
 const avatarVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.85, y: 8, rotate: -4 },
+  hidden: { opacity: 0, scale: 0.85, y: 8, rotate: -4, filter: "blur(8px)" },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
     rotate: 0,
+    filter: "blur(0px)",
     transition: SPRING_SOFT,
   },
   hover: {
@@ -91,8 +92,15 @@ export function HeroSection() {
       <div className="flex w-full flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-3xl xl:text-4xl">{t("name")}</h1>
         <h2 className="text-xl font-semibold text-foreground lg:text-lg xl:text-xl">{t("role")}</h2>
+        {/* <div className="flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground lg:text-lg xl:text-xl">{t("role")}</h2>
+          <span>•</span>
+
+          <span className="text-sm text-muted-foreground xl:text-base">{t("location")}</span>
+        </div> */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground xl:text-base">
-          <MapPin className="size-4" />
+          <MapPinIcon className="size-4" />
+
           <span>{t("location")}</span>
         </div>
       </div>

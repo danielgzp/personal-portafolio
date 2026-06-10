@@ -16,18 +16,19 @@ export const pageVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.22,
+      staggerChildren: 0.15,
       delayChildren: 0.1,
     },
   },
 }
 
-// Level 2: each section fades + rises with a slow, cinematic reveal
+// Level 2: each section fades + rises with a slow, cinematic reveal (Blur bridge)
 export const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 16, filter: "blur(8px)" },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1.1, ease: EASE_PREMIUM },
+    filter: "blur(0px)",
+    transition: { duration: 0.8, ease: EASE_PREMIUM },
   },
 }

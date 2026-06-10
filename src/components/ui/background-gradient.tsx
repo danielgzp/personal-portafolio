@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import React from "react"
-import { motion } from "motion/react"
+import { m } from "motion/react"
 
 export const BackgroundGradient = ({
   children,
@@ -22,8 +22,8 @@ export const BackgroundGradient = ({
     },
   }
   return (
-    <div className={cn("group relative p-[4px]", containerClassName)}>
-      <motion.div
+    <div className={cn("group relative p-[1px]", containerClassName)}>
+      <m.div
         variants={animate ? variants : undefined}
         initial={animate ? "initial" : undefined}
         animate={animate ? "animate" : undefined}
@@ -40,18 +40,19 @@ export const BackgroundGradient = ({
           backgroundSize: animate ? "400% 400%" : undefined,
         }}
         className={cn(
-          "absolute inset-0 z-[1] rounded-full opacity-60 blur-xl transition duration-500 will-change-transform group-hover:opacity-100",
-          "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]"
+          "absolute inset-0 z-[1] rounded-full opacity-30 blur-lg transition duration-500 will-change-transform group-hover:opacity-60",
+          "bg-linear-to-r from-primary/20 via-primary/80 to-primary/20"
         )}
       />
-      <motion.div
+
+      <m.div
         variants={animate ? variants : undefined}
         initial={animate ? "initial" : undefined}
         animate={animate ? "animate" : undefined}
         transition={
           animate
             ? {
-                duration: 5,
+                duration: 4,
                 repeat: Infinity,
                 repeatType: "reverse",
               }
@@ -61,8 +62,8 @@ export const BackgroundGradient = ({
           backgroundSize: animate ? "400% 400%" : undefined,
         }}
         className={cn(
-          "absolute inset-0 z-[1] rounded-full will-change-transform",
-          "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]"
+          "absolute inset-0 z-[1] rounded-full opacity-80 will-change-transform",
+          "bg-linear-to-r from-primary/20 via-primary/60 to-primary/20"
         )}
       />
 
