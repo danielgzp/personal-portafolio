@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import {
-  motion,
+  m,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
@@ -31,7 +31,7 @@ function GradientLayer({
   const background = useMotionTemplate`radial-gradient(circle at ${x}px ${y}px, ${gradientColor} 0%, transparent 50%)`
 
   return (
-    <motion.div
+    <m.div
       className="absolute inset-0"
       style={{
         opacity,
@@ -197,7 +197,7 @@ export const NoiseBackground = ({
       />
 
       {/* Top gradient strip */}
-      <motion.div
+      <m.div
         className="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-80 blur-sm"
         style={{
           background: `linear-gradient(to right, ${gradientColors.join(", ")})`,

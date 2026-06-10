@@ -42,11 +42,12 @@ interface ExperienceItem {
 
 // Individual experience item elegant entrance
 const cardVariants: Variants = {
-  hidden: { opacity: 0, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 16, filter: "blur(8px)" },
   visible: (idx: number) => ({
     opacity: 1,
+    y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1], delay: idx * 0.1 },
+    transition: { duration: 0.8, ease: EASE_PREMIUM, delay: idx * 0.1 },
   }),
 }
 

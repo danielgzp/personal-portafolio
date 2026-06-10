@@ -6,6 +6,8 @@ import { HeroSection } from "./hero-section"
 import { TechnologiesSection } from "./technologies-section"
 import { pageVariants, sectionVariants } from "@/lib/animations"
 import { UnderlinedTitle } from "@/components/ui/underlined-title"
+import { DottedGlowBackground } from "@/components/ui/dotted-glow-background"
+import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation"
 
 export function ProfilePanel() {
   const t = useTranslations("profile")
@@ -14,21 +16,31 @@ export function ProfilePanel() {
   return (
     <div className="relative size-full bg-background">
       {/* Minimalist grid */}
-      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
-      {/* Radial fade mask */}
-      <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
 
       {/*
           Keep pt-20 on mobile & md to prevent fixed Topbar (h-14) overlap,
           reverting to pt-12 (via lg:pt-12) only on desktop screens where
           the Topbar is hidden.
        */}
+      {/* <BackgroundGradientAnimation containerClassName="absolute inset-0" /> */}
+      {/* <DottedGlowBackground
+        className=""
+        opacity={0.75}
+        gap={40}
+        radius={0.5}
+        colorLightVar="--foreground"
+        colorDarkVar="--foreground"
+        glowColorLightVar="--primary"
+        glowColorDarkVar="--primary"
+      />
+
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" /> */}
       <m.div
         id="profile-scroll-container"
         variants={pageVariants}
         initial={reduceMotion ? "visible" : "hidden"}
         animate="visible"
-        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-y-8 overflow-y-auto p-6 pt-18 md:p-12 md:pt-20 lg:gap-y-10 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
+        className="relative z-10 mx-auto flex size-full min-h-full flex-col gap-y-8 overflow-y-auto p-6 pt-18 md:p-12 md:pt-20 lg:p-8 lg:pt-12 xl:p-12 xl:pt-12"
       >
         {/* ── Hero ── */}
         <HeroSection />
@@ -38,7 +50,7 @@ export function ProfilePanel() {
           <UnderlinedTitle>{t("about_title")}</UnderlinedTitle>
           <p className="text-sm leading-relaxed text-pretty text-foreground md:text-base xl:text-base">
             {t.rich("about", {
-              highlight: (chunks) => <span className="font-medium text-primary/65">{chunks}</span>,
+              highlight: (chunks) => <span className="font-semibold text-primary">{chunks}</span>,
             })}
           </p>
         </m.div>
@@ -47,9 +59,9 @@ export function ProfilePanel() {
         <TechnologiesSection />
 
         {/* ── Experience ── */}
-        <m.div variants={sectionVariants} className="w-full min-w-0">
+        <div className="w-full min-w-0">
           <ExperienceSection />
-        </m.div>
+        </div>
 
         {/* ── CTA Footer ── */}
         <CTASection variants={sectionVariants} reduceMotion={reduceMotion} className="mt-auto" />

@@ -56,12 +56,13 @@ const iconVariants: Variants = {
 
 // Individual skill badge — enters with a slow, floating reveal staggered by index
 const badgeVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.8, y: 16 },
+  hidden: { opacity: 0, scale: 0.8, y: 16, filter: "blur(8px)" },
   visible: (idx: number) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.9, ease: EASE_PREMIUM, delay: idx * 0.07 },
+    filter: "blur(0px)",
+    transition: { duration: 0.8, ease: EASE_PREMIUM, delay: idx * 0.04 },
   }),
   hover: {
     scale: 1.05,

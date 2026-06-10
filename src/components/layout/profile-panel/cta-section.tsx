@@ -41,16 +41,10 @@ export function CTASection({ variants, reduceMotion, className, showBorder = tru
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="flex h-9 w-full flex-1 gap-1.5 px-3 text-xs transition-all duration-200 hover:scale-[1.03] hover:border-primary hover:shadow-md active:scale-[0.97] sm:h-10 sm:w-auto sm:px-4 sm:text-sm lg:flex-initial xl:px-5"
+            className="group flex h-9 w-full flex-1 gap-1.5 px-3 text-xs transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_18px_0] hover:shadow-primary/20 sm:h-10 sm:w-auto sm:px-4 sm:text-sm lg:flex-initial xl:px-5"
             size="lg"
           >
-            <m.span
-              className="inline-flex"
-              animate={reduceMotion ? {} : { y: [0, -2, 0] }}
-              transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-            >
-              <DownloadIcon className="size-4 xl:size-4.5" />
-            </m.span>
+            <DownloadIcon className="size-4 animate-bounce xl:size-4.5" />
             {t("download_cv")}
           </Button>
         </DropdownMenuTrigger>

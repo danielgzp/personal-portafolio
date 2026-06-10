@@ -17,7 +17,9 @@ import { cn } from "@/lib/utils"
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation"
 import { useTranslations } from "next-intl"
 import { AnimatePresence, m } from "framer-motion"
+import { nanoid } from "nanoid"
 import { AlertCircle, X, MessageSquareWarning } from "lucide-react"
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect"
 
 /**
  * Known error codes returned by our API.
@@ -105,12 +107,12 @@ export function ChatPanel() {
 
   // 1. Generate a persistent sessionId when the user starts a chat.
   // 3. Ensure the sessionId remains the same for the duration of the thread.
-  const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID())
+  const [sessionId, setSessionId] = useState<string>(() => nanoid())
 
   const handleClearChat = useCallback(() => {
     stop()
     setMessages([])
-    setSessionId(crypto.randomUUID())
+    setSessionId(nanoid())
   }, [setMessages, stop])
 
   // Track whether the user has dismissed the current error banner.
@@ -139,7 +141,7 @@ export function ChatPanel() {
 
   return (
     <section className="relative z-10 flex size-full flex-col overflow-hidden bg-background">
-      <BackgroundGradientAnimation containerClassName="absolute inset-0 -z-10" />
+      {/* <BackgroundGradientAnimation containerClassName="absolute inset-0 -z-10" /> */}
       {/* <DottedGlowBackground
         className="-z-10"
         opacity={0.35}
@@ -152,7 +154,8 @@ export function ChatPanel() {
       />
 
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_80%_at_50%_-10%,rgba(var(--primary),0.08),transparent)]" /> */}
-
+      <div className="absolute inset-0 z-0 h-full bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-size-[48px_48px] opacity-50 dark:opacity-30" />
+      <div className="absolute inset-0 z-0 bg-background mask-[radial-gradient(ellipse_100%_90%_at_50%_0%,transparent_15%,black)]" />
       <Conversation>
         <ConversationContent
           scrollClassName="mask-b-from-95% mask-b-to-100%"
