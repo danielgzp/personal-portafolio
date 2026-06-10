@@ -1,16 +1,17 @@
 "use client"
 
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
+import { Sparkles } from "lucide-react"
 import {
   PromptInput,
   PromptInputBody,
   PromptInputFooter,
   PromptInputMessage,
-  PromptInputSelect,
-  PromptInputSelectContent,
-  PromptInputSelectItem,
-  PromptInputSelectTrigger,
-  PromptInputSelectValue,
+  // PromptInputSelect,
+  // PromptInputSelectContent,
+  // PromptInputSelectItem,
+  // PromptInputSelectTrigger,
+  // PromptInputSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
@@ -35,10 +36,12 @@ type Props = {
   stop: ChatHelpers["stop"]
   sessionId: string
   onClear: () => void
+  /** Display name of the last model that successfully responded */
+  lastUsedModel?: string
 }
 
 export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
-  { sendMessage, status, isChatStarted, stop, sessionId, onClear },
+  { sendMessage, status, isChatStarted, stop, sessionId, onClear, lastUsedModel },
   ref
 ) {
   const tMessages = useTranslations("chat.messages")
@@ -48,7 +51,8 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
   const placeholders = tChat.raw("placeholders") as string[]
 
   const [input, setInput] = useState("")
-  const [model, setModel] = useState(DEFAULT_MODEL)
+  // Model is fixed server-side via auto-fallback — no manual selection needed
+  const [model] = useState(DEFAULT_MODEL)
 
   const currentPlaceholder = useTypingEffect(placeholders, {
     typingSpeed: 30,
@@ -137,7 +141,14 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
         </PromptInputBody>
         <PromptInputFooter className="flex items-center justify-between px-3 pt-2 pb-3 md:px-4">
           <PromptInputTools className="pr-2">
-            <PromptInputSelect onValueChange={(value) => setModel(value)} value={model}>
+            {/* Badge only appears once the server has confirmed which model responded */}
+            {lastUsedModel && (
+              <div className="flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-medium text-muted-foreground dark:bg-accent/50">
+                <Sparkles className="size-3 shrink-0" />
+                <span className="truncate max-w-36">{lastUsedModel}</span>
+              </div>
+            )}
+            {/* <PromptInputSelect onValueChange={(value) => setModel(value)} value={model}>
               <PromptInputSelectTrigger
                 aria-label={tActions("select_model")}
                 className="h-8 max-w-40 rounded-full bg-accent text-xs font-medium text-muted-foreground transition-colors md:max-w-xs dark:bg-accent/50"
@@ -151,7 +162,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                   </PromptInputSelectItem>
                 ))}
               </PromptInputSelectContent>
-            </PromptInputSelect>
+            </PromptInputSelect> */}
           </PromptInputTools>
           <PromptInputSubmit
             disabled={(!input.trim() && !isLoading) || status === "submitted"}

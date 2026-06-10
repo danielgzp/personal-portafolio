@@ -122,6 +122,14 @@ export function ChatPanel() {
 
   const isLoading = status === "submitted" || status === "streaming"
 
+  // Track the last model used — updated from messageMetadata once the stream finishes.
+  // Shown in the input badge so the user always knows which model responded.
+  const lastUsedModel = useMemo(() => {
+    const assistantMessages = messages.filter((m) => m.role === "assistant")
+    const last = assistantMessages[assistantMessages.length - 1]
+    return (last?.metadata as { usedModel?: string } | undefined)?.usedModel
+  }, [messages])
+
   const chatInputRef = useRef<ChatInputHandle | null>(null)
   const setInputFromRef = useCallback((v: string) => chatInputRef.current?.setInput(v), [])
 
@@ -156,16 +164,33 @@ export function ChatPanel() {
             </ConversationEmptyState>
           ) : (
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
-              {messages.map((msg, idx) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  // Mark the last assistant message as actively streaming
-                  // so Streamdown's isAnimating and caret are properly activated
-                  isStreaming={isLoading && idx === messages.length - 1 && msg.role === "assistant"}
-                />
-              ))}
-              {isLoading && messages[messages.length - 1]?.role === "user" && <ChatMessageThinking />}
+              {messages
+                // Skip assistant messages that have no text yet — the thinking indicator
+                // covers this gap so we never render an empty bubble during stream startup
+                .filter((msg) => {
+                  if (msg.role !== "assistant") return true
+                  return msg.parts?.some((p) => p.type === "text" && (p as any).text?.length > 0)
+                })
+                .map((msg, idx, filtered) => (
+                  <ChatMessage
+                    key={msg.id}
+                    message={msg}
+                    // Mark the last assistant message as actively streaming
+                    // so Streamdown's isAnimating and caret are properly activated
+                    isStreaming={isLoading && idx === filtered.length - 1 && msg.role === "assistant"}
+                  />
+                ))}
+              {isLoading && (() => {
+                const last = messages[messages.length - 1]
+                // Show thinking indicator when:
+                // 1. Still waiting for the assistant message to arrive (last is user), OR
+                // 2. Assistant message exists but has no text yet (smoothStream buffer delay)
+                const lastIsUser = last?.role === "user"
+                const lastIsEmptyAssistant =
+                  last?.role === "assistant" &&
+                  !last.parts?.some((p) => p.type === "text" && (p as any).text?.length > 0)
+                return (lastIsUser || lastIsEmptyAssistant) ? <ChatMessageThinking /> : null
+              })()}
             </div>
           )}
           {messages.length > 0 && <div className="h-0.5 shrink-0" aria-hidden="true" />}
@@ -240,6 +265,7 @@ export function ChatPanel() {
         stop={stop}
         sessionId={sessionId}
         onClear={handleClearChat}
+        lastUsedModel={lastUsedModel}
       />
     </section>
   )

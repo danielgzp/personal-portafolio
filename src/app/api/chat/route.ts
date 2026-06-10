@@ -29,16 +29,11 @@ function resolveModelInstance(selectedModel: string) {
 export async function POST(req: Request) {
   try {
     // 0. Rate Limiting Guard
-    // Runs BEFORE body parsing, RAG, and model calls to save compute on abusive requests.
-    // Uses a sliding window of 10 requests per 60 seconds, identified by IP + User-Agent.
     try {
       const identifier = getClientIdentifier(req)
       const { success, limit, remaining, reset } = await ratelimit.limit(identifier)
 
       if (!success) {
-        // Client exceeded their quota — return 429 with standard rate-limit headers.
-        // The response format matches the existing error shape ({ error, message })
-        // so the frontend handles it consistently with other errors.
         const headers = buildRateLimitHeaders(limit, remaining, reset)
         return new Response(
           JSON.stringify({
@@ -52,91 +47,107 @@ export async function POST(req: Request) {
         )
       }
     } catch (rateLimitError) {
-      // Fail-open strategy: if Upstash Redis is unreachable (downtime, DNS, timeout),
-      // we log a warning and let the request through. This prioritizes portfolio
-      // availability over protection — a brief Redis outage shouldn't break the chat.
       console.warn("[rate-limit] Upstash check failed, allowing request:", rateLimitError)
     }
 
     const { messages, model, sessionId } = await req.json()
 
-    // 1. Model Validation: Default to the fastest model if an invalid one is passed.
-    const allowedModels = new Set(AVAILABLE_MODELS.map((m) => m.id))
-    const selectedModel = allowedModels.has(model) ? model : DEFAULT_MODEL
+    // 1. Determine Model order for auto-fallback
+    const requestedModel = AVAILABLE_MODELS.find((m) => m.id === model) || AVAILABLE_MODELS.find((m) => m.id === DEFAULT_MODEL)!
+    const modelPriority = [requestedModel, ...AVAILABLE_MODELS.filter((m) => m.id !== requestedModel.id)]
 
-    // 2. Extract User Query: Cleanly extract the text from the complex Vercel AI payload.
+    let lastError: unknown
+    let result: ReturnType<typeof streamText> | undefined
+    let successfulModel = modelPriority[0] // Fallback for metadata if no model throws
+
+    // 2. Extract User Query
     const userQuery = extractUserQuery(messages)
-
-    // 3. Optional RAG Context Retrieval: Search Supabase for relevant "War Stories".
-    // If the user hasn't typed anything meaningful, or if Supabase is down, it degrades gracefully to "".
     const context = userQuery ? await retrieveContext(userQuery) : ""
 
-    // 4. Instanciar el SDK correcto según el prefijo del modelo seleccionado
-    const modelInstance = resolveModelInstance(selectedModel)
+    // 3. Auto-Fallback Loop: try each model in priority order until one succeeds.
+    // Each candidate's reference is captured in the closure to avoid stale variable issues.
+    const convertedMessages = await convertToModelMessages(messages)
 
-    // 5. Start the AI Stream
-    const startTime = Date.now()
-    const result = streamText({
-      model: modelInstance,
-      messages: await convertToModelMessages(messages),
+    for (const candidate of modelPriority) {
+      try {
+        const modelInstance = resolveModelInstance(candidate.id)
+        const startTime = Date.now()
 
-      // Inject the dynamically built prompt (Base Prompt + RAG Context)
-      system: buildSystemPrompt(context),
+        result = streamText({
+          model: modelInstance,
+          messages: convertedMessages,
+          system: buildSystemPrompt(context),
 
-      // Throttle output to word-by-word for a natural reading pace on the frontend
-      experimental_transform: smoothStream({
-        chunking: "word",
-        delayInMs: 35,
-      }),
+          // Throttle output to word-by-word for a natural reading pace on the frontend
+          experimental_transform: smoothStream({
+            chunking: "word",
+            delayInMs: 35,
+          }),
 
-      onFinish: ({ usage, text }) => {
-        const generationTimeMs = Date.now() - startTime
-        const hasContext = context.length > 0
-        console.log(
-          `[/api/chat] Stream finished — model: ${selectedModel} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)} | time: ${generationTimeMs}ms`
-        )
+          onFinish: ({ usage, text }) => {
+            const generationTimeMs = Date.now() - startTime
+            const hasContext = context.length > 0
+            console.log(
+              `[/api/chat] Stream finished — model: ${candidate.id} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)} | time: ${generationTimeMs}ms`
+            )
 
-        if (sessionId) {
-          waitUntil(
-            (async () => {
-              try {
-                // Ensure the session exists
-                await supabase.from("chat_sessions").upsert(
-                  { id: sessionId, updated_at: new Date().toISOString() },
-                  { onConflict: "id" }
-                )
+            if (sessionId) {
+              waitUntil(
+                (async () => {
+                  try {
+                    // Ensure the session exists
+                    await supabase.from("chat_sessions").upsert(
+                      { id: sessionId, updated_at: new Date().toISOString() },
+                      { onConflict: "id" }
+                    )
 
-                // Track the interaction
-                await supabase.from("chat_messages").insert({
-                  session_id: sessionId,
-                  model: selectedModel,
-                  user_query: userQuery || "",
-                  ai_response: text,
-                  rag_context_used: hasContext,
-                  prompt_tokens: (usage as any)?.promptTokens || 0,
-                  completion_tokens: (usage as any)?.completionTokens || 0,
-                  generation_time_ms: generationTimeMs,
-                })
-              } catch (dbError) {
-                console.error("[/api/chat] Error tracking chat interaction:", dbError)
-              }
-            })()
-          )
+                    // Record which model actually handled the request (post-fallback)
+                    await supabase.from("chat_messages").insert({
+                      session_id: sessionId,
+                      model: candidate.id,
+                      user_query: userQuery || "",
+                      ai_response: text,
+                      rag_context_used: hasContext,
+                      prompt_tokens: (usage as any)?.promptTokens || 0,
+                      completion_tokens: (usage as any)?.completionTokens || 0,
+                      generation_time_ms: generationTimeMs,
+                    })
+                  } catch (dbError) {
+                    console.error("[/api/chat] Error tracking chat interaction:", dbError)
+                  }
+                })()
+              )
+            }
+          },
+
+          onAbort: () => {
+            console.log(`[/api/chat] Stream aborted — model: ${candidate.id}`)
+          },
+        })
+
+        // This candidate started successfully — lock it in and exit the loop
+        successfulModel = candidate
+        break
+      } catch (e) {
+        lastError = e
+        console.warn(`[/api/chat] Model ${candidate.id} failed, trying next:`, e)
+      }
+    }
+
+    if (!result) throw lastError
+
+    // 4. Return the HTTP Stream Response.
+    // messageMetadata sends the winning model's display name to the client
+    // so the UI can render "Powered by X" without any extra round-trips.
+    return result.toUIMessageStreamResponse({
+      onError: handleStreamError,
+      messageMetadata: ({ part }) => {
+        if (part.type === "start") {
+          return { usedModel: successfulModel.name }
         }
       },
-      onAbort: () => {
-        console.log(`[/api/chat] Stream aborted — model: ${selectedModel}`)
-      },
-    })
-
-    // 5. Return the HTTP Stream Response
-    return result.toUIMessageStreamResponse({
-      // If the stream breaks midway, handleStreamError generates the JSON error message
-      onError: handleStreamError,
     })
   } catch (error) {
-    // If an error happens before the stream starts (e.g. rate limits, syntax errors),
-    // buildErrorResponse handles the HTTP status and JSON mapping.
     return buildErrorResponse(error)
   }
 }
