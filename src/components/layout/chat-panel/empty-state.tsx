@@ -161,7 +161,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
           </BackgroundGradient>
         </m.div>
 
-        <div className="max-w-3xl space-y-5">
+        <div className="max-w-4xl space-y-5">
           {/* Heading */}
           <m.h2
             variants={headingVariants}
@@ -197,7 +197,7 @@ export function EmptyState({ setInput }: EmptyStateProps) {
       </div>
 
       {/* ── Quick Actions (Marquee) ─────────────────────────────────────── */}
-      <m.div variants={cardsVariants} className="min-h-[120px] w-full overflow-hidden py-4">
+      <m.div variants={cardsVariants} className="min-h-[160px] w-full overflow-hidden py-4">
         {shuffledSuggestions.length > 0 && (
           <InfiniteMovingCards items={shuffledSuggestions} direction="left" speed="slow" onItemClick={setInput} />
         )}
