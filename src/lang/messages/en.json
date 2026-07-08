@@ -122,7 +122,7 @@
       "title_explore": "Explore and learn about Daniel's profile through",
       "title_explore_ai": "Artificial Intelligence",
       "description_mobile": "An assistant trained on my professional background and experience. Pick a topic to get started.",
-      "description_desktop": "I am an AI agent trained on Daniel's background, architectural decisions, and product vision. Ask me a technical question or choose a topic to get started.",
+      "description_desktop": "AI agent trained on Daniel's background, architectural decisions, and product vision. Ask me a technical question or choose a topic to get started.",
       "suggestions": [
         {
           "heading": "Experience",
@@ -182,7 +182,7 @@
       "title": "Interaction limit reached",
       "description": "The assistant has reached the maximum number of requests allowed by the AI provider. Please try again in a few minutes or contact Daniel directly."
     },
-    "disclaimer": "I am an AI and can make mistakes or provide inaccurate information. Please verify important details."
+    "disclaimer": "AI and can make mistakes or provide inaccurate information. Please verify important details."
   },
   "common": {
     "language": "{locale, select, es {Spanish} en {English} other {unknown}}"

@@ -182,7 +182,7 @@
       "title": "Límite de interacciones alcanzado",
       "description": "El asistente ha alcanzado el límite de solicitudes permitidas por el proveedor de IA. Por favor, intenta de nuevo en unos minutos o contacta a Daniel directamente."
     },
-    "disclaimer": "Soy una IA y puedo cometer errores o proporcionar información imprecisa. Verifica los detalles importantes."
+    "disclaimer": "La IA y puede cometer errores o proporcionar información imprecisa. Verifica los detalles importantes."
   },
   "common": {
     "language": "{locale, select, es {Español} en {Inglés} other {unknown}}"
