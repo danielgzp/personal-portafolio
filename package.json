@@ -67,7 +67,6 @@
     "react-markdown": "^10.1.0",
     "rehype-pretty-code": "^0.14.3",
     "remark-gfm": "^4.0.1",
-    "shadcn": "^4.5.0",
     "shiki": "^4.0.2",
     "streamdown": "^2.5.0",
     "swiper": "^12.2.0",
@@ -90,6 +89,7 @@
     "postcss": "^8",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "shadcn": "^4.13.0",
     "tailwindcss": "^4.2.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
