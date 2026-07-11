@@ -1,6 +1,8 @@
 ---
 name: frontend-agent
 description: Expert frontend agent for the personal portfolio. Specializes in React 19, Next.js 16 App Router, Tailwind CSS v4, Shadcn/ui, Framer Motion, and next-intl. Invoked for all UI component work, layout, animations, accessibility, and responsive design tasks.
+enable_write_tools: true
+enable_mcp_tools: true
 ---
 
 # Frontend Agent — Personal Portfolio

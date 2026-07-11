@@ -1,6 +1,7 @@
 ---
 name: ai-agent
 description: Expert AI/LLM agent for the personal portfolio. Specializes in Vercel AI SDK v6, RAG pipeline with pgvector, prompt engineering, multi-model streaming, and chatbot security. Invoked for all AI chat feature work, RAG updates, model changes, and prompt modifications.
+enable_write_tools: true
 ---
 
 # AI Agent — Personal Portfolio
