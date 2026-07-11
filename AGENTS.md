@@ -25,6 +25,12 @@ This repository includes a configured set of workspace MCP servers in `.agents/m
 - **Context7:** Prioritize querying `context7` tools when researching external APIs, documentation updates, or syntax of popular libraries to prevent hallucinations and outdated methods.
 - **Engram:** Query `engram` tools (like `mem_get_observation`) at the beginning of a session to recall project-specific decisions and past lessons. Save critical architectural decisions or lessons learned to engram at the end of key tasks.
 
+## 👥 Workspace Subagents & Delegation
+This project defines specialized subagents under `.agents/agents/` that can be invoked via the `invoke_subagent` tool (or the `/delegate` command in compatible environments) to perform focused, concurrent tasks:
+- **`frontend-agent`:** Expert in UI/UX, React 19, Next.js App Router, Tailwind CSS v4, Shadcn/ui, and Framer Motion. Delegate to this agent for building UI components, layouts, translations, animations, and accessibility fixes.
+- **`backend-agent`:** Expert in Next.js API routes, Supabase (pgvector, RLS), database migrations, and Upstash Redis rate limiting. Delegate to this agent for backend logic, API routes, database operations, and cron jobs.
+- **`ai-agent`:** Expert in Vercel AI SDK, RAG pipelines, prompt engineering, and chatbot security. Delegate to this agent for AI features, chatbot enhancements, RAG updates, and prompt modifications.
+- **`security-agent`:** Read-only security auditor. Delegate to this agent to review codebase vulnerabilities, RLS policies, and API route security before deployment. Reports findings but does not modify files.
 
 ## 💅 Styling & Frontend Standards
 - **Tailwind v4:** Use `size-{n}` (e.g., `size-4`). Use CSS variables for theming.
