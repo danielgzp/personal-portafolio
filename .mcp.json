@@ -18,7 +18,21 @@
     "codegraph": {
       "command": "codegraph",
       "args": [
-        "serve"
+        "serve",
+        "--mcp"
+      ]
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "engram": {
+      "command": "engram",
+      "args": [
+        "mcp"
       ]
     }
   }
