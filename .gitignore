@@ -44,7 +44,8 @@ next-env.d.ts
 
 # AI generated files (third-party skills — external libraries, not versioned)
 .claude
-.agents/skills
+.codegraph
+docs/superpowers/plans/
 
 # Project docs and agents ARE versioned
 # .agents/agents/ — autonomous agent definitions
