@@ -14,10 +14,17 @@ This project is configured to be developed iteratively with any AI Code Assistan
 - Follow a strict Mobile-First approach.
 
 ## 🧠 Reasoning & Execution Flow
-1. **Research (Empirical):** Read existing files, grep for dependencies, and snapshot the layout before writing code.
+1. **Research (Empirical):** Read existing files, grep for dependencies, and snapshot the layout before writing code. Prioritize using CodeGraph and Context7 MCP tools (see below) for fast codebase navigation and documentation lookup.
 2. **Strategy:** Formulate a plan silently. If the task is complex, use Plan Mode or draft a markdown plan.
 3. **Execution:** Apply surgical edits (prefer replacing/editing over rewriting). Keep changes focused.
 4. **Validation:** ALWAYS verify your work (e.g., `pnpm lint`, `pnpm build`, or mental dry-runs for UI changes). Never assume success.
+
+## 🔌 Workspace MCP Tooling & Memory
+This repository includes a configured set of workspace MCP servers in `.agents/mcp_config.json` and `.mcp.json`. All AI assistants MUST leverage these tools proactively:
+- **CodeGraph:** Prioritize using `codegraph` tools (like `codegraph_explore`, `codegraph_search`, `codegraph_callers`) for all codebase discovery, symbol lookups, and call-chain analysis instead of doing slow, raw file searches or heavy `grep`.
+- **Context7:** Prioritize querying `context7` tools when researching external APIs, documentation updates, or syntax of popular libraries to prevent hallucinations and outdated methods.
+- **Engram:** Query `engram` tools (like `mem_get_observation`) at the beginning of a session to recall project-specific decisions and past lessons. Save critical architectural decisions or lessons learned to engram at the end of key tasks.
+
 
 ## 💅 Styling & Frontend Standards
 - **Tailwind v4:** Use `size-{n}` (e.g., `size-4`). Use CSS variables for theming.
