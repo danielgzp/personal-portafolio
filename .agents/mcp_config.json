@@ -28,6 +28,12 @@
         "-y",
         "@upstash/context7-mcp"
       ]
+    },
+    "engram": {
+      "command": "engram",
+      "args": [
+        "mcp"
+      ]
     }
   }
 }
