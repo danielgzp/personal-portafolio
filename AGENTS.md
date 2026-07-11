@@ -40,9 +40,14 @@ This project defines specialized subagents under `.agents/agents/` that can be i
 
 ## 🛠 Available Scripts
 ```bash
-pnpm dev    # Start dev server
-pnpm build  # Production build
-pnpm lint   # Linting
+pnpm dev             # Start dev server
+pnpm build           # Production build
+pnpm lint            # Linting validation
+pnpm lint:fix        # Linting and auto-fix
+pnpm typecheck       # Verify TypeScript types (highly recommended before commits/builds)
+pnpm format          # Format files using Prettier
+pnpm test:e2e        # Run all Playwright E2E tests
+pnpm test:e2e:ui     # Open Playwright E2E test runner UI
 ```
 
 ## 🗄️ Database & RAG Rules
