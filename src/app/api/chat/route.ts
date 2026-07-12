@@ -12,16 +12,9 @@ import { supabase } from "@/lib/supabase"
 
 // H1 + M1: Zod schema to validate and sanitize the request body
 const ChatRequestSchema = z.object({
-  messages: z
-    .array(
-      z.object({
-        role: z.enum(["user", "assistant", "system"]),
-        content: z.union([z.string(), z.array(z.any())]).optional(),
-        parts: z.array(z.any()).optional(),
-      })
-    )
-    .min(1)
-    .max(50), // Cap conversation history to prevent token abuse
+  // Validate that messages is a non-empty array capped at 50 entries (prevents token abuse).
+  // Individual message shapes are validated by the Vercel AI SDK's convertToModelMessages.
+  messages: z.array(z.any()).min(1).max(50),
   model: z.string().optional(),
   sessionId: z.string().uuid().optional(), // M1: validate UUID format
 })
