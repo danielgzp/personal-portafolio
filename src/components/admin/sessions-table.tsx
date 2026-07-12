@@ -580,7 +580,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
       </Card>
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-3xl md:max-w-5xl lg:max-w-6xl xl:max-w-[85vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
+        <SheetContent side="right" className="w-full data-[side=right]:sm:max-w-2xl data-[side=right]:md:max-w-3xl data-[side=right]:lg:max-w-4xl data-[side=right]:xl:max-w-[50vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
           {activeSession && (
             <div className="flex flex-col h-full overflow-hidden">
               <SheetHeader className="border-b border-border/50 p-6 bg-muted/20">
