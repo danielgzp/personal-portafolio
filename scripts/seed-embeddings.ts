@@ -78,6 +78,76 @@ const WAR_STORIES: WarStory[] = [
       Mi enfoque como "Product-Oriented Engineer" fue fundamental aquí: no solo me enfoqué en escribir código limpio usando TypeScript, sino en entender el modelo de negocio para asegurar que el sistema final resolviera problemas reales de los usuarios.
       El foco principal estuvo en maximizar la usabilidad del cliente y facilitar el despliegue comercial del producto.
     `,
+  },
+  {
+    title: "Estructura y Gestión de Estado con Zustand",
+    company: "Essertech LLC",
+    tags: ["zustand", "state-management", "architecture", "typescript"],
+    content: `
+Para la gestión del estado global del lado del cliente en Next.js, Daniel implementa un patrón modular de Zustand basado en el Slice Pattern (Patrón de Rebanadas).
+En lugar de centralizar todo el estado en un único archivo monolítico, divide la lógica del negocio en "slices" independientes y cohesivos (por ejemplo, UI, Chat, Sesión) y luego los compone en un único "bound store" global.
+
+Este enfoque asegura:
+1. Co-localización: Cada módulo define sus propias interfaces de TypeScript, estado inicial y acciones (actions) en el mismo archivo.
+2. Tipado Estricto (Type-Safety): Utiliza tipos e interfaces detallados para prevenir errores de compilación y mejorar el autocompletado en el editor.
+3. Rendimiento con Selectores: Emplea selectores específicos en los componentes para evitar renders innecesarios cuando cambian partes del estado no consumidas por ese componente.
+4. Middleware de Depuración: Integra 'devtools' para inspeccionar transiciones de estado desde Redux DevTools en tiempo real, y 'persist' para guardar el estado en localStorage/sessionStorage.
+
+A continuación se muestra la estructura recomendada por Daniel para configurar Zustand:
+
+\`\`\`typescript
+import { create, StateCreator } from 'zustand'
+import { devtools, persist } from 'zustand/middleware'
+
+// 1. Definición de tipos y estado para el Slice de Chat
+interface ChatState {
+  messages: Array<{ id: string; text: string; sender: 'user' | 'assistant' }>
+  isStreaming: boolean
+}
+
+interface ChatActions {
+  addMessage: (text: string, sender: 'user' | 'assistant') => void
+  setStreaming: (status: boolean) => void
+  resetChat: () => void
+}
+
+export type ChatSlice = ChatState & ChatActions
+
+// 2. Creación del Slice con StateCreator para asegurar tipado
+const createChatSlice: StateCreator<
+  ChatSlice,
+  [['zustand/devtools', never], ['zustand/persist', unknown]],
+  [],
+  ChatSlice
+> = (set) => ({
+  messages: [],
+  isStreaming: false,
+  addMessage: (text, sender) =>
+    set(
+      (state) => ({
+        messages: [...state.messages, { id: crypto.randomUUID(), text, sender }]
+      }),
+      false,
+      'chat/addMessage'
+    ),
+  setStreaming: (status) => set({ isStreaming: status }, false, 'chat/setStreaming'),
+  resetChat: () => set({ messages: [], isStreaming: false }, false, 'chat/resetChat')
+})
+
+// 3. Composición del Bound Store con Devtools y Persist
+export const useAppStore = create<ChatSlice>()(
+  devtools(
+    persist(
+      (...a) => ({
+        ...createChatSlice(...a),
+      }),
+      { name: 'app-state-storage' }
+    ),
+    { name: 'AppStore' }
+  )
+)
+\`\`\`
+    `.trim(),
   }
 ]
 
