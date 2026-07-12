@@ -14,9 +14,17 @@ import {
   ArrowLeft,
   AlertCircle,
   Sparkles,
+  Calendar
 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet"
 
 import { Session } from "./types"
 
@@ -170,5 +178,42 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
         )}
       </div>
     </div>
+  )
+}
+
+export function SessionDetailSheet({
+  session,
+  isOpen,
+  onOpenChange,
+}: {
+  session: Session | null
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  return (
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full data-[side=right]:sm:max-w-2xl data-[side=right]:md:max-w-3xl data-[side=right]:lg:max-w-4xl data-[side=right]:xl:max-w-[50vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
+        {session && (
+          <div className="flex flex-col h-full overflow-hidden">
+            <SheetHeader className="border-b border-border/50 p-6 bg-muted/20">
+              <div className="space-y-2">
+                <SheetTitle className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg bg-muted text-muted-foreground">
+                    <Calendar className="size-4" />
+                  </span>
+                  Detalle del Chat
+                </SheetTitle>
+                <SheetDescription className="text-xs font-mono text-muted-foreground break-all select-all">
+                  ID Sesión: {session.id}
+                </SheetDescription>
+              </div>
+            </SheetHeader>
+            <div className="flex-1 overflow-y-auto p-6 md:p-8">
+              <SessionDetail session={session} hideHeader={true} />
+            </div>
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
   )
 }

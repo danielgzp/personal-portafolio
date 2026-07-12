@@ -30,7 +30,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import { DeleteSessionDialog } from "../delete-session-dialog"
-import { SessionDetail } from "../session-detail"
+import { SessionDetailSheet } from "../session-detail"
 import { Calendar, Search } from "lucide-react"
 
 import { Session } from "../types"
@@ -123,13 +123,13 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
       columnVisibility,
     },
     initialState: {
-      pagination: { pageSize: 8 },
+      pagination: { pageSize: 10 },
     },
   })
 
   return (
     <div className="space-y-6">
-      <Card className="border-border/50 bg-card/50 backdrop-blur-xs rounded-3xl overflow-hidden shadow-xl gap-0 py-0">
+      <Card className="bg-background gap-0 py-0">
         <SessionsTableToolbar 
           table={table}
           globalFilter={globalFilter}
@@ -139,7 +139,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
 
         <div className="overflow-x-auto min-h-[300px]">
           <Table className="w-full border-collapse">
-            <TableHeader className="border-b border-border/50 bg-muted/20">
+            <TableHeader className="border-b border-border/50 bg-muted/25">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-none hover:bg-transparent">
                   {headerGroup.headers.map((header) => (
@@ -187,36 +187,16 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 </TableRow>
               )}
             </TableBody>
+            <SessionsTablePagination table={table} />
           </Table>
         </div>
-
-        <SessionsTablePagination table={table} />
       </Card>
 
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right" className="w-full data-[side=right]:sm:max-w-2xl data-[side=right]:md:max-w-3xl data-[side=right]:lg:max-w-4xl data-[side=right]:xl:max-w-[50vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
-          {activeSession && (
-            <div className="flex flex-col h-full overflow-hidden">
-              <SheetHeader className="border-b border-border/50 p-6 bg-muted/20">
-                <div className="space-y-2">
-                  <SheetTitle className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                    <span className="p-1.5 rounded-lg bg-muted text-muted-foreground">
-                      <Calendar className="size-4" />
-                    </span>
-                    Detalle del Chat
-                  </SheetTitle>
-                  <SheetDescription className="text-xs font-mono text-muted-foreground break-all select-all">
-                    ID Sesión: {activeSession.id}
-                  </SheetDescription>
-                </div>
-              </SheetHeader>
-              <div className="flex-1 overflow-y-auto p-6 md:p-8">
-                <SessionDetail session={activeSession} hideHeader={true} />
-              </div>
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
+      <SessionDetailSheet 
+        isOpen={isSheetOpen} 
+        onOpenChange={setIsSheetOpen} 
+        session={activeSession} 
+      />
 
       <DeleteSessionDialog
         isOpen={isDeleteDialogOpen}
