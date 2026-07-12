@@ -44,7 +44,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     if (dbError) {
       console.error(`[GET /api/admin/sessions/${id}] Database error:`, dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     if (!session) {
@@ -61,7 +61,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     return NextResponse.json({ session })
   } catch (error: any) {
     console.error(`[GET /api/admin/sessions] Unhandled error:`, error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
 
@@ -86,12 +86,12 @@ export async function DELETE(request: Request, { params }: RouteParams) {
 
     if (dbError) {
       console.error(`[DELETE /api/admin/sessions/${id}] Database error:`, dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error(`[DELETE /api/admin/sessions] Unhandled error:`, error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
