@@ -16,7 +16,7 @@ const ChatRequestSchema = z.object({
   // Individual message shapes are validated by the Vercel AI SDK's convertToModelMessages.
   messages: z.array(z.any()).min(1).max(50),
   model: z.string().optional(),
-  sessionId: z.string().uuid().optional(), // M1: validate UUID format
+  sessionId: z.string().max(255).optional(), // Validate as string up to 255 chars to match database schema and frontend nanoid
 })
 
 function resolveModelInstance(selectedModel: string) {
