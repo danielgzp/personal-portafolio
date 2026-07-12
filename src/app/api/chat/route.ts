@@ -103,18 +103,18 @@ export async function POST(req: Request) {
                       .from("chat_sessions")
                       .upsert({ id: sessionId, updated_at: new Date().toISOString() }, { onConflict: "id" })
 
-                      console.log("Messages", {
-                        sessionId: sessionId,
-                        model: candidate.id,
-                        user_query: userQuery || "",
-                        ai_response: text,
-                        rag_context_used: hasContext,
-                        prompt_tokens: (usage as any)?.promptTokens || 0,
-                        completion_tokens: (usage as any)?.completionTokens || 0,
-                        generation_time_ms: generationTimeMs,
-                      })
+                    console.log("Messages", {
+                      sessionId: sessionId,
+                      model: candidate.id,
+                      user_query: userQuery || "",
+                      ai_response: text,
+                      rag_context_used: hasContext,
+                      prompt_tokens: (usage as any)?.promptTokens || 0,
+                      completion_tokens: (usage as any)?.completionTokens || 0,
+                      generation_time_ms: generationTimeMs,
+                    })
 
-                      console.log("Session Response", supabaseResponse)
+                    console.log("Session Response", supabaseResponse)
                     // Record which model actually handled the request (post-fallback)
                     const messageResponse = await supabase.from("chat_messages").insert({
                       session_id: sessionId,

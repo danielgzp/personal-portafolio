@@ -18,7 +18,8 @@ export async function GET() {
     // 2. Fetch sessions and messages using the service_role key to bypass RLS policies
     const { data: sessions, error: dbError } = await supabase
       .from("chat_sessions")
-      .select(`
+      .select(
+        `
         id,
         created_at,
         updated_at,
@@ -34,7 +35,8 @@ export async function GET() {
           generation_time_ms,
           error_message
         )
-      `)
+      `
+      )
       .order("created_at", { ascending: false })
 
     if (dbError) {

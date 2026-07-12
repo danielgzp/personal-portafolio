@@ -4,27 +4,10 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  Cpu,
-  Clock,
-  Coins,
-  Database,
-  User,
-  Bot,
-  ArrowLeft,
-  AlertCircle,
-  Sparkles,
-  Calendar
-} from "lucide-react"
+import { Cpu, Clock, Coins, Database, User, Bot, ArrowLeft, AlertCircle, Sparkles, Calendar } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 
 import { Session } from "./types"
 
@@ -52,9 +35,7 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
     if (!modelId) return "Unknown Model"
     const parts = modelId.split("/")
     const name = parts[parts.length - 1]
-    return name
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase())
+    return name.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
   }
 
   return (
@@ -69,21 +50,17 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
               </Link>
             </Button>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground">
-                Detalle de la Conversación
-              </h1>
-              <p className="text-xs text-muted-foreground font-mono">
-                ID: {session.id}
-              </p>
+              <h1 className="text-xl font-bold tracking-tight text-foreground">Detalle de la Conversación</h1>
+              <p className="font-mono text-xs text-muted-foreground">ID: {session.id}</p>
             </div>
           </div>
-          <div className="text-xs text-muted-foreground font-mono text-left sm:text-right">
+          <div className="text-left font-mono text-xs text-muted-foreground sm:text-right">
             <div>Iniciado: {formatDate(session.created_at)}</div>
             <div>Última act: {formatDate(session.updated_at)}</div>
           </div>
         </div>
       )}
- 
+
       {/* Conversation Thread */}
       <div className="space-y-8">
         {messages.length > 0 ? (
@@ -91,30 +68,33 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
             <div key={message.id || index} className="space-y-3">
               {/* Interaction Index / Metadata Header */}
               <div className="flex items-center justify-between border-b border-border/35 pb-2">
-                <span className="text-xs font-semibold text-muted-foreground/80 font-mono">
+                <span className="font-mono text-xs font-semibold text-muted-foreground/80">
                   # {index + 1} — {formatDate(message.created_at)}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
                   {message.model && (
-                    <Badge variant="secondary" className="text-[10px] flex items-center gap-1">
+                    <Badge variant="secondary" className="flex items-center gap-1 text-[10px]">
                       <Sparkles className="size-3" />
                       {formatModelName(message.model)}
                     </Badge>
                   )}
                   {message.generation_time_ms !== null && (
-                    <Badge variant="outline" className="text-[10px] flex items-center gap-1 text-muted-foreground">
+                    <Badge variant="outline" className="flex items-center gap-1 text-[10px] text-muted-foreground">
                       <Clock className="size-3" />
                       {(message.generation_time_ms / 1000).toFixed(2)} s
                     </Badge>
                   )}
                   {(message.prompt_tokens !== null || message.completion_tokens !== null) && (
-                    <Badge variant="outline" className="text-[10px] flex items-center gap-1 text-muted-foreground">
+                    <Badge variant="outline" className="flex items-center gap-1 text-[10px] text-muted-foreground">
                       <Coins className="size-3" />
                       Tokens: {(message.prompt_tokens || 0) + (message.completion_tokens || 0)}
                     </Badge>
                   )}
                   {message.rag_context_used && (
-                    <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-450 border border-emerald-500/20 flex items-center gap-1">
+                    <Badge
+                      variant="outline"
+                      className="dark:text-emerald-450 flex items-center gap-1 border border-emerald-500/20 bg-emerald-500/10 text-[10px] text-emerald-600 dark:bg-emerald-500/20"
+                    >
                       <Database className="size-3" />
                       RAG Activo
                     </Badge>
@@ -125,8 +105,8 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
               {/* User Query Block */}
               {message.user_query && (
                 <div className="flex justify-end pl-12">
-                  <div className="flex items-start gap-3 max-w-3xl">
-                    <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-3 text-primary-foreground text-sm shadow-xs border border-primary/20">
+                  <div className="flex max-w-3xl items-start gap-3">
+                    <div className="rounded-2xl rounded-tr-sm border border-primary/20 bg-primary px-4 py-3 text-sm text-primary-foreground shadow-xs">
                       {message.user_query}
                     </div>
                     <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -139,12 +119,12 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
               {/* Error Message if any */}
               {message.error_message && (
                 <div className="flex justify-start pr-12">
-                  <div className="flex items-start gap-3 max-w-3xl">
+                  <div className="flex max-w-3xl items-start gap-3">
                     <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                       <AlertCircle className="size-4.5" />
                     </div>
                     <Card className="border-destructive/30 bg-destructive/5">
-                      <CardContent className="px-4 py-3 text-destructive text-xs font-mono">
+                      <CardContent className="px-4 py-3 font-mono text-xs text-destructive">
                         Error: {message.error_message}
                       </CardContent>
                     </Card>
@@ -155,14 +135,12 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
               {/* AI Response Block */}
               {message.ai_response && (
                 <div className="flex justify-start pr-12">
-                  <div className="flex items-start gap-3 max-w-3xl">
+                  <div className="flex max-w-3xl items-start gap-3">
                     <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Bot className="size-4.5" />
                     </div>
-                    <div className="rounded-2xl border border-border/50 bg-card/50 px-4 py-3 text-foreground text-sm shadow-xs backdrop-blur-xs prose dark:prose-invert prose-xs max-w-none">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {message.ai_response}
-                      </ReactMarkdown>
+                    <div className="prose-xs prose max-w-none rounded-2xl border border-border/50 bg-card/50 px-4 py-3 text-sm text-foreground shadow-xs backdrop-blur-xs dark:prose-invert">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.ai_response}</ReactMarkdown>
                     </div>
                   </div>
                 </div>
@@ -171,7 +149,7 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
           ))
         ) : (
           <Card className="border border-border/40 bg-card/20 shadow-xs">
-            <CardContent className="py-12 text-center text-muted-foreground text-sm">
+            <CardContent className="py-12 text-center text-sm text-muted-foreground">
               Esta sesión de chat no tiene mensajes registrados.
             </CardContent>
           </Card>
@@ -192,18 +170,21 @@ export function SessionDetailSheet({
 }) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full data-[side=right]:sm:max-w-2xl data-[side=right]:md:max-w-3xl data-[side=right]:lg:max-w-4xl data-[side=right]:xl:max-w-[50vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
+      <SheetContent
+        side="right"
+        className="flex h-full w-full flex-col border-l border-border bg-background/95 p-0 shadow-2xl backdrop-blur-xl data-[side=right]:sm:max-w-2xl data-[side=right]:md:max-w-3xl data-[side=right]:lg:max-w-4xl data-[side=right]:xl:max-w-[50vw]"
+      >
         {session && (
-          <div className="flex flex-col h-full overflow-hidden">
-            <SheetHeader className="border-b border-border/50 p-6 bg-muted/20">
+          <div className="flex h-full flex-col overflow-hidden">
+            <SheetHeader className="border-b border-border/50 bg-muted/20 p-6">
               <div className="space-y-2">
-                <SheetTitle className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                  <span className="p-1.5 rounded-lg bg-muted text-muted-foreground">
+                <SheetTitle className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+                  <span className="rounded-lg bg-muted p-1.5 text-muted-foreground">
                     <Calendar className="size-4" />
                   </span>
                   Detalle del Chat
                 </SheetTitle>
-                <SheetDescription className="text-xs font-mono text-muted-foreground break-all select-all">
+                <SheetDescription className="font-mono text-xs break-all text-muted-foreground select-all">
                   ID Sesión: {session.id}
                 </SheetDescription>
               </div>

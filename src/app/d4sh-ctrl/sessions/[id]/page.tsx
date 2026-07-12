@@ -28,7 +28,8 @@ export default async function AdminSessionDetailPage({ params }: PageProps) {
   // 2. Fetch session and its messages
   const { data: session, error: dbError } = await supabase
     .from("chat_sessions")
-    .select(`
+    .select(
+      `
       id,
       created_at,
       updated_at,
@@ -44,7 +45,8 @@ export default async function AdminSessionDetailPage({ params }: PageProps) {
         error_message,
         created_at
       )
-    `)
+    `
+    )
     .eq("id", id)
     .single()
 
@@ -53,12 +55,12 @@ export default async function AdminSessionDetailPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-background">
         <AdminHeader />
-        <main className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center gap-3 p-4 rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/10 text-red-600 dark:text-red-400">
+        <main className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex items-center gap-3 rounded-xl border border-red-200/50 bg-red-50/50 p-4 text-red-600 dark:border-red-900/50 dark:bg-red-950/10 dark:text-red-400">
             <AlertCircle className="size-5 shrink-0" />
             <div>
               <h2 className="font-semibold">Error al cargar la sesión</h2>
-              <p className="text-sm mt-0.5">{dbError.message}</p>
+              <p className="mt-0.5 text-sm">{dbError.message}</p>
             </div>
           </div>
         </main>
@@ -72,15 +74,13 @@ export default async function AdminSessionDetailPage({ params }: PageProps) {
 
   // 4. Sort messages chronologically
   if (session.chat_messages) {
-    session.chat_messages.sort(
-      (a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    )
+    session.chat_messages.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
   }
 
   return (
     <div className="min-h-screen bg-background">
       <AdminHeader />
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="mx-auto max-w-4xl px-6 py-8">
         <SessionDetail session={session} />
       </main>
     </div>

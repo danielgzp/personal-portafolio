@@ -48,9 +48,12 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null)
 
-  const handleViewSession = useCallback((session: Session) => {
-    router.push(`/d4sh-ctrl/sessions/${session.id}`)
-  }, [router])
+  const handleViewSession = useCallback(
+    (session: Session) => {
+      router.push(`/d4sh-ctrl/sessions/${session.id}`)
+    },
+    [router]
+  )
 
   const handleRowClick = useCallback((session: Session) => {
     setActiveSession(session)
