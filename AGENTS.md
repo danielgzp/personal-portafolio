@@ -26,7 +26,7 @@ This repository includes a configured set of workspace MCP servers in `.agents/m
 - **Engram:** Query `engram` tools (like `mem_get_observation`) at the beginning of a session to recall project-specific decisions and past lessons. Save critical architectural decisions or lessons learned to engram at the end of key tasks.
 
 ## 👥 Workspace Subagents & Delegation
-This project defines specialized subagents under `.agents/plugins/portfolio-plugin/agents/` that can be invoked via the `invoke_subagent` tool (or the `/delegate` command in compatible environments) to perform focused, concurrent tasks:
+The default AI assistant acts as an orchestrator and MUST proactively delegate specialized tasks to the subagents defined under `.agents/plugins/portfolio-plugin/agents/` using the `invoke_subagent` tool (or the `/delegate` command). Analyze the user's request and route the work accordingly:
 - **`frontend-agent`:** Expert in UI/UX, React 19, Next.js App Router, Tailwind CSS v4, Shadcn/ui, and Framer Motion. Delegate to this agent for building UI components, layouts, translations, animations, and accessibility fixes.
 - **`backend-agent`:** Expert in Next.js API routes, Supabase (pgvector, RLS), database migrations, and Upstash Redis rate limiting. Delegate to this agent for backend logic, API routes, database operations, and cron jobs.
 - **`ai-agent`:** Expert in Vercel AI SDK, RAG pipelines, prompt engineering, and chatbot security. Delegate to this agent for AI features, chatbot enhancements, RAG updates, and prompt modifications.
