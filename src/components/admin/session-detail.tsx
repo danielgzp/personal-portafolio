@@ -13,29 +13,12 @@ import {
   Bot,
   ArrowLeft,
   AlertCircle,
+  Sparkles,
 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-type Message = {
-  id: number
-  model: string | null
-  user_query: string | null
-  ai_response: string | null
-  rag_context_used: boolean | null
-  prompt_tokens: number | null
-  completion_tokens: number | null
-  generation_time_ms: number | null
-  error_message: string | null
-  created_at: string
-}
-
-type Session = {
-  id: string
-  created_at: string
-  updated_at: string
-  chat_messages?: Message[]
-}
+import { Session } from "./types"
 
 interface SessionDetailProps {
   session: Session
@@ -106,14 +89,14 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
                 <div className="flex flex-wrap items-center gap-2">
                   {message.model && (
                     <Badge variant="secondary" className="text-[10px] flex items-center gap-1">
-                      <Cpu className="size-3" />
+                      <Sparkles className="size-3" />
                       {formatModelName(message.model)}
                     </Badge>
                   )}
                   {message.generation_time_ms !== null && (
                     <Badge variant="outline" className="text-[10px] flex items-center gap-1 text-muted-foreground">
                       <Clock className="size-3" />
-                      {message.generation_time_ms} ms
+                      {(message.generation_time_ms / 1000).toFixed(2)} s
                     </Badge>
                   )}
                   {(message.prompt_tokens !== null || message.completion_tokens !== null) && (
@@ -135,10 +118,10 @@ export function SessionDetail({ session, hideHeader = false }: SessionDetailProp
               {message.user_query && (
                 <div className="flex justify-end pl-12">
                   <div className="flex items-start gap-3 max-w-3xl">
-                    <div className="rounded-2xl bg-muted/60 px-4 py-3 text-foreground/90 text-sm shadow-xs border border-border/20">
+                    <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-3 text-primary-foreground text-sm shadow-xs border border-primary/20">
                       {message.user_query}
                     </div>
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <User className="size-4.5" />
                     </div>
                   </div>
