@@ -358,16 +358,16 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
 
   return (
     <div className="space-y-6">
-      <Card className="border border-border/40 bg-card/60 shadow-xl backdrop-blur-md rounded-3xl overflow-hidden">
+      <Card className="border border-neutral-200/50 dark:border-neutral-800/50 bg-white/50 dark:bg-black/50 backdrop-blur-xs rounded-3xl overflow-hidden shadow-xl">
         {/* Top Bar: Search and Filters */}
-        <div className="p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border/10 bg-card/15">
+        <div className="px-5 py-3.5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-neutral-200/50 dark:border-neutral-800/50 bg-neutral-50/30 dark:bg-neutral-900/30">
           <div className="relative flex-1 max-w-lg">
             <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/70" />
             <Input
               placeholder="Buscar por ID o contenido..."
               value={globalFilter ?? ""}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-11 pr-9 bg-background/50 rounded-xl h-10 border-border/40 focus-visible:ring-primary/20"
+              className="pl-11 pr-9 bg-background/50 rounded-xl h-9 border-neutral-200/50 dark:border-neutral-800/50 focus-visible:ring-primary/20"
             />
             {globalFilter && (
               <button
@@ -386,7 +386,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
               value={(table.getColumn("status")?.getFilterValue() as string) ?? "all"} 
               onValueChange={(val) => table.getColumn("status")?.setFilterValue(val === "all" ? "" : val)}
             >
-              <SelectTrigger className="w-[130px] rounded-xl h-10 bg-background/40 border-border/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
+              <SelectTrigger className="w-[130px] rounded-xl h-9 bg-background/40 border-neutral-200/50 dark:border-neutral-800/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
                 <Filter className="size-3.5 text-muted-foreground" />
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
@@ -403,7 +403,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
               value={(table.getColumn("models")?.getFilterValue() as string) ?? "all"} 
               onValueChange={(val) => table.getColumn("models")?.setFilterValue(val === "all" ? "" : val)}
             >
-              <SelectTrigger className="w-[160px] rounded-xl h-10 bg-background/40 border-border/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
+              <SelectTrigger className="w-[160px] rounded-xl h-9 bg-background/40 border-neutral-200/50 dark:border-neutral-800/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
                 <SlidersHorizontal className="size-3.5 text-muted-foreground" />
                 <SelectValue placeholder="Modelos" />
               </SelectTrigger>
@@ -418,12 +418,12 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
             {/* Column Visibility Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-10 rounded-xl border border-border/50 bg-background/40 text-sm flex items-center gap-2 hover:bg-muted/40 cursor-pointer transition-colors px-3">
+                <Button variant="outline" size="sm" className="h-9 rounded-xl border border-neutral-200/50 dark:border-neutral-800/50 bg-background/40 text-sm flex items-center gap-2 hover:bg-muted/40 cursor-pointer transition-colors px-3">
                   <Eye className="size-3.5 text-muted-foreground" />
                   Vista
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[180px] rounded-2xl border border-border/50 bg-popover/95 backdrop-blur-md p-1">
+              <DropdownMenuContent align="end" className="w-[180px] rounded-2xl border-border/50 bg-popover/95 backdrop-blur-md p-1">
                 {table.getAllColumns().filter(col => col.getCanHide()).map(col => (
                   <DropdownMenuCheckboxItem
                     key={col.id}
@@ -449,7 +449,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 >
                   <Button 
                     variant="destructive" 
-                    className="rounded-xl h-10 whitespace-nowrap shadow-lg shadow-destructive/20 cursor-pointer"
+                    className="rounded-xl h-9 whitespace-nowrap shadow-lg shadow-destructive/20 cursor-pointer"
                     onClick={() => alert("Función de eliminación masiva pendiente de API")}
                   >
                     <Trash2 className="size-4 mr-2" />
@@ -464,11 +464,11 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         {/* Main Table Container */}
         <div className="overflow-x-auto">
           <Table className="w-full border-collapse">
-            <TableHeader className="border-b border-border/10 bg-muted/5">
+            <TableHeader className="border-b border-neutral-200/50 dark:border-neutral-800/50 bg-neutral-50/10 dark:bg-neutral-900/10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-none hover:bg-transparent">
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="px-5 py-3 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/60 align-middle">
+                    <TableHead key={header.id} className="px-5 py-2 text-[10px] uppercase font-bold tracking-wider text-neutral-500 dark:text-neutral-400 align-middle">
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
@@ -482,10 +482,10 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                     key={row.id} 
                     data-state={row.getIsSelected() && "selected"} 
                     onClick={() => handleViewSession(row.original)}
-                    className="group border-b border-border/10 last:border-0 hover:bg-muted/20 cursor-pointer transition-all duration-200"
+                    className="group border-b border-neutral-200/30 dark:border-neutral-800/30 last:border-0 hover:bg-neutral-500/5 dark:hover:bg-neutral-400/5 cursor-pointer transition-all duration-200"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-3.5 px-5 align-middle">
+                      <TableCell key={cell.id} className="py-2.5 px-5 align-middle">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
@@ -508,7 +508,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
 
         {/* Pagination Section */}
         {table.getPageCount() > 0 && (
-          <div className="flex items-center justify-between px-5 py-4 border-t border-border/10 bg-card/10">
+          <div className="flex items-center justify-between px-5 py-3 border-t border-neutral-200/50 dark:border-neutral-800/50 bg-neutral-50/30 dark:bg-neutral-900/30">
             {/* Left side: Rows per page */}
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground font-medium hidden sm:inline">Filas por página</span>
@@ -516,7 +516,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 value={`${table.getState().pagination.pageSize}`} 
                 onValueChange={(val) => table.setPageSize(Number(val))}
               >
-                <SelectTrigger className="h-8 w-16 rounded-xl bg-background/50 border border-border/40 text-xs hover:bg-muted/40 cursor-pointer transition-colors">
+                <SelectTrigger className="h-8 w-16 rounded-xl bg-background/50 border border-neutral-200/50 dark:border-neutral-800/50 text-xs hover:bg-muted/40 cursor-pointer transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-border/50 bg-popover/95 backdrop-blur-md min-w-16">
@@ -540,7 +540,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  className="size-8 rounded-full border border-neutral-200/50 dark:border-neutral-800/50 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
                   onClick={() => table.setPageIndex(0)} 
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -549,7 +549,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  className="size-8 rounded-full border border-neutral-200/50 dark:border-neutral-800/50 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
                   onClick={() => table.previousPage()} 
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -558,7 +558,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  className="size-8 rounded-full border border-neutral-200/50 dark:border-neutral-800/50 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
                   onClick={() => table.nextPage()} 
                   disabled={!table.getCanNextPage()}
                 >
@@ -567,7 +567,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 <Button 
                   variant="outline" 
                   size="icon" 
-                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  className="size-8 rounded-full border border-neutral-200/50 dark:border-neutral-800/50 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
                   onClick={() => table.setPageIndex(table.getPageCount() - 1)} 
                   disabled={!table.getCanNextPage()}
                 >
