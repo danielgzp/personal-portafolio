@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { ArrowLeft } from "lucide-react"
-import { Link } from "@/lang/routing"
+import Link from "next/link"
 import { m, useReducedMotion } from "framer-motion"
-import { NextIntlClientProvider } from "next-intl"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -88,15 +87,13 @@ export default function LoginPage() {
           </form>
 
           <div className="flex justify-center border-t border-border/50 pt-4">
-            <NextIntlClientProvider locale="es">
-              <Link
-                href="/"
-                className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
-              >
-                <ArrowLeft className="size-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
-                Volver al portafolio
-              </Link>
-            </NextIntlClientProvider>
+            <Link
+              href="/"
+              className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
+            >
+              <ArrowLeft className="size-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
+              Volver al portafolio
+            </Link>
           </div>
         </div>
       </m.div>

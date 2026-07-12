@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useCallback } from "react"
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,10 +15,9 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card } from "@/components/ui/card"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { DeleteSessionDialog } from "../delete-session-dialog"
-import { SessionDetailSheet } from "../session-detail"
-import { Calendar, ChevronDownIcon, ChevronUpIcon, Search } from "lucide-react"
+import { ChevronDownIcon, ChevronUpIcon, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import { Session } from "../types"
 import { getColumns } from "./columns"
@@ -32,6 +31,7 @@ interface SessionsTableProps {
 }
 
 export function SessionsTable({ sessions: initialSessions }: SessionsTableProps) {
+  const router = useRouter()
   const { sessions, isLoading, deleteSession, isDeleting } = useSessions(initialSessions)
 
   // TanStack Table State
@@ -42,26 +42,22 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // UI State
-  const [activeSession, setActiveSession] = useState<Session | null>(null)
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null)
 
-  const handleViewSession = (session: Session) => {
-    setActiveSession(session)
-    setIsSheetOpen(true)
-  }
+  const handleViewSession = useCallback((session: Session) => {
+    router.push(`/d4sh-ctrl/sessions/${session.id}`)
+  }, [router])
 
-  const handleDeleteClick = (id: string) => {
+  const handleDeleteClick = useCallback((id: string) => {
     setSessionToDelete(id)
     setIsDeleteDialogOpen(true)
-  }
+  }, [])
 
   const handleConfirmDelete = async () => {
     if (!sessionToDelete) return
     try {
       await deleteSession(sessionToDelete)
-      if (activeSession?.id === sessionToDelete) setIsSheetOpen(false)
       setRowSelection({})
     } catch (error: any) {
       console.error("Error deleting session:", error)
@@ -72,9 +68,9 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     }
   }
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text)
-  }
+  }, [])
 
   const allUniqueModels = useMemo(() => {
     const modelsSet = new Set<string>()
@@ -92,7 +88,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         onDeleteClick: handleDeleteClick,
         onCopyId: copyToClipboard,
       }),
-    []
+    [handleViewSession, handleDeleteClick, copyToClipboard]
   )
 
   const table = useReactTable({
@@ -212,8 +208,6 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         </div>
         <SessionsTablePagination table={table} />
       </Card>
-
-      <SessionDetailSheet isOpen={isSheetOpen} onOpenChange={setIsSheetOpen} session={activeSession} />
 
       <DeleteSessionDialog
         isOpen={isDeleteDialogOpen}
