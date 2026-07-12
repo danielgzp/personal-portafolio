@@ -8,7 +8,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
 import { m, useReducedMotion } from "framer-motion"
-import { useState, useSyncExternalStore } from "react"
+import { useState, useSyncExternalStore, useEffect } from "react"
 
 // Premium iOS-style drawer easing (emilkowal-animations)
 // 500ms duration with a strong deceleration curve for a natural swipe-like feel
@@ -33,6 +33,14 @@ export function PanelLayout() {
   // Only animate after explicit user interaction — prevents the isMobile
   // hydration (false → true) from triggering a slide animation on load.
   const [hasInteracted, setHasInteracted] = useState(false)
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.get("tab") === "chat") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab("chat")
+    }
+  }, [])
 
   // React 18/19 Modern SSR Bypass:
   // Avoids the cascading render warning of useEffect by using useSyncExternalStore.

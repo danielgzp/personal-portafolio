@@ -14,10 +14,23 @@ This project is configured to be developed iteratively with any AI Code Assistan
 - Follow a strict Mobile-First approach.
 
 ## 🧠 Reasoning & Execution Flow
-1. **Research (Empirical):** Read existing files, grep for dependencies, and snapshot the layout before writing code.
+1. **Research (Empirical):** Read existing files, grep for dependencies, and snapshot the layout before writing code. Prioritize using CodeGraph and Context7 MCP tools (see below) for fast codebase navigation and documentation lookup.
 2. **Strategy:** Formulate a plan silently. If the task is complex, use Plan Mode or draft a markdown plan.
 3. **Execution:** Apply surgical edits (prefer replacing/editing over rewriting). Keep changes focused.
 4. **Validation:** ALWAYS verify your work (e.g., `pnpm lint`, `pnpm build`, or mental dry-runs for UI changes). Never assume success.
+
+## 🔌 Workspace MCP Tooling & Memory
+This repository includes a configured set of workspace MCP servers in `.agents/mcp_config.json` and `.mcp.json`. All AI assistants MUST leverage these tools proactively:
+- **CodeGraph:** Prioritize using `codegraph` tools (like `codegraph_explore`, `codegraph_search`, `codegraph_callers`) for all codebase discovery, symbol lookups, and call-chain analysis instead of doing slow, raw file searches or heavy `grep`.
+- **Context7:** Prioritize querying `context7` tools when researching external APIs, documentation updates, or syntax of popular libraries to prevent hallucinations and outdated methods.
+- **Engram:** Query `engram` tools (like `mem_get_observation`) at the beginning of a session to recall project-specific decisions and past lessons. Save critical architectural decisions or lessons learned to engram at the end of key tasks.
+
+## 👥 Workspace Subagents & Delegation
+The default AI assistant acts as an orchestrator and MUST proactively delegate specialized tasks to the subagents defined under `.agents/plugins/portfolio-plugin/agents/` using the `invoke_subagent` tool (or the `/delegate` command). Analyze the user's request and route the work accordingly:
+- **`frontend-agent`:** Expert in UI/UX, React 19, Next.js App Router, Tailwind CSS v4, Shadcn/ui, and Framer Motion. Delegate to this agent for building UI components, layouts, translations, animations, and accessibility fixes.
+- **`backend-agent`:** Expert in Next.js API routes, Supabase (pgvector, RLS), database migrations, and Upstash Redis rate limiting. Delegate to this agent for backend logic, API routes, database operations, and cron jobs.
+- **`ai-agent`:** Expert in Vercel AI SDK, RAG pipelines, prompt engineering, and chatbot security. Delegate to this agent for AI features, chatbot enhancements, RAG updates, and prompt modifications.
+- **`security-agent`:** Read-only security auditor. Delegate to this agent to review codebase vulnerabilities, RLS policies, and API route security before deployment. Reports findings but does not modify files.
 
 ## 💅 Styling & Frontend Standards
 - **Tailwind v4:** Use `size-{n}` (e.g., `size-4`). Use CSS variables for theming.
@@ -27,9 +40,14 @@ This project is configured to be developed iteratively with any AI Code Assistan
 
 ## 🛠 Available Scripts
 ```bash
-pnpm dev    # Start dev server
-pnpm build  # Production build
-pnpm lint   # Linting
+pnpm dev             # Start dev server
+pnpm build           # Production build
+pnpm lint            # Linting validation
+pnpm lint:fix        # Linting and auto-fix
+pnpm typecheck       # Verify TypeScript types (highly recommended before commits/builds)
+pnpm format          # Format files using Prettier
+pnpm test:e2e        # Run all Playwright E2E tests
+pnpm test:e2e:ui     # Open Playwright E2E test runner UI
 ```
 
 ## 🗄️ Database & RAG Rules

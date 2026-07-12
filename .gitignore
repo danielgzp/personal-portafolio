@@ -42,10 +42,14 @@ pnpm-debug.log*
 next-env.d.ts
 
 
-# AI generated files
+# AI generated files (third-party skills — external libraries, not versioned)
 .claude
-.agents
-docs
+.codegraph
+docs/superpowers/*
+
+# Project docs and agents ARE versioned
+# .agents/agents/ — autonomous agent definitions
+# docs/ — design specs and changelogs
 
 # Playwright
 /playwright-report/
