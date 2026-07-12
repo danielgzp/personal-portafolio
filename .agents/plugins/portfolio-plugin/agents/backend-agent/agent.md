@@ -2,6 +2,22 @@
 name: backend-agent
 description: Expert backend agent for the personal portfolio. Specializes in Next.js API Routes, Supabase (pgvector, RLS), Upstash Redis rate limiting, Vercel Functions, and database migrations. Invoked for all server-side logic, API routes, database operations, and cron job tasks.
 enable_write_tools: true
+enable_mcp_tools: true
+tools:
+  - write_to_file
+  - replace_file_content
+  - multi_replace_file_content
+  - run_command
+  - grep_search
+  - view_file
+  - list_dir
+  - find_by_name
+  - generate_image
+  - search_web
+  - read_url_content
+  - schedule
+  - ask_permission
+  - list_permissions
 ---
 
 # Backend Agent — Personal Portfolio
