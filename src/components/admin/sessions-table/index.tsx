@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card"
 import { DeleteSessionDialog } from "../delete-session-dialog"
 import { ChevronDownIcon, ChevronUpIcon, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { SessionDetailSheet } from "../session-detail"
 
 import { Session } from "../types"
 import { getColumns } from "./columns"
@@ -42,12 +43,22 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // UI State
+  const [activeSession, setActiveSession] = useState<Session | null>(null)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null)
 
-  const handleViewSession = useCallback((session: Session) => {
-    router.push(`/d4sh-ctrl/sessions/${session.id}`)
-  }, [router])
+  const handleViewSession = useCallback(
+    (session: Session) => {
+      router.push(`/d4sh-ctrl/sessions/${session.id}`)
+    },
+    [router]
+  )
+
+  const handleRowClick = useCallback((session: Session) => {
+    setActiveSession(session)
+    setIsSheetOpen(true)
+  }, [])
 
   const handleDeleteClick = useCallback((id: string) => {
     setSessionToDelete(id)
@@ -58,6 +69,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     if (!sessionToDelete) return
     try {
       await deleteSession(sessionToDelete)
+      if (activeSession?.id === sessionToDelete) setIsSheetOpen(false)
       setRowSelection({})
     } catch (error: any) {
       console.error("Error deleting session:", error)
@@ -180,7 +192,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={() => handleViewSession(row.original)}
+                    onClick={() => handleRowClick(row.original)}
                     className="group cursor-pointer border-b border-border/30 transition-all duration-200 last:border-0 hover:bg-muted/30"
                   >
                     {row.getVisibleCells().map((cell) => (
@@ -208,6 +220,8 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         </div>
         <SessionsTablePagination table={table} />
       </Card>
+
+      <SessionDetailSheet isOpen={isSheetOpen} onOpenChange={setIsSheetOpen} session={activeSession} />
 
       <DeleteSessionDialog
         isOpen={isDeleteDialogOpen}

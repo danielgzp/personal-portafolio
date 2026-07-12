@@ -56,9 +56,7 @@ export function StatsCards({ sessions }: StatsCardsProps) {
     if (modelId === "N/A") return "N/A"
     const parts = modelId.split("/")
     const name = parts[parts.length - 1]
-    return name
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase())
+    return name.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
   }
 
   const statItems = [
@@ -99,20 +97,14 @@ export function StatsCards({ sessions }: StatsCardsProps) {
         return (
           <Card key={i}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <div className={`p-2 rounded-xl ${stat.colorClass}`}>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
+              <div className={`rounded-xl p-2 ${stat.colorClass}`}>
                 <Icon className="size-4" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold tracking-tight">
-                {stat.value}
-              </div>
-              <p className="text-xs mt-1 text-muted-foreground">
-                {stat.description}
-              </p>
+              <div className="text-2xl font-bold tracking-tight">{stat.value}</div>
+              <p className="mt-1 text-xs text-muted-foreground">{stat.description}</p>
             </CardContent>
           </Card>
         )

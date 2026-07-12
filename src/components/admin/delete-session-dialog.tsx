@@ -31,7 +31,7 @@ export function DeleteSessionDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="border border-border bg-background">
         <DialogHeader>
-          <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive mb-2">
+          <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <AlertTriangle className="size-6" />
           </div>
           <DialogTitle className="text-center text-lg font-semibold text-foreground">
@@ -46,12 +46,12 @@ export function DeleteSessionDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="mt-4 flex gap-2 justify-center sm:justify-center">
+        <DialogFooter className="mt-4 flex justify-center gap-2 sm:justify-center">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isDeleting}
-            className="w-full sm:w-auto cursor-pointer"
+            className="w-full cursor-pointer sm:w-auto"
           >
             Cancelar
           </Button>
@@ -59,7 +59,7 @@ export function DeleteSessionDialog({
             variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="w-full sm:w-auto cursor-pointer"
+            className="w-full cursor-pointer sm:w-auto"
           >
             {isDeleting ? (
               <span className="flex items-center gap-2">

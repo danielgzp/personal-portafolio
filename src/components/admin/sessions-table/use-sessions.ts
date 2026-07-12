@@ -32,11 +32,9 @@ export function useSessions(initialData: Session[]) {
     mutationFn: deleteSession,
     onSuccess: (_, deletedId) => {
       // Optimistically update cache or invalidate
-      queryClient.setQueryData<Session[]>(["sessions"], (old) => 
-        old ? old.filter(s => s.id !== deletedId) : []
-      )
+      queryClient.setQueryData<Session[]>(["sessions"], (old) => (old ? old.filter((s) => s.id !== deletedId) : []))
       // queryClient.invalidateQueries({ queryKey: ["sessions"] }) // Uncomment if you prefer a hard refetch
-    }
+    },
   })
 
   return {

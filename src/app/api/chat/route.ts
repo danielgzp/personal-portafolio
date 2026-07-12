@@ -1,7 +1,7 @@
 import { google } from "@ai-sdk/google"
 import { groq } from "@ai-sdk/groq"
-import { convertToModelMessages, smoothStream, streamText } from "ai"
 import { z } from "zod"
+import { convertToModelMessages, createUIMessageStreamResponse, smoothStream, streamText, toUIMessageStream } from "ai"
 import { waitUntil } from "@vercel/functions"
 import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
         result = streamText({
           model: modelInstance,
           messages: convertedMessages,
-          system: buildSystemPrompt(context),
+          instructions: buildSystemPrompt(context),
 
           // Throttle output to word-by-word for a natural reading pace on the frontend
           experimental_transform: smoothStream({
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
             delayInMs: 35,
           }),
 
-          onFinish: ({ usage, text }) => {
+          onEnd: ({ usage, text }) => {
             const generationTimeMs = Date.now() - startTime
             const hasContext = context.length > 0
             // H3: Structured metadata log only — no user content or session IDs
@@ -132,6 +132,18 @@ export async function POST(req: Request) {
                       .from("chat_sessions")
                       .upsert({ id: sessionId, updated_at: new Date().toISOString() }, { onConflict: "id" })
 
+                    console.log("Messages", {
+                      sessionId: sessionId,
+                      model: candidate.id,
+                      user_query: userQuery || "",
+                      ai_response: text,
+                      rag_context_used: hasContext,
+                      prompt_tokens: (usage as any)?.promptTokens || 0,
+                      completion_tokens: (usage as any)?.completionTokens || 0,
+                      generation_time_ms: generationTimeMs,
+                    })
+
+                    console.log("Session Response", supabaseResponse)
                     // Record which model actually handled the request (post-fallback)
                     await supabase.from("chat_messages").insert({
                       session_id: sessionId,
@@ -170,13 +182,16 @@ export async function POST(req: Request) {
     // 4. Return the HTTP Stream Response.
     // messageMetadata sends the winning model's display name to the client
     // so the UI can render "Powered by X" without any extra round-trips.
-    return result.toUIMessageStreamResponse({
-      onError: handleStreamError,
-      messageMetadata: ({ part }) => {
-        if (part.type === "start") {
-          return { usedModel: successfulModel.name }
-        }
-      },
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: handleStreamError,
+        messageMetadata: ({ part }) => {
+          if (part.type === "start") {
+            return { usedModel: successfulModel.name }
+          }
+        },
+      }),
     })
   } catch (error) {
     return buildErrorResponse(error)

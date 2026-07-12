@@ -22,7 +22,8 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     const { data: session, error: dbError } = await supabase
       .from("chat_sessions")
-      .select(`
+      .select(
+        `
         id,
         created_at,
         updated_at,
@@ -38,7 +39,8 @@ export async function GET(request: Request, { params }: RouteParams) {
           error_message,
           created_at
         )
-      `)
+      `
+      )
       .eq("id", id)
       .single()
 
@@ -79,10 +81,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
 
     const { id } = await params
 
-    const { error: dbError } = await supabase
-      .from("chat_sessions")
-      .delete()
-      .eq("id", id)
+    const { error: dbError } = await supabase.from("chat_sessions").delete().eq("id", id)
 
     if (dbError) {
       console.error(`[DELETE /api/admin/sessions/${id}] Database error:`, dbError)
