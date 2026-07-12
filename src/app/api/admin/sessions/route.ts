@@ -39,7 +39,7 @@ export async function GET() {
 
     if (dbError) {
       console.error("[GET /api/admin/sessions] Database error:", dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     // 3. Format sessions with aggregate statistics
@@ -70,6 +70,6 @@ export async function GET() {
     return NextResponse.json({ sessions: formattedSessions })
   } catch (error: any) {
     console.error("[GET /api/admin/sessions] Unhandled error:", error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
