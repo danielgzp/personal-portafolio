@@ -97,9 +97,9 @@ export function StatsCards({ sessions }: StatsCardsProps) {
       {statItems.map((stat, i) => {
         const Icon = stat.icon
         return (
-          <Card key={i} className="border border-neutral-200/50 dark:border-neutral-800/50 bg-white/50 dark:bg-black/50 backdrop-blur-xs">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+          <Card key={i}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
               </CardTitle>
               <div className={`p-2 rounded-xl ${stat.colorClass}`}>
@@ -107,10 +107,10 @@ export function StatsCards({ sessions }: StatsCardsProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+              <div className="text-2xl font-bold tracking-tight">
                 {stat.value}
               </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+              <p className="text-xs mt-1 text-muted-foreground">
                 {stat.description}
               </p>
             </CardContent>

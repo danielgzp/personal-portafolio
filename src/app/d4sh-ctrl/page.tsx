@@ -89,10 +89,10 @@ export default async function AdminDashboardPage() {
       <AdminHeader />
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
             Resumen General
-          </h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
             Visualiza y gestiona las sesiones de chat de tu portafolio.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default async function AdminDashboardPage() {
 
         {/* Sessions Interactive Table */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
             Sesiones de Chat
           </h2>
           <SessionsTable sessions={formattedSessions} />

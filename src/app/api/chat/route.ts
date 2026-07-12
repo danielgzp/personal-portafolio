@@ -92,17 +92,31 @@ export async function POST(req: Request) {
               `[/api/chat] Stream finished — model: ${candidate.id} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)} | time: ${generationTimeMs}ms`
             )
 
+            console.log("the session id is", sessionId)
             if (sessionId) {
               waitUntil(
                 (async () => {
                   try {
+                    console.log("Sending chat message...")
                     // Ensure the session exists
-                    await supabase
+                    const supabaseResponse = await supabase
                       .from("chat_sessions")
                       .upsert({ id: sessionId, updated_at: new Date().toISOString() }, { onConflict: "id" })
 
+                      console.log("Messages", {
+                        sessionId: sessionId,
+                        model: candidate.id,
+                        user_query: userQuery || "",
+                        ai_response: text,
+                        rag_context_used: hasContext,
+                        prompt_tokens: (usage as any)?.promptTokens || 0,
+                        completion_tokens: (usage as any)?.completionTokens || 0,
+                        generation_time_ms: generationTimeMs,
+                      })
+
+                      console.log("Session Response", supabaseResponse)
                     // Record which model actually handled the request (post-fallback)
-                    await supabase.from("chat_messages").insert({
+                    const messageResponse = await supabase.from("chat_messages").insert({
                       session_id: sessionId,
                       model: candidate.id,
                       user_query: userQuery || "",
@@ -112,6 +126,7 @@ export async function POST(req: Request) {
                       completion_tokens: (usage as any)?.completionTokens || 0,
                       generation_time_ms: generationTimeMs,
                     })
+                    console.log("Message Response", messageResponse)
                   } catch (dbError) {
                     console.error("[/api/chat] Error tracking chat interaction:", dbError)
                   }

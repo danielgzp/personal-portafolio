@@ -13,31 +13,19 @@ import {
   VisibilityState,
 } from "@tanstack/react-table"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card } from "@/components/ui/card"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { DeleteSessionDialog } from "../delete-session-dialog"
 import { SessionDetailSheet } from "../session-detail"
-import { Calendar, Search } from "lucide-react"
+import { Calendar, ChevronDownIcon, ChevronUpIcon, Search } from "lucide-react"
 
 import { Session } from "../types"
 import { getColumns } from "./columns"
 import { SessionsTableToolbar } from "./toolbar"
 import { SessionsTablePagination } from "./pagination"
 import { useSessions } from "./use-sessions"
+import { cn } from "@/lib/utils"
 
 interface SessionsTableProps {
   sessions: Session[]
@@ -45,7 +33,7 @@ interface SessionsTableProps {
 
 export function SessionsTable({ sessions: initialSessions }: SessionsTableProps) {
   const { sessions, isLoading, deleteSession, isDeleting } = useSessions(initialSessions)
-  
+
   // TanStack Table State
   const [sorting, setSorting] = useState<SortingState>([{ id: "created_at", desc: true }])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -97,11 +85,15 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     return Array.from(modelsSet)
   }, [sessions])
 
-  const columns = useMemo(() => getColumns({
-    onViewSession: handleViewSession,
-    onDeleteClick: handleDeleteClick,
-    onCopyId: copyToClipboard
-  }), [])
+  const columns = useMemo(
+    () =>
+      getColumns({
+        onViewSession: handleViewSession,
+        onDeleteClick: handleDeleteClick,
+        onCopyId: copyToClipboard,
+      }),
+    []
+  )
 
   const table = useReactTable({
     data: sessions || [],
@@ -128,48 +120,75 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
   })
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-background gap-0 py-0">
-        <SessionsTableToolbar 
+    <>
+      <Card className="gap-0 divide-y bg-background py-0">
+        <SessionsTableToolbar
           table={table}
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
           allUniqueModels={allUniqueModels}
         />
-
-        <div className="overflow-x-auto min-h-[300px]">
-          <Table className="w-full border-collapse">
+        <div className="min-h-[300px] w-full border-collapse overflow-x-auto">
+          <Table>
             <TableHeader className="border-b border-border/50 bg-muted/25">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-none hover:bg-transparent">
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="px-5 py-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground align-middle">
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead
+                      className="h-11 px-5 text-[11px] font-bold text-muted-foreground uppercase"
+                      key={header.id}
+                      style={{ width: `${header.getSize()}px` }}
+                    >
+                      {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                        <div
+                          className={cn(
+                            header.column.getCanSort() &&
+                              "flex h-full cursor-pointer items-center justify-between gap-2 select-none"
+                          )}
+                          onClick={header.column.getToggleSortingHandler()}
+                          onKeyDown={(e) => {
+                            // Enhanced keyboard handling for sorting
+                            if (header.column.getCanSort() && (e.key === "Enter" || e.key === " ")) {
+                              e.preventDefault()
+                              header.column.getToggleSortingHandler()?.(e)
+                            }
+                          }}
+                          tabIndex={header.column.getCanSort() ? 0 : undefined}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {{
+                            asc: <ChevronUpIcon aria-hidden="true" className="shrink-0" size={16} />,
+                            desc: <ChevronDownIcon aria-hidden="true" className="shrink-0" size={16} />,
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      ) : (
+                        flexRender(header.column.columnDef.header, header.getContext())
+                      )}
                     </TableHead>
                   ))}
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+            <TableBody className="bg-background">
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={table.getAllColumns().length} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center text-muted-foreground space-y-2">
-                      <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full mb-2" />
+                    <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground">
+                      <div className="mb-2 size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                       <span className="font-medium">Cargando sesiones...</span>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow 
-                    key={row.id} 
-                    data-state={row.getIsSelected() && "selected"} 
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
                     onClick={() => handleViewSession(row.original)}
-                    className="group border-b border-border/30 last:border-0 hover:bg-muted/30 cursor-pointer transition-all duration-200"
+                    className="group cursor-pointer border-b border-border/30 transition-all duration-200 last:border-0 hover:bg-muted/30"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-2.5 px-5 align-middle">
+                      <TableCell key={cell.id} className="px-5 py-2.5 align-middle">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
@@ -178,25 +197,23 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
               ) : (
                 <TableRow>
                   <TableCell colSpan={table.getAllColumns().length} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center text-muted-foreground space-y-2">
-                      <Search className="size-8 opacity-20 mb-2" />
+                    <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground">
+                      <Search className="mb-2 size-8 opacity-20" />
                       <span className="font-medium">No se encontraron sesiones.</span>
-                      <span className="text-xs opacity-70">Ajusta los filtros o la búsqueda para encontrar resultados.</span>
+                      <span className="text-xs opacity-70">
+                        Ajusta los filtros o la búsqueda para encontrar resultados.
+                      </span>
                     </div>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
-            <SessionsTablePagination table={table} />
           </Table>
         </div>
+        <SessionsTablePagination table={table} />
       </Card>
 
-      <SessionDetailSheet 
-        isOpen={isSheetOpen} 
-        onOpenChange={setIsSheetOpen} 
-        session={activeSession} 
-      />
+      <SessionDetailSheet isOpen={isSheetOpen} onOpenChange={setIsSheetOpen} session={activeSession} />
 
       <DeleteSessionDialog
         isOpen={isDeleteDialogOpen}
@@ -205,6 +222,6 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         isDeleting={isDeleting}
         sessionId={sessionToDelete}
       />
-    </div>
+    </>
   )
 }

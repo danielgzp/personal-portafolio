@@ -51,7 +51,7 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
   {
     id: "select",
     header: ({ table }) => (
-      <div className="px-1 flex items-center justify-center">
+      <div className="flex items-center justify-center px-1">
         <Checkbox
           checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -60,7 +60,7 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="px-1 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div className="flex items-center justify-center px-1" onClick={(e) => e.stopPropagation()}>
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -75,7 +75,7 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
     accessorKey: "id",
     header: "ID Sesión",
     cell: ({ row }) => (
-      <div className="font-mono text-xs font-semibold text-foreground/80 hover:text-primary transition-colors">
+      <div className="font-mono text-xs font-semibold text-foreground/80 transition-colors hover:text-primary">
         <span className="md:hidden">{String(row.getValue("id")).slice(0, 8)}</span>
         <span className="hidden md:inline">{row.getValue("id")}</span>
       </div>
@@ -83,51 +83,57 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
   },
   {
     accessorKey: "created_at",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted()
-      return (
-        <div 
-          onClick={() => column.toggleSorting(isSorted === "asc")} 
-          className="flex items-center gap-1.5 cursor-pointer hover:text-foreground select-none transition-colors"
-        >
-          <span>Fecha Creación</span>
-          <ArrowUpDown className={cn("size-3 transition-colors", isSorted ? "text-foreground" : "text-muted-foreground/30")} />
-        </div>
-      )
-    },
+
     cell: ({ row }) => <div className="text-sm font-medium">{formatDate(row.getValue("created_at"))}</div>,
   },
   {
     id: "status",
     header: "Estado",
     accessorFn: (row) => {
-      const hasError = row.chat_messages?.some(m => m.error_message)
-      const isRecent = row.last_activity ? (new Date().getTime() - new Date(row.last_activity).getTime()) < 24 * 60 * 60 * 1000 : false
-      return hasError ? "Error" : (isRecent ? "Activa" : "Inactiva")
+      const hasError = row.chat_messages?.some((m) => m.error_message)
+      const isRecent = row.last_activity
+        ? new Date().getTime() - new Date(row.last_activity).getTime() < 24 * 60 * 60 * 1000
+        : false
+      return hasError ? "Error" : isRecent ? "Activa" : "Inactiva"
     },
     filterFn: "equalsString",
     cell: ({ row }) => {
       const status = row.getValue("status") as string
-      if (status === "Error") return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-semibold rounded-full px-2.5 py-0.5 text-xs">Error</Badge>
-      if (status === "Activa") return <Badge variant="secondary" className="bg-foreground text-background dark:bg-neutral-100 dark:text-neutral-900 border-none font-bold rounded-full px-3 py-1 text-xs">Activa</Badge>
-      return <Badge variant="outline" className="bg-muted text-muted-foreground border-border/50 font-medium rounded-full px-2.5 py-0.5 text-xs">Inactiva</Badge>
-    }
+      if (status === "Error")
+        return (
+          <Badge
+            variant="outline"
+            className="rounded-full border-destructive/20 bg-destructive/10 px-2.5 py-0.5 text-xs font-semibold text-destructive"
+          >
+            Error
+          </Badge>
+        )
+      if (status === "Activa")
+        return (
+          <Badge
+            variant="secondary"
+            className="rounded-full border-none bg-foreground px-3 py-1 text-xs font-bold text-background dark:bg-neutral-100 dark:text-neutral-900"
+          >
+            Activa
+          </Badge>
+        )
+      return (
+        <Badge
+          variant="outline"
+          className="rounded-full border-border/50 bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+        >
+          Inactiva
+        </Badge>
+      )
+    },
   },
   {
     accessorKey: "message_count",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted()
-      return (
-        <div 
-          onClick={() => column.toggleSorting(isSorted === "asc")} 
-          className="flex items-center gap-1.5 cursor-pointer hover:text-foreground select-none transition-colors"
-        >
-          <span>Mensajes</span>
-          <ArrowUpDown className={cn("size-3 transition-colors", isSorted ? "text-foreground" : "text-muted-foreground/30")} />
-        </div>
-      )
-    },
-    cell: ({ row }) => <Badge variant="secondary" className="px-2.5 rounded-full font-semibold">{row.getValue("message_count")}</Badge>,
+    cell: ({ row }) => (
+      <Badge variant="secondary" className="font-semibold">
+        {row.getValue("message_count")}
+      </Badge>
+    ),
   },
   {
     accessorKey: "last_user_query",
@@ -135,11 +141,11 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
     cell: ({ row }) => {
       const val = row.getValue("last_user_query") as string
       return (
-        <div className="max-w-[200px] truncate text-xs text-muted-foreground group-hover:text-foreground/90 transition-colors">
+        <div className="max-w-[200px] truncate text-xs text-muted-foreground transition-colors group-hover:text-foreground/90">
           {val || <span className="italic opacity-50">Sin mensajes</span>}
         </div>
       )
-    }
+    },
   },
   {
     accessorKey: "models",
@@ -152,10 +158,14 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
       const models = row.getValue("models") as string[] | undefined
       return (
         <div className="flex flex-wrap gap-1">
-           {models?.map((m, i) => <Badge key={i} variant="outline" className="text-[10px] px-1.5 py-0 border-border/60">{formatModelBadge(m)}</Badge>)}
+          {models?.map((m, i) => (
+            <Badge key={i} variant="outline">
+              {formatModelBadge(m)}
+            </Badge>
+          ))}
         </div>
       )
-    }
+    },
   },
   {
     id: "actions",
@@ -164,25 +174,25 @@ export const getColumns = (actions: ColumnActions): ColumnDef<Session>[] => [
       <div className="text-right" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0 hover:bg-muted rounded-full">
+            <Button variant="ghost" size="icon-sm">
               <span className="sr-only">Abrir menú</span>
               <MoreHorizontal className="size-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px] rounded-xl border-border/50 bg-popover/95 backdrop-blur-md">
-            <DropdownMenuItem onClick={() => actions.onViewSession(row.original)} className="cursor-pointer rounded-lg text-sm">
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => actions.onViewSession(row.original)}>
               <Eye className="mr-2 size-4" /> Ver Detalles
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => actions.onCopyId(row.original.id)} className="cursor-pointer rounded-lg text-sm">
+            <DropdownMenuItem onClick={() => actions.onCopyId(row.original.id)}>
               <Copy className="mr-2 size-4" /> Copiar ID
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border/40" />
-            <DropdownMenuItem variant="destructive" onClick={() => actions.onDeleteClick(row.original.id)} className="cursor-pointer rounded-lg text-sm">
+            <DropdownMenuItem variant="destructive" onClick={() => actions.onDeleteClick(row.original.id)}>
               <Trash2 className="mr-2 size-4" /> Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    )
-  }
+    ),
+  },
 ]
