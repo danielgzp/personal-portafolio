@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full justify-center bg-background px-4 items-start pt-24 md:pt-36">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
       <m.div
         initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98, filter: "blur(4px)" }}
         animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
