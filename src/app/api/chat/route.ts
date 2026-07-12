@@ -1,6 +1,6 @@
 import { google } from "@ai-sdk/google"
 import { groq } from "@ai-sdk/groq"
-import { convertToModelMessages, smoothStream, streamText } from "ai"
+import { convertToModelMessages, createUIMessageStreamResponse, smoothStream, streamText, toUIMessageStream } from "ai"
 import { waitUntil } from "@vercel/functions"
 import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
         result = streamText({
           model: modelInstance,
           messages: convertedMessages,
-          system: buildSystemPrompt(context),
+          instructions: buildSystemPrompt(context),
 
           // Throttle output to word-by-word for a natural reading pace on the frontend
           experimental_transform: smoothStream({
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
             delayInMs: 35,
           }),
 
-          onFinish: ({ usage, text }) => {
+          onEnd: ({ usage, text }) => {
             const generationTimeMs = Date.now() - startTime
             const hasContext = context.length > 0
             console.log(
@@ -154,13 +154,16 @@ export async function POST(req: Request) {
     // 4. Return the HTTP Stream Response.
     // messageMetadata sends the winning model's display name to the client
     // so the UI can render "Powered by X" without any extra round-trips.
-    return result.toUIMessageStreamResponse({
-      onError: handleStreamError,
-      messageMetadata: ({ part }) => {
-        if (part.type === "start") {
-          return { usedModel: successfulModel.name }
-        }
-      },
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: handleStreamError,
+        messageMetadata: ({ part }) => {
+          if (part.type === "start") {
+            return { usedModel: successfulModel.name }
+          }
+        },
+      }),
     })
   } catch (error) {
     return buildErrorResponse(error)
