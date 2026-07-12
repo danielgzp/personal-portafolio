@@ -12,9 +12,11 @@ import {
   flexRender,
   SortingState,
   ColumnFiltersState,
+  VisibilityState,
 } from "@tanstack/react-table"
 import { motion, AnimatePresence } from "framer-motion"
 
+import { cn } from "@/lib/utils"
 import {
   Table,
   TableBody,
@@ -26,7 +28,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
@@ -40,6 +42,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu"
 import {
   Sheet,
@@ -63,6 +66,8 @@ import {
   XCircle,
   MoreHorizontal,
   Copy,
+  SlidersHorizontal,
+  Filter,
 } from "lucide-react"
 
 type Message = {
@@ -95,6 +100,15 @@ interface SessionsTableProps {
 
 const SPRING_SOFT = { stiffness: 280, damping: 22 }
 
+const COLUMN_LABELS: Record<string, string> = {
+  id: "ID Sesión",
+  created_at: "Fecha Creación",
+  status: "Estado",
+  message_count: "Mensajes",
+  last_user_query: "Último Mensaje",
+  models: "Modelos",
+}
+
 export function SessionsTable({ sessions: initialSessions }: SessionsTableProps) {
   const router = useRouter()
   const [sessions, setSessions] = useState<Session[]>(initialSessions)
@@ -104,6 +118,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState("")
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   // UI State
   const [activeSession, setActiveSession] = useState<Session | null>(null)
@@ -180,7 +195,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         <div className="px-1 flex items-center justify-center">
           <input
             type="checkbox"
-            className="size-4 cursor-pointer rounded border-border bg-background/50 text-primary focus:ring-primary/50"
+            className="size-4 cursor-pointer rounded border border-neutral-300 dark:border-neutral-700 bg-background/50 text-primary focus:ring-primary/50 transition-all checked:bg-primary checked:border-primary"
             checked={table.getIsAllPageRowsSelected()}
             onChange={table.getToggleAllPageRowsSelectedHandler()}
             aria-label="Select all"
@@ -191,7 +206,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
         <div className="px-1 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <input
             type="checkbox"
-            className="size-4 cursor-pointer rounded border-border bg-background/50 text-primary focus:ring-primary/50"
+            className="size-4 cursor-pointer rounded border border-neutral-300 dark:border-neutral-700 bg-background/50 text-primary focus:ring-primary/50 transition-all checked:bg-primary checked:border-primary"
             checked={row.getIsSelected()}
             onChange={row.getToggleSelectedHandler()}
             aria-label="Select row"
@@ -214,11 +229,15 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     {
       accessorKey: "created_at",
       header: ({ column }) => {
+        const isSorted = column.getIsSorted()
         return (
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} className="h-8 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:bg-muted/50 -ml-2">
-            Fecha Creación
-            <ArrowUpDown className="ml-2 size-3" />
-          </Button>
+          <div 
+            onClick={() => column.toggleSorting(isSorted === "asc")} 
+            className="flex items-center gap-1.5 cursor-pointer hover:text-foreground select-none transition-colors"
+          >
+            <span>Fecha Creación</span>
+            <ArrowUpDown className={cn("size-3 transition-colors", isSorted ? "text-foreground" : "text-muted-foreground/30")} />
+          </div>
         )
       },
       cell: ({ row }) => <div className="text-sm font-medium">{formatDate(row.getValue("created_at"))}</div>,
@@ -234,19 +253,23 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
       filterFn: "equalsString",
       cell: ({ row }) => {
         const status = row.getValue("status") as string
-        if (status === "Error") return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-semibold">Error</Badge>
-        if (status === "Activa") return <Badge variant="secondary" className="bg-foreground text-background font-bold border-transparent">Activa</Badge>
-        return <Badge variant="outline" className="bg-muted text-muted-foreground border-border/50 font-medium">Inactiva</Badge>
+        if (status === "Error") return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-semibold rounded-full px-2.5 py-0.5 text-xs">Error</Badge>
+        if (status === "Activa") return <Badge variant="secondary" className="bg-foreground text-background dark:bg-neutral-100 dark:text-neutral-900 border-none font-bold rounded-full px-3 py-1 text-xs">Activa</Badge>
+        return <Badge variant="outline" className="bg-muted text-muted-foreground border-border/50 font-medium rounded-full px-2.5 py-0.5 text-xs">Inactiva</Badge>
       }
     },
     {
       accessorKey: "message_count",
       header: ({ column }) => {
+        const isSorted = column.getIsSorted()
         return (
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} className="h-8 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:bg-muted/50 -ml-2">
-            Mensajes
-            <ArrowUpDown className="ml-2 size-3" />
-          </Button>
+          <div 
+            onClick={() => column.toggleSorting(isSorted === "asc")} 
+            className="flex items-center gap-1.5 cursor-pointer hover:text-foreground select-none transition-colors"
+          >
+            <span>Mensajes</span>
+            <ArrowUpDown className={cn("size-3 transition-colors", isSorted ? "text-foreground" : "text-muted-foreground/30")} />
+          </div>
         )
       },
       cell: ({ row }) => <Badge variant="secondary" className="px-2.5 rounded-full font-semibold">{row.getValue("message_count")}</Badge>,
@@ -281,6 +304,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     },
     {
       id: "actions",
+      enableHiding: false,
       cell: ({ row }) => (
         <div className="text-right" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
@@ -318,12 +342,14 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: "includesString",
     state: {
       sorting,
       columnFilters,
       rowSelection,
       globalFilter,
+      columnVisibility,
     },
     initialState: {
       pagination: { pageSize: 8 },
@@ -332,16 +358,16 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
 
   return (
     <div className="space-y-6">
-      {/* Top Bar: Search and Filters */}
-      <Card className="border border-border/50 bg-card/60 shadow-xl backdrop-blur-md rounded-3xl overflow-hidden">
-        <CardContent className="p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <Card className="border border-border/40 bg-card/60 shadow-xl backdrop-blur-md rounded-3xl overflow-hidden">
+        {/* Top Bar: Search and Filters */}
+        <div className="p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border/10 bg-card/15">
           <div className="relative flex-1 max-w-lg">
-            <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/70" />
             <Input
               placeholder="Buscar por ID o contenido..."
               value={globalFilter ?? ""}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-11 pr-9 bg-background/50 rounded-full h-10 border-border/40 focus-visible:ring-primary/20"
+              className="pl-11 pr-9 bg-background/50 rounded-xl h-10 border-border/40 focus-visible:ring-primary/20"
             />
             {globalFilter && (
               <button
@@ -355,36 +381,63 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {/* Filter by Status */}
             <Select 
               value={(table.getColumn("status")?.getFilterValue() as string) ?? "all"} 
               onValueChange={(val) => table.getColumn("status")?.setFilterValue(val === "all" ? "" : val)}
             >
-              <SelectTrigger className="w-[130px] rounded-full h-10 bg-background/40 border-border/50 text-sm">
+              <SelectTrigger className="w-[130px] rounded-xl h-10 bg-background/40 border-border/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
+                <Filter className="size-3.5 text-muted-foreground" />
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-border/50 bg-popover/95 backdrop-blur-md">
-                <SelectItem value="all" className="rounded-xl">Todos</SelectItem>
-                <SelectItem value="Activa" className="rounded-xl text-foreground font-medium">Activa</SelectItem>
-                <SelectItem value="Inactiva" className="rounded-xl text-muted-foreground">Inactiva</SelectItem>
-                <SelectItem value="Error" className="rounded-xl text-destructive">Error</SelectItem>
+                <SelectItem value="all" className="rounded-xl cursor-pointer">Todos</SelectItem>
+                <SelectItem value="Activa" className="rounded-xl text-foreground font-medium cursor-pointer">Activa</SelectItem>
+                <SelectItem value="Inactiva" className="rounded-xl text-muted-foreground cursor-pointer">Inactiva</SelectItem>
+                <SelectItem value="Error" className="rounded-xl text-destructive cursor-pointer">Error</SelectItem>
               </SelectContent>
             </Select>
 
+            {/* Filter by Models */}
             <Select 
               value={(table.getColumn("models")?.getFilterValue() as string) ?? "all"} 
               onValueChange={(val) => table.getColumn("models")?.setFilterValue(val === "all" ? "" : val)}
             >
-              <SelectTrigger className="w-[160px] rounded-full h-10 bg-background/40 border-border/50 text-sm">
+              <SelectTrigger className="w-[160px] rounded-xl h-10 bg-background/40 border-border/50 text-sm flex items-center gap-2 cursor-pointer hover:bg-muted/40 transition-colors">
+                <SlidersHorizontal className="size-3.5 text-muted-foreground" />
                 <SelectValue placeholder="Modelos" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-border/50 bg-popover/95 backdrop-blur-md">
-                <SelectItem value="all" className="rounded-xl">Todos los modelos</SelectItem>
+                <SelectItem value="all" className="rounded-xl cursor-pointer">Todos los modelos</SelectItem>
                 {allUniqueModels.map((m) => (
-                  <SelectItem key={m} value={m} className="rounded-xl">{formatModelBadge(m)}</SelectItem>
+                  <SelectItem key={m} value={m} className="rounded-xl cursor-pointer">{formatModelBadge(m)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
+            {/* Column Visibility Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-10 rounded-xl border border-border/50 bg-background/40 text-sm flex items-center gap-2 hover:bg-muted/40 cursor-pointer transition-colors px-3">
+                  <Eye className="size-3.5 text-muted-foreground" />
+                  Vista
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[180px] rounded-2xl border border-border/50 bg-popover/95 backdrop-blur-md p-1">
+                {table.getAllColumns().filter(col => col.getCanHide()).map(col => (
+                  <DropdownMenuCheckboxItem
+                    key={col.id}
+                    className="capitalize rounded-xl cursor-pointer text-xs"
+                    checked={col.getIsVisible()}
+                    onCheckedChange={(value) => col.toggleVisibility(!!value)}
+                  >
+                    {COLUMN_LABELS[col.id] || col.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Selection actions */}
             <AnimatePresence>
               {Object.keys(rowSelection).length > 0 && (
                 <motion.div
@@ -396,7 +449,7 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
                 >
                   <Button 
                     variant="destructive" 
-                    className="rounded-full h-10 whitespace-nowrap shadow-lg shadow-destructive/20"
+                    className="rounded-xl h-10 whitespace-nowrap shadow-lg shadow-destructive/20 cursor-pointer"
                     onClick={() => alert("Función de eliminación masiva pendiente de API")}
                   >
                     <Trash2 className="size-4 mr-2" />
@@ -406,96 +459,125 @@ export function SessionsTable({ sessions: initialSessions }: SessionsTableProps)
               )}
             </AnimatePresence>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Main Table */}
-      <div className="rounded-3xl border border-border/50 bg-card/40 p-2 shadow-sm backdrop-blur-xs overflow-x-auto">
-        <Table className="w-full">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-none hover:bg-transparent">
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-4 py-3 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/60 align-middle">
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow 
-                  key={row.id} 
-                  data-state={row.getIsSelected() && "selected"} 
-                  onClick={() => handleViewSession(row.original)}
-                  className="group border-b border-border/20 last:border-0 hover:bg-muted/30 cursor-pointer transition-all duration-200"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-4 px-4 align-middle">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+        {/* Main Table Container */}
+        <div className="overflow-x-auto">
+          <Table className="w-full border-collapse">
+            <TableHeader className="border-b border-border/10 bg-muted/5">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="border-none hover:bg-transparent">
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="px-5 py-3 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/60 align-middle">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-40 text-center">
-                  <div className="flex flex-col items-center justify-center text-muted-foreground space-y-2">
-                    <Search className="size-8 opacity-20 mb-2" />
-                    <span className="font-medium">No se encontraron sesiones.</span>
-                    <span className="text-xs opacity-70">Ajusta los filtros o la búsqueda para encontrar resultados.</span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow 
+                    key={row.id} 
+                    data-state={row.getIsSelected() && "selected"} 
+                    onClick={() => handleViewSession(row.original)}
+                    className="group border-b border-border/10 last:border-0 hover:bg-muted/20 cursor-pointer transition-all duration-200"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-3.5 px-5 align-middle">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={table.getAllColumns().length} className="h-40 text-center">
+                    <div className="flex flex-col items-center justify-center text-muted-foreground space-y-2">
+                      <Search className="size-8 opacity-20 mb-2" />
+                      <span className="font-medium">No se encontraron sesiones.</span>
+                      <span className="text-xs opacity-70">Ajusta los filtros o la búsqueda para encontrar resultados.</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
         {/* Pagination Section */}
         {table.getPageCount() > 0 && (
-          <div className="flex items-center justify-between px-4 py-4 mt-2 border-t border-border/30">
+          <div className="flex items-center justify-between px-5 py-4 border-t border-border/10 bg-card/10">
+            {/* Left side: Rows per page */}
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground font-medium hidden sm:inline">Filas por página</span>
               <Select 
                 value={`${table.getState().pagination.pageSize}`} 
                 onValueChange={(val) => table.setPageSize(Number(val))}
               >
-                <SelectTrigger className="h-8 w-16 rounded-xl bg-background/50 border-border/40 text-xs">
+                <SelectTrigger className="h-8 w-16 rounded-xl bg-background/50 border border-border/40 text-xs hover:bg-muted/40 cursor-pointer transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-border/50 bg-popover/95 backdrop-blur-md min-w-16">
                   {[8, 15, 25, 50].map(size => (
-                    <SelectItem key={size} value={`${size}`} className="text-xs rounded-lg">{size}</SelectItem>
+                    <SelectItem key={size} value={`${size}`} className="text-xs rounded-lg cursor-pointer">{size}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             
+            {/* Right side: Page range of total and navigation buttons */}
             <div className="flex items-center gap-6">
               <span className="text-xs text-muted-foreground font-medium">
-                Pág. {table.getState().pagination.pageIndex + 1} de {table.getPageCount()} <span className="hidden sm:inline">({table.getFilteredRowModel().rows.length} total)</span>
+                {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}-${Math.min(
+                  (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                  table.getFilteredRowModel().rows.length
+                )} de ${table.getFilteredRowModel().rows.length}`}
               </span>
               
-              <div className="flex items-center gap-1.5">
-                <Button variant="outline" size="icon" className="size-8 rounded-full border-border/40" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+              <div className="flex items-center gap-1">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  onClick={() => table.setPageIndex(0)} 
+                  disabled={!table.getCanPreviousPage()}
+                >
                   <ChevronsLeft className="size-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="size-8 rounded-full border-border/40" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  onClick={() => table.previousPage()} 
+                  disabled={!table.getCanPreviousPage()}
+                >
                   <ChevronLeft className="size-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="size-8 rounded-full border-border/40" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  onClick={() => table.nextPage()} 
+                  disabled={!table.getCanNextPage()}
+                >
                   <ChevronRight className="size-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="size-8 rounded-full border-border/40" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="size-8 rounded-full border border-border/40 bg-background/50 hover:bg-muted/40 cursor-pointer disabled:opacity-50 transition-all" 
+                  onClick={() => table.setPageIndex(table.getPageCount() - 1)} 
+                  disabled={!table.getCanNextPage()}
+                >
                   <ChevronsRight className="size-4" />
                 </Button>
               </div>
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="right" className="w-full sm:max-w-3xl md:max-w-5xl lg:max-w-6xl xl:max-w-[85vw] border-l border-border bg-background/95 backdrop-blur-xl p-0 shadow-2xl flex flex-col h-full">
