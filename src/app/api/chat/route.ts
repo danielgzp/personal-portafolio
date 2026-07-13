@@ -1,6 +1,7 @@
 import { google } from "@ai-sdk/google"
 import { groq } from "@ai-sdk/groq"
-import { convertToModelMessages, smoothStream, streamText } from "ai"
+import { convertToModelMessages, createUIMessageStreamResponse, smoothStream, streamText, toUIMessageStream } from "ai"
+import { z } from "zod"
 import { waitUntil } from "@vercel/functions"
 import { buildSystemPrompt } from "@/lib/ai/prompts"
 import { extractUserQuery, retrieveContext } from "@/lib/ai/rag"
@@ -8,6 +9,15 @@ import { buildErrorResponse, handleStreamError } from "@/lib/ai/error-handler"
 import { AVAILABLE_MODELS, DEFAULT_MODEL } from "@/lib/ai/models"
 import { ratelimit, getClientIdentifier, buildRateLimitHeaders } from "@/lib/rate-limit"
 import { supabase } from "@/lib/supabase"
+
+// H1 + M1: Zod schema to validate and sanitize the request body
+const ChatRequestSchema = z.object({
+  // Validate that messages is a non-empty array capped at 50 entries (prevents token abuse).
+  // Individual message shapes are validated by the Vercel AI SDK's convertToModelMessages.
+  messages: z.array(z.any()).min(1).max(50),
+  model: z.string().optional(),
+  sessionId: z.string().max(255).optional(), // Validate as string up to 255 chars to match database schema and frontend nanoid
+})
 
 function resolveModelInstance(selectedModel: string) {
   if (selectedModel.startsWith("google/")) {
@@ -47,10 +57,30 @@ export async function POST(req: Request) {
         )
       }
     } catch (rateLimitError) {
-      console.warn("[rate-limit] Upstash check failed, allowing request:", rateLimitError)
+      // H2: Fail-closed — if Upstash is unavailable, block the request to prevent cost attacks
+      console.error("[rate-limit] Upstash check failed, blocking request:", rateLimitError)
+      return new Response(
+        JSON.stringify({
+          error: "service_unavailable",
+          message: "El servicio no está disponible temporalmente. Inténtalo de nuevo en unos segundos.",
+        }),
+        { status: 503, headers: { "Content-Type": "application/json" } }
+      )
     }
 
-    const { messages, model, sessionId } = await req.json()
+    // H1: Validate and parse request body with Zod schema
+    const body = await req.json()
+    const parsed = ChatRequestSchema.safeParse(body)
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({
+          error: "invalid_request",
+          message: "El formato de la solicitud no es válido.",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      )
+    }
+    const { messages, model, sessionId } = parsed.data
 
     // 1. Determine Model order for auto-fallback
     const requestedModel =
@@ -77,7 +107,7 @@ export async function POST(req: Request) {
         result = streamText({
           model: modelInstance,
           messages: convertedMessages,
-          system: buildSystemPrompt(context),
+          instructions: buildSystemPrompt(context),
 
           // Throttle output to word-by-word for a natural reading pace on the frontend
           experimental_transform: smoothStream({
@@ -85,38 +115,25 @@ export async function POST(req: Request) {
             delayInMs: 35,
           }),
 
-          onFinish: ({ usage, text }) => {
+          onEnd: ({ usage, text }) => {z
             const generationTimeMs = Date.now() - startTime
             const hasContext = context.length > 0
+            // H3: Structured metadata log only — no user content or session IDs
             console.log(
               `[/api/chat] Stream finished — model: ${candidate.id} | rag: ${hasContext} | tokens: ${JSON.stringify(usage)} | time: ${generationTimeMs}ms`
             )
 
-            console.log("the session id is", sessionId)
             if (sessionId) {
               waitUntil(
                 (async () => {
                   try {
-                    console.log("Sending chat message...")
                     // Ensure the session exists
-                    const supabaseResponse = await supabase
+                    await supabase
                       .from("chat_sessions")
                       .upsert({ id: sessionId, updated_at: new Date().toISOString() }, { onConflict: "id" })
 
-                      console.log("Messages", {
-                        sessionId: sessionId,
-                        model: candidate.id,
-                        user_query: userQuery || "",
-                        ai_response: text,
-                        rag_context_used: hasContext,
-                        prompt_tokens: (usage as any)?.promptTokens || 0,
-                        completion_tokens: (usage as any)?.completionTokens || 0,
-                        generation_time_ms: generationTimeMs,
-                      })
-
-                      console.log("Session Response", supabaseResponse)
                     // Record which model actually handled the request (post-fallback)
-                    const messageResponse = await supabase.from("chat_messages").insert({
+                    await supabase.from("chat_messages").insert({
                       session_id: sessionId,
                       model: candidate.id,
                       user_query: userQuery || "",
@@ -126,7 +143,6 @@ export async function POST(req: Request) {
                       completion_tokens: (usage as any)?.completionTokens || 0,
                       generation_time_ms: generationTimeMs,
                     })
-                    console.log("Message Response", messageResponse)
                   } catch (dbError) {
                     console.error("[/api/chat] Error tracking chat interaction:", dbError)
                   }
@@ -154,13 +170,16 @@ export async function POST(req: Request) {
     // 4. Return the HTTP Stream Response.
     // messageMetadata sends the winning model's display name to the client
     // so the UI can render "Powered by X" without any extra round-trips.
-    return result.toUIMessageStreamResponse({
-      onError: handleStreamError,
-      messageMetadata: ({ part }) => {
-        if (part.type === "start") {
-          return { usedModel: successfulModel.name }
-        }
-      },
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: handleStreamError,
+        messageMetadata: ({ part }) => {
+          if (part.type === "start") {
+            return { usedModel: successfulModel.name }
+          }
+        },
+      }),
     })
   } catch (error) {
     return buildErrorResponse(error)

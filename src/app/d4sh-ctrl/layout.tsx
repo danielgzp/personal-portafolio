@@ -13,11 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false }, // No indexar
 }
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning className={`${geistSans.className} antialiased`}>
       <body>

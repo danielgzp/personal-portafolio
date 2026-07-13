@@ -22,7 +22,8 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     const { data: session, error: dbError } = await supabase
       .from("chat_sessions")
-      .select(`
+      .select(
+        `
         id,
         created_at,
         updated_at,
@@ -38,13 +39,14 @@ export async function GET(request: Request, { params }: RouteParams) {
           error_message,
           created_at
         )
-      `)
+      `
+      )
       .eq("id", id)
       .single()
 
     if (dbError) {
       console.error(`[GET /api/admin/sessions/${id}] Database error:`, dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     if (!session) {
@@ -61,7 +63,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     return NextResponse.json({ session })
   } catch (error: any) {
     console.error(`[GET /api/admin/sessions] Unhandled error:`, error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
 
@@ -79,19 +81,16 @@ export async function DELETE(request: Request, { params }: RouteParams) {
 
     const { id } = await params
 
-    const { error: dbError } = await supabase
-      .from("chat_sessions")
-      .delete()
-      .eq("id", id)
+    const { error: dbError } = await supabase.from("chat_sessions").delete().eq("id", id)
 
     if (dbError) {
       console.error(`[DELETE /api/admin/sessions/${id}] Database error:`, dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error(`[DELETE /api/admin/sessions] Unhandled error:`, error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }

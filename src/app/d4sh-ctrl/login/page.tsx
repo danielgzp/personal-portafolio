@@ -70,9 +70,7 @@ export default function LoginPage() {
               autoComplete="current-password"
             />
 
-            {error && (
-              <p className="text-sm text-center text-destructive">{error}</p>
-            )}
+            {error && <p className="text-center text-sm text-destructive">{error}</p>}
 
             <Button type="submit" disabled={loading} className="w-full cursor-pointer">
               {loading ? (
@@ -89,7 +87,7 @@ export default function LoginPage() {
           <div className="flex justify-center border-t border-border/50 pt-4">
             <Link
               href="/"
-              className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="group inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors duration-200 hover:text-primary"
             >
               <ArrowLeft className="size-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
               Volver al portafolio

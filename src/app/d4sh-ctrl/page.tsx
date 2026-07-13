@@ -23,7 +23,8 @@ export default async function AdminDashboardPage() {
   // 2. Fetch data directly from DB using service_role key to bypass RLS policies
   const { data: sessions, error: dbError } = await supabase
     .from("chat_sessions")
-    .select(`
+    .select(
+      `
       id,
       created_at,
       updated_at,
@@ -39,7 +40,8 @@ export default async function AdminDashboardPage() {
         generation_time_ms,
         error_message
       )
-    `)
+    `
+    )
     .order("created_at", { ascending: false })
 
   // 3. Handle database error if any
@@ -47,12 +49,12 @@ export default async function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-background">
         <AdminHeader />
-        <main className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center gap-3 p-4 rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/10 text-red-600 dark:text-red-400">
+        <main className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex items-center gap-3 rounded-xl border border-red-200/50 bg-red-50/50 p-4 text-red-600 dark:border-red-900/50 dark:bg-red-950/10 dark:text-red-400">
             <AlertCircle className="size-5 shrink-0" />
             <div>
               <h2 className="font-semibold">Error al cargar datos</h2>
-              <p className="text-sm mt-0.5">{dbError.message}</p>
+              <p className="mt-0.5 text-sm">{dbError.message}</p>
             </div>
           </div>
         </main>
@@ -87,12 +89,10 @@ export default async function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <AdminHeader />
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <main className="mx-auto max-w-7xl space-y-8 px-6 py-8">
         <div>
-          <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
-            Resumen General
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground lg:text-3xl">Resumen General</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Visualiza y gestiona las sesiones de chat de tu portafolio.
           </p>
         </div>
@@ -102,9 +102,7 @@ export default async function AdminDashboardPage() {
 
         {/* Sessions Interactive Table */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold tracking-tight text-foreground">
-            Sesiones de Chat
-          </h2>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">Sesiones de Chat</h2>
           <SessionsTable sessions={formattedSessions} />
         </div>
       </main>

@@ -18,7 +18,8 @@ export async function GET() {
     // 2. Fetch sessions and messages using the service_role key to bypass RLS policies
     const { data: sessions, error: dbError } = await supabase
       .from("chat_sessions")
-      .select(`
+      .select(
+        `
         id,
         created_at,
         updated_at,
@@ -34,12 +35,13 @@ export async function GET() {
           generation_time_ms,
           error_message
         )
-      `)
+      `
+      )
       .order("created_at", { ascending: false })
 
     if (dbError) {
       console.error("[GET /api/admin/sessions] Database error:", dbError)
-      return NextResponse.json({ error: dbError.message }, { status: 500 })
+      return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
     }
 
     // 3. Format sessions with aggregate statistics
@@ -70,6 +72,6 @@ export async function GET() {
     return NextResponse.json({ sessions: formattedSessions })
   } catch (error: any) {
     console.error("[GET /api/admin/sessions] Unhandled error:", error)
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
