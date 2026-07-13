@@ -59,10 +59,12 @@ export function extractUserQuery(messages: any[]): string {
  * @returns A formatted string containing the matching context, or an empty string if nothing matches.
  */
 export async function retrieveContext(query: string): Promise<string> {
-  // 1. Generate a vector embedding for the user's query using Google's model
+  // 1. Truncate and generate a vector embedding for the user's query using Google's model
+  // M4: Cap to 2000 chars to prevent cost attacks via oversized embedding payloads
+  const truncatedQuery = query.slice(0, 2000)
   const { embedding } = await embed({
     model: google.textEmbeddingModel("gemini-embedding-2"),
-    value: query,
+    value: truncatedQuery,
   })
 
   // 2. Perform a cosine similarity search in Postgres via RPC

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { timingSafeEqual } from "crypto"
 import { supabase } from "@/lib/supabase"
 
 /**
@@ -6,27 +7,35 @@ import { supabase } from "@/lib/supabase"
  * Prevents the project from being paused due to inactivity.
  */
 
+// M3: Use constant-time comparison to prevent timing attacks on the cron secret
+function verifyCronSecret(authHeader: string | null): boolean {
+  const secret = process.env.CRON_SECRET
+  if (!authHeader || !secret) return false
+  const provided = authHeader.replace("Bearer ", "")
+  if (provided.length !== secret.length) return false
+  return timingSafeEqual(Buffer.from(provided), Buffer.from(secret))
+}
+
 export async function GET(request: Request) {
   // Check for Vercel Cron Authorization header
-  const authHeader = request.headers.get("authorization")
-
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!verifyCronSecret(request.headers.get("authorization"))) {
     return new Response("Unauthorized", { status: 401 })
   }
 
   try {
     // Simple query to keep the database active
-    const { data, error } = await supabase.from("documents").select("id").limit(1)
+    const { error } = await supabase.from("documents").select("id").limit(1)
 
     if (error) {
       console.error("Supabase Keep-Alive Error:", error)
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+      // M2: Do not expose internal error details in the response
+      return NextResponse.json({ success: false, error: "Error interno del servidor" }, { status: 500 })
     }
 
+    // L2: Remove internal data from the response to avoid leaking document IDs
     return NextResponse.json({
       success: true,
       message: "Supabase keep-alive successful",
-      data,
     })
   } catch (err) {
     console.error("Unexpected error in cron job:", err)
